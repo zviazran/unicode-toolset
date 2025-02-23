@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <Router basename="/unicode-toolset">
       <div className="App">
         <Navbar />
         <Routes>
