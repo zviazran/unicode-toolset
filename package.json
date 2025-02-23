@@ -8,11 +8,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "ph-pages -d dist"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "drunicode": "^1.1.0",
+    "gh-pages": "^6.3.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
@@ -38,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zviazran/unicode-toolset.git"
+    "url": "git+https://zviazran.github.io/unicode-toolset.git"
   },
-  "homepage": "https://github.com/zviazran/unicode-toolset#readme"
+  "homepage": "https://zviazran.github.io/unicode-toolset#readme"
 }
