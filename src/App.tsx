@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home/Home";
 import About from "./components/About/About";
@@ -16,21 +16,13 @@ const App: React.FC = () => {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/?/about" element={<About />} />
-
           <Route path="/resume" element={<Resume />} />
-          <Route path="/?/resume" element={<About />} />
-
           <Route path="/toolset" element={<Toolsets />} />
-          <Route path="/?/toolset" element={<Toolsets />} />
-
           <Route path="/invisible-char-editor" element={<InvisibleCharEditor />} />
-          <Route path="/?/invisible-char-editor" element={<InvisibleCharEditor />} />
-
           <Route path="/drunicode" element={<DrUnicodeWrapper />} />
-          <Route path="/?/drunicode" element={<DrUnicodeWrapper />} />
+          <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1] : "/home"} />} />
         </Routes>
         <Footer />
       </div>
