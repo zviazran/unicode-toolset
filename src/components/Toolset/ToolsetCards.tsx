@@ -20,7 +20,7 @@ const ToolsetCards: React.FC<ToolsetCardsProps> = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(link); // Navigate to the internal route
+    navigate(`../${link}`);
   };
 
   return (
