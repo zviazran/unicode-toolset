@@ -4,9 +4,16 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script>
-      // Preserve the full path and redirect to index.html
-      const redirectTo = '/unicode-toolset' + window.location.pathname + window.location.search + window.location.hash;
-      window.location.replace(redirectTo);
+      (function() {
+        const base = '/unicode-toolset';
+        const currentPath = window.location.pathname;
+
+        // Prevent infinite loop by checking if base is already present
+        if (!currentPath.startsWith(base)) {
+          const redirectTo = base + currentPath + window.location.search + window.location.hash;
+          window.location.replace(redirectTo);
+        }
+      })();
     </script>
   </head>
   <body>
