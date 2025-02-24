@@ -181,7 +181,6 @@ html {
 
 @media (max-width: 767px) {
   .navbar {
-    padding: 1rem 2rem !important;
     font-size: 1.4rem !important;
     background-color: #343e47 !important;
   }
@@ -435,7 +434,7 @@ html {
 }
 
 .social-icon {
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 /* --------- */
@@ -788,7 +787,8 @@ html {
   background-color: transparent !important;
   opacity: 0.9 !important;
   transition: all 0.5s ease 0s !important;
-  padding-top: 21px !important;
+  padding-top: 10px !important;
+  padding-bottom: 5px !important;
 }
 .skill-heading {
   padding-top: 2px !important;
@@ -832,6 +832,6 @@ html {
 
 @media (max-width: 767px) {
   .skill-tools-wrapper{
-    flex-direction: column;
+    font-size: smaller;
   }
 }

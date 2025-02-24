@@ -12,7 +12,7 @@ const Skillset: React.FC<SkillsetProps> = ({ title, skills, tools }) => {
   return (
     <Row className="skill-tools-wrapper">
       <Col xs={2} className="skill-wrapper">
-        <h3 className="skill-heading">{title}</h3>
+        <h4 className="skill-heading">{title}</h4>
       </Col>
       
       <Col xs={6} className="skill-wrapper">
