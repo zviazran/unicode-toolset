@@ -6,9 +6,16 @@
 
 .editor {
   display: flex;
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Align vertically if needed */
+  justify-content: center; 
+  align-items: center; 
   gap: 20px;
+  flex-wrap: wrap; 
+}
+
+@media (max-width: 768px) { 
+  .editor {
+    gap: 0px;
+  }
 }
 
 .textBox {
@@ -18,6 +25,7 @@
   flex-direction: column;
   justify-content: space-between; /* Ensure content fills the available space */
   max-width: 30rem;
+  min-width: 15rem;
   min-height: 8rem;
 }
   
@@ -35,7 +43,7 @@ textarea, .processedText {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    resize: vertical;
+    resize: none;
     min-height: 8rem;
   }
   
@@ -96,6 +104,7 @@ textarea, .processedText {
     font-size: 1rem;
     cursor: pointer;
     margin-top: 20px;
+    margin-bottom: 10px;
     border: none;
   }
   

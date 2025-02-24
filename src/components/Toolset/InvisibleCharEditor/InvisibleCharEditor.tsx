@@ -57,33 +57,42 @@ const InvisibleCharEditor: React.FC = () => {
   const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
   const [isTagTyping, setIsAddTagsMode] = useState(false);
 
-  const handleTextChange = (text: string) => {
-    setNormalText(text);
-    const processed = replaceInvisibleChars(text);
-    setProcessedText(processed);
-  };
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    const cursorPosition = e.target.selectionStart;
+    const diff = newValue.length - normalText.length;
+  
+    if (isTagTyping && diff > 0) {
+      const insertedText = newValue.slice(cursorPosition - diff, cursorPosition);
+  
+      // Convert each character to its invisible tag version
+      const invisibleText = Array.from(insertedText)
+        .filter((char) => /^[a-zA-Z0-9]$/.test(char)) // Only alphanumeric
+        .map((char) => String.fromCodePoint(0xe0000 + char.charCodeAt(0)))
+        .join("");  
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (isTagTyping && /^[a-zA-Z0-9]$/.test(event.key) && !event.ctrlKey && !event.shiftKey) {
-      event.preventDefault();
-      const tagChar = String.fromCodePoint(0xe0000 + event.key.charCodeAt(0));
-      const textarea = event.currentTarget as HTMLTextAreaElement;
-      const cursorPosition = textarea.selectionStart;
+      // Reinsert the processed text at the correct position
+      const updatedValue =
+        newValue.slice(0, cursorPosition - diff) +
+        invisibleText +
+        newValue.slice(cursorPosition);
+  
+      // Update state with the new value
+      setNormalText(updatedValue);
+      setProcessedText(replaceInvisibleChars(updatedValue));
 
-      const updatedText =
-        normalText.slice(0, cursorPosition) + tagChar + normalText.slice(cursorPosition);
-
-      setNormalText(updatedText);
-      setProcessedText(replaceInvisibleChars(updatedText));
-
+      // Adjust cursor position to after the processed text
       setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = cursorPosition + tagChar.length;
+        e.target.selectionStart = e.target.selectionEnd = cursorPosition - diff + invisibleText.length;
       }, 0);
+    } else {
+      // Handle deletions or no changes
+      setNormalText(newValue);
+      setProcessedText(replaceInvisibleChars(newValue));
     }
   };
 
-  const getRandomInvisibleChars = (count: number): string[] => {
-    const chars: string[] = [];
+  const getRandomInvisibleChar = (): string => {
     const excludedRanges = [  
       [0x202a, 0x202e],
       [0x1d173, 0x1d17a],
@@ -94,22 +103,18 @@ const InvisibleCharEditor: React.FC = () => {
       !excludedRanges.some(([exStart, exEnd]) => start >= exStart && end <= exEnd)
     );
   
-    for (let i = 0; i < count; i++) {
-      const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
-      const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
-      chars.push(String.fromCodePoint(codePoint));
-    }
-  
-    return chars;
+    const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
+    const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
+    
+    return String.fromCodePoint(codePoint);
   };
+  
+  const handleAddInvisibleChars = () => {
+    const randomChar = getRandomInvisibleChar();
 
-  const handleAddInvisibleChars = (count: number) => {
-    const randomChars = getRandomInvisibleChars(count);
-    let updatedText = normalText;
-    randomChars.forEach(char => {
-      const randomPosition = Math.floor(Math.random() * (updatedText.length + 1));
-      updatedText = updatedText.slice(0, randomPosition) + char + updatedText.slice(randomPosition);
-    });
+    const randomPosition = Math.floor(Math.random() * (normalText.length + 1));
+    const updatedText = normalText.slice(0, randomPosition) + randomChar + normalText.slice(randomPosition);
+
     setNormalText(updatedText);
     setProcessedText(replaceInvisibleChars(updatedText));
   };
@@ -128,8 +133,7 @@ const InvisibleCharEditor: React.FC = () => {
           <h2>What we see</h2>
           <textarea
             value={normalText}
-            onChange={(e) => handleTextChange(e.target.value)}
-            onKeyDown={handleKeyPress}
+            onChange={handleTextChange}
             placeholder="Type your text here..."
           />
         </div>
@@ -154,7 +158,7 @@ const InvisibleCharEditor: React.FC = () => {
         </label>
       </div>
       <div className={styles.buttonContainer}>
-        <button onClick={() => handleAddInvisibleChars(1)} className={styles.invisibleCharButton}>
+        <button onClick={handleAddInvisibleChars} className={styles.invisibleCharButton}>
           Add Random Invisible Character
         </button>
       </div>
