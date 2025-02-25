@@ -1,6 +1,7 @@
 // src/components/InvisibleCharEditor.tsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from './InvisibleCharEditor.module.css';
+import CounterBar from '../CounterBar';
 
 // Define ranges of invisible characters
 const invisibleCharRanges = [
@@ -53,6 +54,7 @@ const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
 };
 
 const InvisibleCharEditor: React.FC = () => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [normalText, setNormalText] = useState("");
   const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
   const [isTagTyping, setIsAddTagsMode] = useState(false);
@@ -69,8 +71,7 @@ const InvisibleCharEditor: React.FC = () => {
       const invisibleText = Array.from(insertedText)
         .filter((char) => /^[a-zA-Z0-9 !@#$%^&*()]$/.test(char))
         .map((char) => String.fromCodePoint(0xe0000 + char.charCodeAt(0)))
-        .join("");  
-
+        .join("");
       // Reinsert the processed text at the correct position
       const updatedValue =
         newValue.slice(0, cursorPosition - diff) +
@@ -122,9 +123,6 @@ const InvisibleCharEditor: React.FC = () => {
     setProcessedText(replaceInvisibleChars(updatedText));
   };
 
-  const characterCount = normalText.length;
-  const byteCount = new TextEncoder().encode(normalText).length;
-
   return (
     <div className={styles.invisibleCharEditor}>
       <h1>Invisible Characters Editor</h1>
@@ -135,6 +133,7 @@ const InvisibleCharEditor: React.FC = () => {
         <div className={styles.textBox}>
           <h2>What we see</h2>
           <textarea
+            ref={textareaRef}
             value={normalText}
             onChange={handleTextChange}
             placeholder="Type your text here..."
@@ -147,9 +146,7 @@ const InvisibleCharEditor: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={styles.counters}>
-        <p>{characterCount} characters, {byteCount} bytes</p>
-      </div>
+      <CounterBar textareaRef={textareaRef} />
       <div className={styles.buttonContainer}>
         <label className={styles.tagToggle}>
           <input

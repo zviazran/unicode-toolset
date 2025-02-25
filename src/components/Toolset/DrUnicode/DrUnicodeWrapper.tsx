@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from './DrUnicodeWrapper.module.css';
 import { DrUnicode } from 'drunicode';
+import CounterBar from '../CounterBar';
 
 const DrUnicodeWrapper: React.FC = () => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [normalText, setNormalText] = useState<string>("");  
   const [diagnosisText, setDiagnosisText] = useState<string>("");
   const drUnicode = new DrUnicode();
@@ -27,6 +29,7 @@ const DrUnicodeWrapper: React.FC = () => {
       </div>
       <div className={styles.textBox}>
         <textarea
+          ref={textareaRef}
           value={normalText}
           onChange={handleTextChange}
           placeholder="Text input..."
@@ -35,9 +38,7 @@ const DrUnicodeWrapper: React.FC = () => {
       <div className={styles.diagnosisText}>
           {diagnosisText}
       </div>
-      <div className={styles.counters}>
-        <p>{normalText.length} characters, {new TextEncoder().encode(normalText).length} bytes</p>
-      </div>
+      <CounterBar textareaRef={textareaRef} />
     </div>
   );
 };

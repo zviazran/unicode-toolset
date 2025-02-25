@@ -1,0 +1,55 @@
+.counterBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    padding: 10px;
+  }
+  
+  .counterBar p {
+    margin: 0;
+    color: #333;
+  }
+  
+  .copyButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+    padding: 10px 15px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .copyButton:hover {
+    color: #007bff; 
+  }
+  
+  .icon {
+    font-size: 25px; 
+    transition: transform 0.2s ease-in-out;
+    color: #4a4a4a;
+  }
+  
+  .iconCheck {
+    color: #4a4a4a; 
+  }
+  
+  .iconCopy {
+    color: #4a4a4a; 
+  }
+  
+  .copyButton:hover .iconCopy {
+    color: #007bff; 
+  }
+  
+  .copyButton .iconCheck {
+    color: #28a745; 
+  }
+  
+  .copyButton:hover .icon {
+    transform: scale(1.1);
+  }
+  
