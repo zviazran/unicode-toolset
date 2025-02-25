@@ -67,7 +67,7 @@ const InvisibleCharEditor: React.FC = () => {
   
       // Convert each character to its invisible tag version
       const invisibleText = Array.from(insertedText)
-        .filter((char) => /^[a-zA-Z0-9]$/.test(char)) // Only alphanumeric
+        .filter((char) => /^[a-zA-Z0-9 !@#$%^&*()]$/.test(char))
         .map((char) => String.fromCodePoint(0xe0000 + char.charCodeAt(0)))
         .join("");  
 
@@ -112,7 +112,10 @@ const InvisibleCharEditor: React.FC = () => {
   const handleAddInvisibleChars = () => {
     const randomChar = getRandomInvisibleChar();
 
-    const randomPosition = Math.floor(Math.random() * (normalText.length + 1));
+    // Calculate random position with edge handling
+    const randomPosition = normalText.length > 4
+      ? Math.floor(Math.random() * (normalText.length - 1)) + 1 // Between 1 and length - 1
+      : Math.floor(Math.random() * (normalText.length + 1));    // Allow edges for short text
     const updatedText = normalText.slice(0, randomPosition) + randomChar + normalText.slice(randomPosition);
 
     setNormalText(updatedText);
