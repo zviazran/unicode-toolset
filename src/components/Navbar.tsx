@@ -33,7 +33,7 @@ function NavBar() {
       className={navColour ? "sticky" : "navbar"}
     >
       <Container>
-        <Nav.Link as={Link} to="/" onClick={() => updateExpanded(false)} className="navbar-text-container">
+        <Nav.Link as={Link} to="/home" onClick={() => updateExpanded(false)} className="navbar-text-container">
           zvi.azran
         </Nav.Link>
         <Navbar.Toggle
@@ -49,7 +49,7 @@ function NavBar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto" defaultActiveKey="#home">
             <Nav.Item>
-              <Nav.Link as={Link} to="/" onClick={() => updateExpanded(false)}>
+              <Nav.Link as={Link} to="/home" onClick={() => updateExpanded(false)}>
                 <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
               </Nav.Link>
             </Nav.Item>
