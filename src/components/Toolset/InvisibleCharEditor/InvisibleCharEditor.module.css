@@ -7,125 +7,120 @@
 .editor {
   display: flex;
   justify-content: center; 
-  align-items: center; 
-  gap: 20px;
   flex-wrap: wrap; 
 }
 
-@media (max-width: 768px) { 
-  .editor {
-    gap: 0px;
-  }
-}
-
 .textBox {
+  display: grid;
+  grid-template-rows: auto 1fr; /* Title takes auto height, rest fills */
   flex: 1;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Ensure content fills the available space */
   max-width: 30rem;
   min-width: 15rem;
   min-height: 8rem;
+  padding-left: 1rem;
+  padding-bottom: 0.1rem;
 }
   
-  .textBox h2 {
-    white-space: nowrap;
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    font-size: 1.2rem; 
-  }
+.textBox h2 {
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  font-size: 1.2rem; 
+}
 
-  
-textarea, .processedText {
-    width: 100%;
-    height: 100px; 
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
-    min-height: 8rem;
-  }
-  
-  textarea:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-  
-  .processedText {
-    background-color: #f5f5f5;
-    color: #333;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: monospace;
-    flex: 1; 
-    text-align:justify;
-  }
+
+.normalText, .processedText {
+  width: 100%;
+  height: auto; /* Allow natural content expansion */
+  min-height: 8rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.normalText {
+  display: block;
+  resize: horizontal;
+}
+
+.normalText:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.processedText {
+  background-color: #f5f5f5;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+}
 
   
 .invisibleChar, .tagChar {
-    background-color: rgba(255, 180, 190, 0.5);
-    color: black;
-    padding: 2px 4px;
-    border-radius: 4px;
-    margin: 0 2px;
-    font-size: 1rem;
-    display: inline-block;
-    line-height: 1.2em;
-  }
+  background-color: rgba(255, 180, 190, 0.5);
+  color: black;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  font-size: 1rem;
+  display: inline-block;
+  line-height: 1.2em;
+}
   
-  .invisibleChar {
-    min-width: 2.5em;
-  }
-  
-  .tagChar {
-    min-width: 1.5em;
-  }
-  
-  .tagToggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    cursor: pointer;
-  }
-  
-  .tagToggle input {
-    width: 20px;
-    height: 20px;
-    accent-color: #007bff;
-  }
-  
-  .invisibleCharButton {
-    display: inline-block;
-    background-color: #28a745;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    border: none;
-  }
-  
-  .invisibleCharButton:hover {
-    background-color: #218838;
-  }
-  
-  .invisibleCharButton:active {
-    background-color: #1e7e34;
-  }
-  
-  .counters {
-    margin-top: 20px;
-    font-size: 1.1rem;
-  }
-  
-  .description p {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 20px;
-  }
+.invisibleChar {
+  min-width: 2.5em;
+}
+
+.tagChar {
+  min-width: 1.5em;
+}
+
+.tagToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.tagToggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: #007bff;
+}
+
+.invisibleCharButton {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border: none;
+}
+
+.invisibleCharButton:hover {
+  background-color: #218838;
+}
+
+.invisibleCharButton:active {
+  background-color: #1e7e34;
+}
+
+.counters {
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.description p {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 20px;
+}
   
   

@@ -132,7 +132,7 @@ const InvisibleCharEditor: React.FC = () => {
       <div className={styles.editor}>
         <div className={styles.textBox}>
           <h2>What we see</h2>
-          <textarea
+          <textarea className={styles.normalText}
             ref={textareaRef}
             value={normalText}
             onChange={handleTextChange}
