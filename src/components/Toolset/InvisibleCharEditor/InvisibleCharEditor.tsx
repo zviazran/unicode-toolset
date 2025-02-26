@@ -53,11 +53,44 @@ const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
   return result;
 };
 
+const computeValidRanges = (): [number, number][] => {
+  const RandomInvisiblesExcludedRanges = [  
+    [0x200c, 0x200c],
+    [0x202a, 0x202e],
+    [0x1d173, 0x1d17a],
+    [0xe0000, 0xe007f],
+  ];
+
+  const validRanges: [number, number][] = [];
+
+  for (const [start, end] of invisibleCharRanges) {
+    let currentStart = start;
+    
+    for (const [exStart, exEnd] of RandomInvisiblesExcludedRanges) {
+      if (exEnd < currentStart) continue; // Skip exclusions that are before our range
+      if (exStart > end) break; // No more exclusions affect this range
+
+      if (currentStart < exStart) {
+        validRanges.push([currentStart, Math.min(end, exStart - 1)]);
+      }
+
+      currentStart = Math.max(currentStart, exEnd + 1);
+    }
+
+    if (currentStart <= end) {
+      validRanges.push([currentStart, end]);
+    }
+  }
+
+  return validRanges;
+};
+
 const InvisibleCharEditor: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [normalText, setNormalText] = useState("");
   const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
   const [isTagTyping, setIsAddTagsMode] = useState(false);
+  const validRanges: [number, number][] = computeValidRanges();
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
@@ -94,16 +127,6 @@ const InvisibleCharEditor: React.FC = () => {
   };
 
   const getRandomInvisibleChar = (): string => {
-    const excludedRanges = [  
-      [0x202a, 0x202e],
-      [0x1d173, 0x1d17a],
-      [0xe0000, 0xe007f],
-    ];
-
-    const validRanges = invisibleCharRanges.filter(([start, end]) =>
-      !excludedRanges.some(([exStart, exEnd]) => start >= exStart && end <= exEnd)
-    );
-  
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
     const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
     
