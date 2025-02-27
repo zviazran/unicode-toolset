@@ -16,7 +16,14 @@ export const TOOLSETS = [
     joke: "An isValid(string) a day keeps the bugs away.",
     description: "A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.",
     link: "drunicode",
-  }
+  },
+  {
+    image: DR_UNICODE,
+    name: "Crash Char Sequence Generator",
+    joke: "Unicode. SMASH!!!",
+    description: "bla bla",
+    link: "crash-char-sequence-generator",
+  },
 ];
 
 export const JS_SKILLS = [

@@ -2,19 +2,8 @@
 import React, { useState, useRef } from "react";
 import styles from './InvisibleCharEditor.module.css';
 import CounterBar from '../CounterBar';
+import { invisibleCharRanges } from "../CodePointsConsts";
 
-// Define ranges of invisible characters
-const invisibleCharRanges = [
-  [0x00ad, 0x00ad], // Soft hyphen
-  [0x061c, 0x061c], // Arabic Letter Mark
-  [0x180e, 0x180e], // Mongolian vowel separator
-  [0x200b, 0x200f], // Zero-width and directional marks
-  [0x202a, 0x202e], // Bidirectional text overrides
-  [0x2060, 0x206f], // Invisible operators and markers
-  [0xfeff, 0xfeff],  // Zero-width no-break space
-  [0x1d173, 0x1d17a], // Musical invisible symbols
-  [0xe0000, 0xe007f], // Tags
-];
 
 // Function to check if a code point is in the invisible ranges
 const isInvisibleCodePoint = (code: number): boolean => {

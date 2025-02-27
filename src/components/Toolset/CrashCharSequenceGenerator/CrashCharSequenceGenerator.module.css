@@ -1,0 +1,49 @@
+.crashCharSequenceGenerator {
+  text-align: center;
+  margin-top: 8rem;
+  min-height: 33rem;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 0.5rem; 
+}
+
+.description p {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.textBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.selectContainer, .inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.selectContainer label, .inputContainer label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.inputContainer input {
+  width: 100px;
+}
+
+.counterBarContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  flex-direction: row;
+}
