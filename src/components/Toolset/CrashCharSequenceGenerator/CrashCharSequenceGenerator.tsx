@@ -43,10 +43,10 @@ const CrashCharSequenceGenerator: React.FC = () => {
         <p>Generate a crash-making character combination. Try this at your own risk.</p>
       </div>
 
-      <div className={styles.counterBarContainer}>
-        <div className={styles.selectContainer}>
-          <label htmlFor="comboSelect">Choose Combination:</label>
-          <select id="comboSelect" value={selectedOption} onChange={handleSelectionChange}>
+      <div className={styles.controlsGrid}>
+        <div className={styles.controlItem}>
+          <label className={styles.controlLabel} htmlFor="comboSelect">Combination:</label>
+          <select className={styles.controlInput} id="comboSelect" value={selectedOption} onChange={handleSelectionChange}>            
             {Object.keys(crashGenerator.crashSequences).map((key) => (
               <option key={key} value={key}>
                 {key}
@@ -54,32 +54,25 @@ const CrashCharSequenceGenerator: React.FC = () => {
             ))}
           </select>
         </div>
-
-        <div className={styles.inputContainer}>
-          <label htmlFor="lengthInput">Set Length:</label>
-          <input type="number" id="lengthInput" min={2} value={length} onChange={handleLengthChange} />
+        
+        <div className={styles.controlItem}>
+          <label className={styles.controlLabel} htmlFor="lengthInput">Set Length:</label>
+          <input className={styles.controlInput} type="number" id="lengthInput" min={2} value={length} onChange={handleLengthChange} />
         </div>
 
-        <div className={styles.inputContainer}>
-          <label htmlFor="countLengthInput">Section Length:</label>
-          <input type="number" id="countLengthInput" min={1} value={countLength} onChange={handleCountLengthChange} />
+        <div className={styles.controlItem}>
+          <label className={styles.controlLabel} htmlFor="countLengthInput">Section Length:</label>
+          <input className={styles.controlInput} type="number" id="countLengthInput" min={1} value={countLength} onChange={handleCountLengthChange} />
         </div>
-
-        <div className={styles.inputContainer}>
-          <label htmlFor="styledCheckbox">Styled Output:</label>
-          <input
-            type="checkbox"
-            id="styledCheckbox"
-            checked={styled}
-            onChange={handleStyledChange}
-          />
+        
+        <div className={styles.controlItem}>
+          <label className={styles.controlLabel} htmlFor="styledCheckbox">Styled:</label>
+          <input className={styles.controlInput} type="checkbox" id="styledCheckbox" checked={styled} onChange={handleStyledChange} />
         </div>
       </div>
 
-      <div className={styles.counterBarContainer}>
-        <div className={styles.textBox}>
-          <textarea ref={textareaRef} value={generateText()} />
-        </div>
+      <div className={styles.outputContainer}>
+        <textarea className={styles.textBox} ref={textareaRef} value={generateText()} />
         <CounterBar textareaRef={textareaRef} />
       </div>
     </div>

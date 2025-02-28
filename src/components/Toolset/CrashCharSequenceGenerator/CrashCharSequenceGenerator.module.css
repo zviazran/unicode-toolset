@@ -15,35 +15,39 @@
   margin-bottom: 20px;
 }
 
-.textBox {
+.controlsGrid {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 0.3rem;
 }
 
-textarea:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.selectContainer, .inputContainer {
+.controlItem {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+  flex-direction: row;
+  justify-content: left;
 }
 
-.selectContainer label, .inputContainer label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.controlLabel {
+  text-align: left;
+  height: 1.3rem;
+  width: 8rem;
 }
 
-.inputContainer input {
-  width: 100px;
+.controlInput {
+  max-height: 1.3rem;
+  max-width: 8rem;
 }
 
-.counterBarContainer {
+.outputContainer {
   display: flex;
   align-items: center;
   margin-top: 1rem;
   flex-direction: row;
+}
+
+.textBox {
+  height: 3rem;
+  min-height: auto;
+  width: auto;
+  resize: none;
 }

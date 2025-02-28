@@ -1,7 +1,7 @@
 {
   "name": "unicode-toolset",
   "description": "My portfolio and collection of heuristic tools for analyzing, editing, and visualizing Unicode characters.",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "author": "Zvi Azran",
   "scripts": {
@@ -43,5 +43,5 @@
     "type": "git",
     "url": "git+https://github.com/zviazran/unicode-toolset.git"
   },
-  "homepage": "https://zviazran.github.io/unicode-toolset"
+  "homepage": "https://zviazran.github.io/unicode-toolset/"
 }
