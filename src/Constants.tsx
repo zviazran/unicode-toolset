@@ -1,5 +1,6 @@
 import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
+import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
 
 
 export const TOOLSETS = [
@@ -18,10 +19,10 @@ export const TOOLSETS = [
     link: "drunicode",
   },
   {
-    image: DR_UNICODE,
+    image: CRASH_CHAR_SEQUENCE_GENERATOR,
     name: "Crash Char Sequence Generator",
     joke: "Unicode. SMASH!!!",
-    description: "bla bla",
+    description: "Generate a crash making character combination. Try this at your own risk.",
     link: "crash-char-sequence-generator",
   },
 ];
