@@ -16,14 +16,18 @@ class BidiCrashSequenceGenerator {
     const leftRightPair = String.fromCharCode(sequence.left) + String.fromCharCode(sequence.right);
     let str = "";
     if (styled)
-      str += "👉<" + sequence.circle + ">"; 
-    for (let i = 0; i < length; i += breakCount/2) {
-      str += leftRightPair.repeat(Math.min(breakCount/2, length - i)); // Add the section
-      str += String.fromCharCode(sequence.break); // Add break after section
+      str += "<" + sequence.circle + ">";
+
+    for (let i = 0; i < length/2; i += breakCount/2) {
+      str += leftRightPair.repeat(Math.min(breakCount/2, length/2 - i)); 
+      str += String.fromCharCode(sequence.break); 
     }
     str += String.fromCharCode(sequence.break);
-    if (styled) 
+    if (styled){
+      if (length > 1000)
+        str += "󠁈󠁩󠀠󠁚󠁶󠁩󠀠󠁁󠁺󠁲󠁡󠁮󠀠󠁩󠁳󠀠󠁯󠁰󠁥󠁮󠀠󠁦󠁯󠁲󠀠󠁷󠁯󠁲󠁫󠀡";
       str += "👈";
+    }
     
     return str;
   }
