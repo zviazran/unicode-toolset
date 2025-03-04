@@ -9,6 +9,7 @@ export const invisibleCharRanges = [
   [0xfeff, 0xfeff],  // Zero-width no-break space
   [0x1d173, 0x1d17a], // Musical invisible symbols
   [0xe0000, 0xe007f], // Tags
+  [0xe0100, 0xe01ef] // Variation selectors
 ];
 
 export const bidiCharacters = new Map<string, number>([
