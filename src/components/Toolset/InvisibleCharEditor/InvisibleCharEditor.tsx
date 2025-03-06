@@ -11,7 +11,7 @@ const computeValidRanges = (): [number, number][] => {
     [0x200c, 0x200c],
     [0x202a, 0x202e],
     [0x1d173, 0x1d17a],
-    [0xe0000, 0xe007f],
+    [0xe0000, 0xe01ff],
   ];
 
   const validRanges: [number, number][] = [];
@@ -117,7 +117,7 @@ const InvisibleCharEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees</h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} />
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setNormalText}/>
         </div>
       </div>
       <CounterBar textareaRef={textareaRef} />
