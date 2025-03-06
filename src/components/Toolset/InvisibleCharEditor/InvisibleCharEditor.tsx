@@ -3,44 +3,8 @@ import React, { useState, useRef } from "react";
 import styles from './InvisibleCharEditor.module.css';
 import CounterBar from '../CounterBar';
 import { invisibleCharRanges } from "../CodePointsConsts";
+import ProcessedTextDisplay from "./ProcessedTextDisplay";
 
-
-// Function to check if a code point is in the invisible ranges
-const isInvisibleCodePoint = (code: number): boolean => {
-  return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
-};
-
-const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
-  const result: (string | JSX.Element)[] = [];
-  let i = 0;
-
-  while (i < text.length) {
-    const codePoint = text.codePointAt(i)!;
-    const char = String.fromCodePoint(codePoint);
-
-    if (isInvisibleCodePoint(codePoint)) {
-      if (codePoint >= 0xe0020 && codePoint <= 0xe007f) {
-        result.push(
-          <span key={i} className={styles.tagChar}>
-            {String.fromCharCode(codePoint - 0xe0000)}
-          </span>
-        );
-      } else {
-        result.push(
-          <span key={i} className={styles.invisibleChar}>
-            U+{codePoint.toString(16).toUpperCase()}
-          </span>
-        );
-      }
-    } else {
-      result.push(char);
-    }
-
-    i += char.length;
-  }
-
-  return result;
-};
 
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [  
@@ -77,7 +41,7 @@ const computeValidRanges = (): [number, number][] => {
 const InvisibleCharEditor: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [normalText, setNormalText] = useState("");
-  const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
+  const [processedText, setProcessedText] = useState<string>("");
   const [isTagTyping, setIsAddTagsMode] = useState(false);
   const validRanges: [number, number][] = computeValidRanges();
 
@@ -102,7 +66,7 @@ const InvisibleCharEditor: React.FC = () => {
   
       // Update state with the new value
       setNormalText(updatedValue);
-      setProcessedText(replaceInvisibleChars(updatedValue));
+      setProcessedText(updatedValue);
 
       // Adjust cursor position to after the processed text
       setTimeout(() => {
@@ -111,7 +75,7 @@ const InvisibleCharEditor: React.FC = () => {
     } else {
       // Handle deletions or no changes
       setNormalText(newValue);
-      setProcessedText(replaceInvisibleChars(newValue));
+      setProcessedText(newValue);
     }
   };
 
@@ -132,7 +96,7 @@ const InvisibleCharEditor: React.FC = () => {
     const updatedText = normalText.slice(0, randomPosition) + randomChar + normalText.slice(randomPosition);
 
     setNormalText(updatedText);
-    setProcessedText(replaceInvisibleChars(updatedText));
+    setProcessedText(updatedText);
   };
 
   return (
@@ -153,9 +117,7 @@ const InvisibleCharEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees</h2>
-          <div className={styles.processedText}>
-            {processedText}
-          </div>
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} />
         </div>
       </div>
       <CounterBar textareaRef={textareaRef} />

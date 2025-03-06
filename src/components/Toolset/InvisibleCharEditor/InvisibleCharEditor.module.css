@@ -122,5 +122,17 @@
   color: #333;
   margin-bottom: 20px;
 }
+
+.cursor {
+  position: absolute;
+  width: 2px;
+  height: 1em;
+  background: black;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
   
   
