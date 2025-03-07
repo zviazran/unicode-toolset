@@ -25,57 +25,47 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
 
       if (isInvisibleCodePoint(codePoint)) {
         const startIndex = i;
-        if (codePoint >= 0xe0020 && codePoint <= 0xe007f) {
-          result.push(
-            <span
-              key={startIndex}
-              className={styles.tagChar}
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => handleContentChange(e.target.innerText, startIndex)}
-            >
-              {String.fromCharCode(codePoint - 0xe0000)}
-            </span>
-          );
-        } else {
-          result.push(
-            <span
-              key={startIndex}
-              className={styles.invisibleChar}
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => handleContentChange(e.target.innerText, startIndex)}
-            >
-              U+{codePoint.toString(16).toUpperCase()}
-            </span>
-          );
-        }
+        const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
+        result.push(
+          <span
+            key={startIndex}
+            className={isTagChar ? styles.tagChar : styles.invisibleChar}
+            contentEditable
+            suppressContentEditableWarning
+            data-original={char}
+            onBlur={(e) => handleContentChange(e.target.innerText, startIndex, e.target.dataset.original ?? "")}
+          >
+            {isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`}
+          </span>
+        );
       } else {
         result.push(char);
       }
 
-      i++;
+      i += char.length;
     }
 
     return result;
   };
 
-  const handleContentChange = (newValue: string, position: number) => {  
+  const handleContentChange = (newValue: string, position: number, originalText: string) => {  
     const currentText = text;
     let newContent = "";
-    // If the newContent is a Unicode reference like 'U+FFEF', we want to convert it back to a character.
-    if (newValue.startsWith("U+")) {
-      const codePoint = parseInt(newValue.slice(2), 16);
-      newContent = String.fromCodePoint(codePoint);
-    }
-    // Check if the newContent is a single character and is an ASCII character in the range of 0x20 to 0x7F
-    if (newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
-      newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
-    }
+    try{
+      // If the newContent is a Unicode reference like 'U+FFEF', we want to convert it back to a character.
+      if (newValue.startsWith("U+")) {
+        const codePoint = parseInt(newValue.slice(2), 16);
+        newContent = String.fromCodePoint(codePoint);
+      }
+      // Check if the newContent is a single character and is an ASCII character in the range of 0x20 to 0x7F
+      if (newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
+        newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
+      }
+    } catch {}
   
     // Now we can replace the content with the character (or text) at the specified position
     const beforeChange = currentText.slice(0, position);
-    const afterChange = currentText.slice(position + 1);
+    const afterChange = currentText.slice(position + originalText.length);
   
     const updatedText = beforeChange + newContent + afterChange;
   
