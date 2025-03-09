@@ -34,6 +34,13 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             suppressContentEditableWarning
             data-original={char}
             onBlur={(e) => handleContentChange(e.target.innerText, startIndex, e.target.dataset.original ?? "")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // Prevent new lines in contentEditable
+                handleContentChange(e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
+                e.currentTarget.blur(); // Remove focus
+              }
+            }}
           >
             {isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`}
           </span>
