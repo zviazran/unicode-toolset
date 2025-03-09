@@ -49,7 +49,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   };
 
   const handleContentChange = (newValue: string, position: number, originalText: string) => {  
-    const currentText = text;
+    if (!textareaRef.current) return; // Ensure the ref exists
+    const currentText = textareaRef.current.value;
     let newContent = "";
     try{
       // If the newContent is a Unicode reference like 'U+FFEF', we want to convert it back to a character.
