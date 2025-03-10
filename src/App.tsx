@@ -24,7 +24,7 @@ const App: React.FC = () => {
           <Route path="/invisible-char-editor" element={<InvisibleCharEditor />} />
           <Route path="/drunicode" element={<DrUnicodeWrapper />} />
           <Route path="/crash-char-sequence-generator" element={<CrashCharSequenceGenerator />} />
-          <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1] : "/home"} />} />
+          <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1].replace("&", "?")  : "/home"} />} />
         </Routes>
         <Footer />
       </div>
