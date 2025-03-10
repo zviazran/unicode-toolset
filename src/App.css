@@ -630,9 +630,15 @@ html {
 
 .resume-section {
   position: relative !important;
-  padding-bottom: 30px !important;
+  padding-bottom: 1rem !important;
   background-image: var(--section-background-color) !important;
   color: #414141 !important;
+}
+
+@media (max-width: 767px) {
+  .resume-section {
+    padding-top: 1rem !important;
+  }
 }
 
 .resume {
