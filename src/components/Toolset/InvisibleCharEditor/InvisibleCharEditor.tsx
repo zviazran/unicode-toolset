@@ -1,5 +1,6 @@
 // src/components/InvisibleCharEditor.tsx
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styles from './InvisibleCharEditor.module.css';
 import CounterBar from '../CounterBar';
 import { invisibleCharRanges } from "../CodePointsConsts";
@@ -44,6 +45,16 @@ const InvisibleCharEditor: React.FC = () => {
   const [processedText, setProcessedText] = useState<string>("");
   const [isTagTyping, setIsAddTagsMode] = useState(false);
   const validRanges: [number, number][] = computeValidRanges();
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const text = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
+    if (text){
+      setNormalText(text);
+      setProcessedText(text);
+    }
+  }, []); // Empty dependency array ensures it only runs once on mount
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
