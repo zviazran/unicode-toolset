@@ -60,7 +60,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   
   
 
-  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalText: string) => {  
+  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {  
     if (!textareaRef.current) return; // Ensure the ref exists
     const currentText = textareaRef.current.value;
     let newContent = "";
@@ -69,17 +69,20 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       if (newValue.startsWith("U+")) {
         const codePoint = parseInt(newValue.slice(2), 16);
         newContent = String.fromCodePoint(codePoint);
-        if (isInvisible && originalText === newContent) return; // nothing needed to be done
+        if (!isInvisible && originalValue === newContent) return; // nothing needed to be done
       }
       // Check if the newContent is a single character and is an ASCII character in the range of 0x20 to 0x7F
-      if (newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
+      if (isInvisible && newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
         newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
       }
     } catch {}
   
-    // Now we can replace the content with the character (or text) at the specified position
+    if (!newContent && newValue === originalValue)
+      newContent = newValue;
+  
+    // Now we can replace the content with the character at the specified position
     const beforeChange = currentText.slice(0, position);
-    const afterChange = currentText.slice(position + originalText.length);
+    const afterChange = currentText.slice(position + originalValue.length);
   
     const updatedText = beforeChange + newContent + afterChange;
   
