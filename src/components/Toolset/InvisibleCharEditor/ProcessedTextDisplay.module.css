@@ -27,3 +27,11 @@
 .invisibleChar {
   min-width: 2.5em;
 }
+
+.visibleChar {
+  cursor: pointer;
+}
+
+.visibleChar:hover {
+  opacity: 0.6;
+}

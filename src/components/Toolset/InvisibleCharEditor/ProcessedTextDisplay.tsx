@@ -17,45 +17,50 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
 
   const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
-    let i = 0;
-
-    while (i < text.length) {
+  
+    for (let i = 0; i < text.length; ) {
       const codePoint = text.codePointAt(i)!;
       const char = String.fromCodePoint(codePoint);
+      const startIndex = i;
+      const isInvisible = isInvisibleCodePoint(codePoint);
+      const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
 
-      if (isInvisibleCodePoint(codePoint)) {
-        const startIndex = i;
-        const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
-        result.push(
-          <span
-            key={startIndex}
-            className={isTagChar ? styles.tagChar : styles.invisibleChar}
-            contentEditable
-            suppressContentEditableWarning
-            data-original={char}
-            onBlur={(e) => handleContentChange(e.target.innerText, startIndex, e.target.dataset.original ?? "")}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault(); // Prevent new lines in contentEditable
-                handleContentChange(e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
-                e.currentTarget.blur(); // Remove focus
-              }
-            }}
-          >
-            {isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`}
-          </span>
-        );
-      } else {
-        result.push(char);
-      }
-
+      result.push(
+        <span
+          key={startIndex}
+          className={isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar) : styles.visibleChar}
+          contentEditable
+          suppressContentEditableWarning
+          data-original={char}
+          onClick={(e) => {
+            if (!isInvisible) {
+              const target = e.currentTarget;
+              target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
+              target.className = styles.invisibleChar;
+            }
+          }}
+          onBlur={(e) => handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "")}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleContentChange(isInvisible, e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
+              e.currentTarget.blur();
+            }
+          }}
+        >
+          {isInvisible ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
+        </span>
+      );
+  
       i += char.length;
     }
-
+  
     return result;
   };
+  
+  
 
-  const handleContentChange = (newValue: string, position: number, originalText: string) => {  
+  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalText: string) => {  
     if (!textareaRef.current) return; // Ensure the ref exists
     const currentText = textareaRef.current.value;
     let newContent = "";
@@ -64,7 +69,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       if (newValue.startsWith("U+")) {
         const codePoint = parseInt(newValue.slice(2), 16);
         newContent = String.fromCodePoint(codePoint);
-        if (originalText === newContent) return; // nothing needed to be done
+        if (isInvisible && originalText === newContent) return; // nothing needed to be done
       }
       // Check if the newContent is a single character and is an ASCII character in the range of 0x20 to 0x7F
       if (newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
