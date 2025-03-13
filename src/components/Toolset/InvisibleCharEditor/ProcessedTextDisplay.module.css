@@ -1,6 +1,6 @@
 .processedText {
   width: 100%;
-  height: auto; /* Allow natural content expansion */
+  height: auto;
   min-height: 8rem;
   padding: 10px;
   border: 1px solid #ccc;
@@ -11,6 +11,7 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: monospace;
+  text-align: left;
 }
 
 .invisibleChar, .tagChar, .visibleChar {
