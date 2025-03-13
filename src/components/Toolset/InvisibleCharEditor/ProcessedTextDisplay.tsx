@@ -24,40 +24,48 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const startIndex = i;
       const isInvisible = isInvisibleCodePoint(codePoint);
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
-
-      result.push(
-        <span
-          key={startIndex}
-          className={isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar) : styles.visibleChar}
-          contentEditable
-          suppressContentEditableWarning
-          data-original={char}
-          onClick={(e) => {
-            if (!isInvisible) {
-              const target = e.currentTarget;
-              target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-              target.className = styles.invisibleChar;
-            }
-          }}
-          onBlur={(e) => {
-            handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "")
-            if (!isInvisible){
-              const originalChar = e.target.dataset.original ?? "";
-              e.target.textContent = originalChar;
-              e.target.className = styles.visibleChar;
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleContentChange(isInvisible, e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
-              e.currentTarget.blur();
-            }
-          }}
-        >
-          {isInvisible ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
-        </span>
-      );
+  
+      // Check for a newline character and handle it separately
+      if (codePoint === 0x0D || codePoint === 0x0A) {
+        if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
+          i++; // If we encounter CR and the next character is LF, skip the LF (CRLF sequence)
+        }
+        result.push(<br key={startIndex} />);
+      } else {
+        result.push(
+          <span
+            key={startIndex}
+            className={isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar) : styles.visibleChar}
+            contentEditable
+            suppressContentEditableWarning
+            data-original={char}
+            onClick={(e) => {
+              if (!isInvisible) {
+                const target = e.currentTarget;
+                target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
+                target.className = styles.invisibleChar;
+              }
+            }}
+            onBlur={(e) => {
+              handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
+              if (!isInvisible) {
+                const originalChar = e.target.dataset.original ?? "";
+                e.target.textContent = originalChar;
+                e.target.className = styles.visibleChar;
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleContentChange(isInvisible, e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
+                e.currentTarget.blur();
+              }
+            }}
+          >
+            {isInvisible ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
+          </span>
+        );
+      }
   
       i += char.length;
     }
@@ -65,8 +73,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     return result;
   };
   
-  
-
   const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {  
     if (!textareaRef.current) return; // Ensure the ref exists
     const currentText = textareaRef.current.value;
