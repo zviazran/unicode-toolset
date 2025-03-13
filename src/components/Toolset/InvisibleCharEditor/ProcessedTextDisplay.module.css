@@ -1,0 +1,46 @@
+.processedText {
+  width: 100%;
+  height: auto; /* Allow natural content expansion */
+  min-height: 8rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+}
+
+.invisibleChar, .tagChar, .visibleChar {
+  outline: none;
+}
+
+.invisibleChar, .tagChar {
+  background-color: rgba(255, 180, 190, 0.5);
+  color: black;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  font-size: 1rem;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+.invisibleChar {
+  min-width: 2.5em;
+}
+
+.visibleChar {
+  border-left: 0.5px solid rgba(255, 180, 190, 0.2);
+  border-right: 0.5px solid rgba(255, 180, 190, 0.2);
+  min-width: 0.5em;
+  display: inline-block;
+  text-align: justify;
+  cursor: pointer;
+}
+
+.visibleChar:hover {
+  opacity: 0.8;
+}
