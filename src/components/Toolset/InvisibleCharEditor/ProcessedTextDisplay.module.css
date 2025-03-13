@@ -38,6 +38,7 @@
   min-width: 0.5em;
   display: inline-block;
   text-align: justify;
+  cursor: pointer;
 }
 
 .visibleChar:hover {
