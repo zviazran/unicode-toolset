@@ -39,7 +39,14 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               target.className = styles.invisibleChar;
             }
           }}
-          onBlur={(e) => handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "")}
+          onBlur={(e) => {
+            handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "")
+            if (!isInvisible){
+              const originalChar = e.target.dataset.original ?? "";
+              e.target.textContent = originalChar;
+              e.target.className = styles.visibleChar;
+            }
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();

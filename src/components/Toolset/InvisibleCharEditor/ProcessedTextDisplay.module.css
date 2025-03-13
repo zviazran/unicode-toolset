@@ -13,6 +13,10 @@
   font-family: monospace;
 }
 
+.invisibleChar, .tagChar, .visibleChar {
+  outline: none;
+}
+
 .invisibleChar, .tagChar {
   background-color: rgba(255, 180, 190, 0.5);
   color: black;
@@ -29,9 +33,13 @@
 }
 
 .visibleChar {
-  cursor: pointer;
+  border-left: 0.5px solid rgba(255, 180, 190, 0.2);
+  border-right: 0.5px solid rgba(255, 180, 190, 0.2);
+  min-width: 0.5em;
+  display: inline-block;
+  text-align: justify;
 }
 
 .visibleChar:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
