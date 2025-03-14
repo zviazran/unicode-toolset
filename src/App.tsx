@@ -6,6 +6,7 @@ import Toolsets from "./components/Toolset/Toolsets";
 import InvisibleCharEditor from "./components/Toolset/InvisibleCharEditor/InvisibleCharEditor";
 import DrUnicodeWrapper from "./components/Toolset/DrUnicode/DrUnicodeWrapper";
 import CrashCharSequenceGenerator from "./components/Toolset/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
+import EncodedPromptInjectionGenerator from "./components/Toolset/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
 import Footer from "./components/Footer";
 import Resume from "./components/Resume/Resume";
 import "./App.css";
@@ -24,6 +25,7 @@ const App: React.FC = () => {
           <Route path="/invisible-char-editor" element={<InvisibleCharEditor />} />
           <Route path="/drunicode" element={<DrUnicodeWrapper />} />
           <Route path="/crash-char-sequence-generator" element={<CrashCharSequenceGenerator />} />
+          <Route path="/encoded-prompt-injection-generator" element={<EncodedPromptInjectionGenerator />} />
           <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1].replace("&", "?")  : "/home"} />} />
         </Routes>
         <Footer />

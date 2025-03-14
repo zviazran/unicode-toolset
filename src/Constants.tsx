@@ -1,6 +1,7 @@
 import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
+import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
 
 
 export const TOOLSETS = [
@@ -24,6 +25,13 @@ export const TOOLSETS = [
     joke: "Unicode. SMASH!!!",
     description: "Generate a crash making character combination. Try this at your own risk.",
     link: "crash-char-sequence-generator",
+  },
+  {
+    image: ENCODED_PROMPT_INJECTION_GENERATOR,
+    name: "Encoded Prompt Injection Generator",
+    joke: "Tricked",
+    description: "Explore how encoded inputs can trick AI systems.",
+    link: "encoded-prompt-injection-generator",
   },
 ];
 
