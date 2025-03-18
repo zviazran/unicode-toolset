@@ -1,7 +1,7 @@
 import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
-import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
+import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/encoded-prompt-injection-generator.png";
 
 
 export const TOOLSETS = [
