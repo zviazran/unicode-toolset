@@ -34,7 +34,7 @@ const Toolsets: React.FC = () => {
       </Container>
       <Container>
         <h1 className="toolset-heading">
-          Other Recommended Webtools
+          Other Recommendations
         </h1>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           {RECOMMENDATIONS.map((project: Project, index: number) => (
