@@ -7,6 +7,8 @@ This is a portfolio and collection of heuristic tools designed for analyzing, ed
 
 - **Invisible Characters Editor**: Online tool to display and add invisible characters to text. To be used for simple homograph spoofing.
 - **Dr. Unicode**: A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.
+- **Crash Char Sequence Generator**: Generate a crash making character combination. Try this at your own risk.
+- **Encoded Prompt Injection Generator**: Explore how encoded inputs can trick AI systems.
 
 ## Getting Started
 
