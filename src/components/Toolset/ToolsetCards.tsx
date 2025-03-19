@@ -7,7 +7,7 @@ interface ToolsetCardsProps {
   title: string;
   joke: string;
   description: string;
-  link: string; // an internal route like "/toolsets/1"
+  link: string; // Can be an internal route or an external URL
 }
 
 const ToolsetCards: React.FC<ToolsetCardsProps> = ({
@@ -20,7 +20,11 @@ const ToolsetCards: React.FC<ToolsetCardsProps> = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`../${link}`);
+    if (link.startsWith("https://")) {
+      window.location.href = link;
+    } else {
+      navigate(`../${link}`);
+    }
   };
 
   return (

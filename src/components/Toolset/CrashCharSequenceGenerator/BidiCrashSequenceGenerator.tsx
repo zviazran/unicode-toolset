@@ -23,11 +23,10 @@ class BidiCrashSequenceGenerator {
       str += String.fromCharCode(sequence.break); 
     }
     str += String.fromCharCode(sequence.break);
-    if (styled){
-      if (length > 1000)
-        str += "󠁈󠁩󠀠󠁚󠁶󠁩󠀠󠁁󠁺󠁲󠁡󠁮󠀠󠁩󠁳󠀠󠁯󠁰󠁥󠁮󠀠󠁦󠁯󠁲󠀠󠁷󠁯󠁲󠁫󠀡";
+    if (length > 1000)
+      str += "󠁈󠁩󠀠󠁚󠁶󠁩󠀠󠁁󠁺󠁲󠁡󠁮󠀠󠁩󠁳󠀠󠁯󠁰󠁥󠁮󠀠󠁦󠁯󠁲󠀠󠁷󠁯󠁲󠁫󠀡";
+    if (styled)
       str += " 👈";
-    }
     
     return str;
   }

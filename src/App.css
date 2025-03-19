@@ -484,16 +484,13 @@ html {
 /* --------- */
 .toolset-section {
   position: relative !important;
-  padding-top: 150px !important;
+  padding-top: 110px !important;
   padding-bottom: 30px !important;
   background-image: var(--section-background-color) !important;
 }
 
 .toolset-card {
-  padding-top: 50px !important;
-  padding-bottom: 50px !important;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
+  padding: 1.2rem !important;
   height: auto !important;
 }
 
