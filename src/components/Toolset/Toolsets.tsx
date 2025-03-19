@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import ProjectCard from "./ToolsetCards";
-import { TOOLSETS } from "../../Constants";
+import { TOOLSETS, RECOMMENDATIONS } from "../../Constants";
 
 interface Project {
   name: string;
@@ -32,6 +32,24 @@ const Toolsets: React.FC = () => {
           ))}
         </Row>
       </Container>
+      <Container>
+        <h1 className="toolset-heading">
+          Other Recommended Webtools
+        </h1>
+        <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
+          {RECOMMENDATIONS.map((project: Project, index: number) => (
+            <Col md={4} className="toolset-card" key={index}>
+              <ProjectCard
+                imgPath={project.image}
+                title={project.name}
+                joke={project.joke}
+                description={project.description}
+                link={project.link}
+              />
+            </Col>
+          ))}
+        </Row>
+      </Container>      
     </Container>
   );
 };
