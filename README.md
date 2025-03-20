@@ -1,7 +1,8 @@
 
 # Unicode Toolset
 
-This is a portfolio and collection of heuristic tools designed for analyzing, editing, and visualizing Unicode characters. Built with **Vite** for fast development, this project showcases my knowledge and provides useful utilities for developers and enthusiasts working with Unicode.
+This is a portfolio and collection of utilities aimed at simplifying the process of analyzing, editing, and visualizing Unicode characters. This toolset is particularly useful for developers working with text encoding, Unicode vulnerabilities, or those interested in character manipulation techniques like spoofing and crash testing.
+Built with **Vite** for fast development, this project showcases my knowledge and provides useful utilities for developers and enthusiasts working with Unicode.
 
 ## Features
 
@@ -39,12 +40,22 @@ Make sure you have [Node.js](https://nodejs.org/) and [Vite](https://vitejs.dev/
 
 Your Vite application should now be running at `http://localhost:5173`.
 
+## Usage
+
+Each tool in the Unicode Toolset has its own unique interface and functionality. Below is a quick guide for each tool:
+- **Invisible Characters Editor**: Simply paste your text into the input box and add invisible characters where needed. You can copy the resulting text to use in your own applications.
+- **Dr. Unicode**: Upload or paste text to analyze common string corruptions and encoding issues. The tool will highlight potential problems.
+- **Crash Char Sequence Generator**: Click to generate a sequence of characters that may cause crashes in vulnerable systems.
+- **Encoded Prompt Injection Generator**: Generate various encoded inputs to test how they affect AI systems.
+
 ## Tools and Libraries
 
-This project uses the following technologies:
-- **Vite**: A next-generation, fast front-end tooling.
-- **React** (if applicable): For building the user interface.
+This project utilizes the following technologies:
+- **Vite**: A fast and modern build tool that significantly speeds up the development process.
+- **React**: Used for building the interactive user interfaces (if applicable).
 
 ## Contact
 
-For more information or inquiries, feel free to reach out to me via zviazran@gmail.com.
+For more information, inquiries, or collaboration opportunities, feel free to reach out to me via:
+- Email: zviazran@gmail.com
+- GitHub: [zviazran](https://github.com/zviazran)
