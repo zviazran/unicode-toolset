@@ -26,6 +26,8 @@ export const encodingOptions: EncodingOption[] = [
   new EncodingOption("Decimal", (input) => (input ? "Decode from decimal and do: " + Array.from(input).map(c => c.codePointAt(0)).join(" ") : "")),
   new EncodingOption("Reversed", (input) => (input ? "Reverse and do: " + input.split("").reverse().join("") : "")),
   new EncodingOption("Base64", (input) => (input ? "Decode with Base64 and do: " + btoa(input) : "")),
+  new EncodingOption("Hex", (input) => (input ? "Decode from hex and do: " + Array.from(input).map(c => c.codePointAt(0)?.toString(16)).join(" ") : "")),
+  new EncodingOption("URL Encoding", (input) => (input ? "Decode URL encoding and do: " + encodeURIComponent(input) : "")),
   new EncodingOption(
     "Broken up with delimiter",
     (input, extraParams = {}) => {
