@@ -25,10 +25,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const isInvisible = isInvisibleCodePoint(codePoint);
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
   
-      // Check for a newline character and handle it separately
       if (codePoint === 0x0D || codePoint === 0x0A) {
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
-          i++; // If we encounter CR and the next character is LF, skip the LF (CRLF sequence)
+          i++; 
         }
         result.push(<br key={startIndex} />);
       } else {
@@ -39,6 +38,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             contentEditable
             suppressContentEditableWarning
             data-original={char}
+            title={`U+${codePoint.toString(16).toUpperCase()}`}
             onClick={(e) => {
               if (!isInvisible) {
                 const target = e.currentTarget;
@@ -74,17 +74,15 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   };
   
   const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {  
-    if (!textareaRef.current) return; // Ensure the ref exists
+    if (!textareaRef.current) return;
     const currentText = textareaRef.current.value;
     let newContent = "";
-    try{
-      // If the newContent is a Unicode reference like 'U+FFEF', we want to convert it back to a character.
+    try {
       if (newValue.startsWith("U+")) {
         const codePoint = parseInt(newValue.slice(2), 16);
         newContent = String.fromCodePoint(codePoint);
-        if (!isInvisible && originalValue === newContent) return; // nothing needed to be done
+        if (!isInvisible && originalValue === newContent) return;
       }
-      // Check if the newContent is a single character and is an ASCII character in the range of 0x20 to 0x7F
       if (isInvisible && newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
         newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
       }
@@ -93,7 +91,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     if (!newContent && newValue === originalValue)
       newContent = newValue;
   
-    // Now we can replace the content with the character at the specified position
     const beforeChange = currentText.slice(0, position);
     const afterChange = currentText.slice(position + originalValue.length);
   
@@ -102,7 +99,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     setText(updatedText);
     setProcessedText(replaceInvisibleChars(updatedText));
   };
-  
   
   useEffect(() => {
     setProcessedText(replaceInvisibleChars(text));
