@@ -7,10 +7,10 @@ const crashGenerator = new BidiCrashSequenceGenerator();
 
 const CrashCharSequenceGenerator: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("⚫ LRM+RLM");
+  const [selectedOption, setSelectedOption] = useState<string>(Object.keys(crashGenerator.crashSequences)[0]);
   const [length, setLength] = useState<number>(2000);
   const [countLength, setCountLength] = useState<number>(300);
-  const [styled, setStyled] = useState<boolean>(true); 
+  const [selectedStyle, setSelectedStyle] = useState<string>(crashGenerator.availableStyles[0]); // Default to first style
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
@@ -24,16 +24,21 @@ const CrashCharSequenceGenerator: React.FC = () => {
     setCountLength(parseInt(e.target.value));
   };
 
-  const handleStyledChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStyled(e.target.checked); 
+  const handleStyleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStyle(e.target.value);
   };
 
   const generateText = () => {
-    return crashGenerator.generate(selectedOption as keyof typeof crashGenerator.crashSequences, length, countLength, styled);
+    return crashGenerator.generate(
+      selectedOption as keyof typeof crashGenerator.crashSequences,
+      length,
+      countLength,
+      selectedStyle
+    );
   };
 
   useEffect(() => {
-    setStyled(styled); 
+    setSelectedStyle(selectedStyle);
   }, []);
 
   return (
@@ -64,15 +69,21 @@ const CrashCharSequenceGenerator: React.FC = () => {
           <label className={styles.controlLabel} htmlFor="countLengthInput">Section Length:</label>
           <input className={styles.controlInput} type="number" id="countLengthInput" min={1} value={countLength} onChange={handleCountLengthChange} />
         </div>
-        
+
         <div className={styles.controlItem}>
-          <label className={styles.controlLabel} htmlFor="styledCheckbox">Styled:</label>
-          <input className={styles.controlInput} type="checkbox" id="styledCheckbox" checked={styled} onChange={handleStyledChange} />
+          <label className={styles.controlLabel} htmlFor="styleSelect">Style:</label>
+          <select className={styles.controlInput} id="styleSelect" value={selectedStyle} onChange={handleStyleChange}>
+            {crashGenerator.availableStyles.map((style) => (
+              <option key={style} value={style}>
+                {style}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div className={styles.outputContainer}>
-        <textarea className={styles.textBox} ref={textareaRef} value={generateText()} />
+        <textarea className={styles.textBox} ref={textareaRef} value={generateText()} onChange={() => {}} />
         <CounterBar textareaRef={textareaRef} />
       </div>
     </div>
