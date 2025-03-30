@@ -46,7 +46,7 @@ export default function CounterBar({ textareaRef }: CounterBarProps) {
           <AiOutlineCopy className={`${styles.icon} ${styles.iconCopy}`} />
         )}
       </button>
-      <p>{characterCount} characters, {byteCount} bytes</p>
+      <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
     </div>
   );
 }

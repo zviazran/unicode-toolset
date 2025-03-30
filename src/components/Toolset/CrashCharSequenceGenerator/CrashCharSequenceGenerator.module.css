@@ -48,8 +48,8 @@
 .textBox {
   height: 3rem;
   min-height: auto;
-  width: 8.5rem;
-  min-width: 8.5rem;
+  max-width: 11rem;
+  min-width: 9rem;
   resize: none;
   margin-left: auto;
 }
