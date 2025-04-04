@@ -1,6 +1,7 @@
 import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
+import URL_TWISTER from "./Assets/Toolsets/url-twister.png";
 import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/encoded-prompt-injection-generator.png";
 
 import UNICODE_CODE_CONVERTER from "./Assets/Recommendations/unicode-code-converter.png";
@@ -29,6 +30,13 @@ export const TOOLSETS = [
     joke: "Unicode. SMASH!!! 😱",
     description: "Generate a crash making character combination. Try this at your own risk.",
     link: "crash-char-sequence-generator",
+  },
+  {
+    image: URL_TWISTER,
+    name: "URL Twister",
+    joke: "Let's twist again, like we got tricked last summer 🌀",
+    description: "Enter a URL to generate tricky spoofing versions. Would you be fooled?",
+    link: "url-twister",
   },
   {
     image: ENCODED_PROMPT_INJECTION_GENERATOR,
