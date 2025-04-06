@@ -29,8 +29,22 @@ const UrlTwisterComponent: React.FC = () => {
 
   const twistFunctions = [
     URLTwister.addWordsToDomain,
-    (url: string) => URLTwister.generate(url, [StringTwister.Typo.charSwap, StringTwister.Typo.addedChar, StringTwister.Typo.missingChar, StringTwister.Typo.repetitions, StringTwister.Typo.replacedChar]),
-    (url: string) => URLTwister.generate(url, [StringTwister.Typo.charSwap, StringTwister.Typo.addedChar, StringTwister.Typo.missingChar, StringTwister.Typo.repetitions, StringTwister.Typo.replacedChar]).map((url: string) => URLTwister.addWordsToDomain(url)),
+    (url: string) => URLTwister.generate(url, [
+      StringTwister.Typo.charSwap,
+      StringTwister.Typo.addedChar,
+      StringTwister.Typo.missingChar,
+      StringTwister.Typo.repetitions,
+      StringTwister.Typo.replacedChar,
+      StringTwister.removeEnglishVowels
+    ]),
+    (url: string) => URLTwister.generate(url, [
+      StringTwister.Typo.charSwap,
+      StringTwister.Typo.addedChar,
+      StringTwister.Typo.missingChar,
+      StringTwister.Typo.repetitions,
+      StringTwister.Typo.replacedChar,
+      (url: string) => StringTwister.leetspeak(url, 1)
+    ]).map((url: string) => URLTwister.addWordsToDomain(url)),
   ];
 
   const handleTwist = () => {
@@ -41,15 +55,21 @@ const UrlTwisterComponent: React.FC = () => {
       return;
     }
 
-    const shuffled = shuffle(twistFunctions);
-    const allFns = [...shuffled, ...alwaysAtEnd];
-  
-    const results = allFns.flatMap(fn => {
+    const twistResults = twistFunctions.flatMap(fn => {
       const output = fn(inputValue);
       return Array.isArray(output) ? output : [output];
     });
-  
-    setOutput(results.join("\n"));
+
+    const shuffled = shuffle(twistResults);
+
+    const alwaysEndResults = alwaysAtEnd.flatMap(fn => {
+      const output = fn(inputValue);
+      return Array.isArray(output) ? output : [output];
+    });
+
+    const allResults = [...shuffled, ...alwaysEndResults];
+
+    setOutput(allResults.join("\n"));
   };
 
   useEffect(() => {
