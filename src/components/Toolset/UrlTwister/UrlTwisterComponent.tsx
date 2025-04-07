@@ -105,7 +105,7 @@ const UrlTwisterComponent: React.FC = () => {
         className={styles.textBox}
         ref={outputTextareaRef}
         value={output}
-        readOnly
+        onChange={(e) => setOutput(e.target.value)}
       />
       <CounterBar textareaRef={outputTextareaRef} />
     </div>
