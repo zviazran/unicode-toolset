@@ -35,7 +35,7 @@ export const TOOLSETS = [
     image: URL_TWISTER,
     name: "URL Twister",
     joke: "Let's twist again, like we got tricked last summer 🌀",
-    description: "Enter a URL to generate tricky spoofing versions. Would you be fooled?",
+    description: "Enter a URL to generate random tricky spoofing versions. Would you be fooled?",
     link: "url-twister",
   },
   {

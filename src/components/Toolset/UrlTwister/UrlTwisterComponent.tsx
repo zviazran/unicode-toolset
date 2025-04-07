@@ -31,9 +31,17 @@ const UrlTwisterComponent: React.FC = () => {
     URLTwister.addWordsToDomain,
     (url: string) => URLTwister.generate(url, [
       StringTwister.Typo.charSwap,
+      StringTwister.Typo.charSwap,
+      StringTwister.Typo.charSwap,
+      StringTwister.Typo.addedChar,
       StringTwister.Typo.addedChar,
       StringTwister.Typo.missingChar,
+      StringTwister.Typo.missingChar,
+      StringTwister.Typo.missingChar,
       StringTwister.Typo.repetitions,
+      StringTwister.Typo.repetitions,
+      StringTwister.Typo.replacedChar,
+      StringTwister.Typo.replacedChar,
       StringTwister.Typo.replacedChar,
       StringTwister.removeEnglishVowels
     ]),
@@ -60,7 +68,9 @@ const UrlTwisterComponent: React.FC = () => {
       return Array.isArray(output) ? output : [output];
     });
 
-    const shuffled = shuffle(twistResults);
+    const uniqueResults = Array.from(new Set(twistResults));
+
+    const shuffled = shuffle(uniqueResults);
 
     const alwaysEndResults = alwaysAtEnd.flatMap(fn => {
       const output = fn(inputValue);
@@ -80,7 +90,7 @@ const UrlTwisterComponent: React.FC = () => {
     <div className={styles.urlTwisterComponent}>
       <h1>URL Twister</h1>
       <div className={styles.description}>
-        <p>Enter a URL to generate tricky spoofing versions. Would you be fooled?</p>
+        <p>Enter a URL to generate random tricky spoofing versions. Would you be fooled?</p>
       </div>
 
       <textarea
