@@ -29,19 +29,19 @@ const About: React.FC = () => {
         </Row>
         <Row className="skill-tools-wrapper">
           <Col xs={2} className="skill-wrapper">
-            <h4>
+            <h5>
               Langs
-            </h4>
+            </h5>
           </Col>
           <Col xs={6} className="skill-wrapper">
-            <h4>
+            <h5>
               Skillset
-            </h4>
+            </h5>
           </Col>
           <Col xs={4} className="skill-wrapper">
-            <h4>
+            <h5>
               Tools I use
-            </h4>
+            </h5>
           </Col>
         </Row>
         <Skillset title="JS" skills={JS_SKILLS} tools={JS_TOOLS} />

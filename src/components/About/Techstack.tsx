@@ -10,17 +10,17 @@ interface TechstackProps {
 
 const Techstack: React.FC<TechstackProps> = ({ name, initialRating }) => {
   return (
-    <Row style={{ justifyContent: "left", paddingBottom: "10px" }}>
-      <Col className="skill-name" xs={4}>
+    <Row className="align-items-center" style={{ paddingBottom: "10px" }}>
+      <Col xs={12} sm={4} className="skill-name">
         {name}
       </Col>
-      <Col xs={6}>
+      <Col xs={12} sm={6}>
         <StarRatings
           rating={initialRating}
           starRatedColor="gold"
           numberOfStars={5}
-          starDimension="20px"
-          starSpacing="2px"
+          starDimension="14px"
+          starSpacing="1px"
           name="rating"
         />
       </Col>

@@ -782,8 +782,14 @@ html {
 }
 .tool-name {
   text-align: left;
-  margin-left: 10%;
 }
+
+@media (max-width: 768px) {
+  .tool-name {
+    margin-left: -12%;
+  }
+}
+
 .skill-wrapper {
   border-right: 1px solid #414141;
   box-shadow: 0 4px 5px 3px rgba(59, 56, 59, 0.459) !important;
@@ -793,6 +799,13 @@ html {
   padding-top: 10px !important;
   padding-bottom: 5px !important;
 }
+
+@media (max-width: 768px) {
+  .skill-wrapper h5 {
+    font-size: 0.85rem;
+  }
+}
+
 .skill-heading {
   padding-top: 2px !important;
 }
