@@ -18,13 +18,6 @@ export const TOOLSETS = [
     link: "invisible-char-editor",
   },
   {
-    image: DR_UNICODE,
-    name: "Dr. Unicode",
-    joke: "An isValid(string) a day keeps the bugs away 🐞",
-    description: "A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.",
-    link: "drunicode",
-  },
-  {
     image: CRASH_CHAR_SEQUENCE_GENERATOR,
     name: "Crash Char Sequence Generator",
     joke: "Unicode. SMASH!!! 😱",
@@ -39,9 +32,16 @@ export const TOOLSETS = [
     link: "url-twister",
   },
   {
+    image: DR_UNICODE,
+    name: "Dr. Unicode",
+    joke: "An isValid(string) a day keeps the bugs away 🐞",
+    description: "A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.",
+    link: "drunicode",
+  },  
+  {
     image: ENCODED_PROMPT_INJECTION_GENERATOR,
     name: "Encoded Prompt Injection Generator",
-    joke: "Humanities last chance to stop Skynet 🌐",
+    joke: "Humanity's last chance to stop Skynet 🌐",
     description: "Explore how encoded inputs can trick AI systems.",
     link: "encoded-prompt-injection-generator",
   },
