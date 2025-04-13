@@ -78,22 +78,24 @@ export const JS_SKILLS = [
   { name: "React-Native", initialRating: 3 },
   { name: "Html", initialRating: 4 },
   { name: "CSS", initialRating: 4 },
+  { name: "Electron", initialRating: 4 },
 ];
 
 export const JS_TOOLS = [
     "Visual Studio Code", 
-    "Git", 
     "Chrome DevTools", 
     "Npm (Node Package Manager)", 
     "Sublime Text", 
-    "Postman"
-  ];
+    "Postman",
+    "Docker"
+];
 
 export const CSHARP_SKILLS = [
   { name: ".NET Core", initialRating: 4 },
   { name: ".NET Framework", initialRating: 4 },
   { name: "LINQ", initialRating: 4 },
   { name: "Windows Forms", initialRating: 4 },
+  { name: "NUnit", initialRating: 4 },
   { name: "WPF", initialRating: 3 },
   { name: "Unity (Game Development)", initialRating: 3 },
 ];
@@ -122,9 +124,9 @@ export const CPP_SKILLS = [
 export const CPP_TOOLS = [
   "Visual Studio",
   "GCC",
-  "SysinternalsSuite (ProcMon, ProcExp ...)",
+  "Sysinternals\u00ADSuite (ProcMon, ProcExp ...)",
   "Api Monitor",
-  "Processhacker",
+  "Process\u00ADhacker",
   "CFF Explorer",
   "Fiddler",
 ];

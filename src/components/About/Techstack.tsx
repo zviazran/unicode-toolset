@@ -19,7 +19,7 @@ const Techstack: React.FC<TechstackProps> = ({ name, initialRating }) => {
           rating={initialRating}
           starRatedColor="gold"
           numberOfStars={5}
-          starDimension="14px"
+          starDimension="18px"
           starSpacing="1px"
           name="rating"
         />
