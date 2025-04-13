@@ -9,7 +9,7 @@ class BidiCrashSequenceGenerator {
     "🟡 LRE+RLE": { left: bidiCharacters.get("LRE")!, right: bidiCharacters.get("RLE")!, break: bidiCharacters.get("PDF")!, circle:"🟡" },
   };
 
-  public availableStyles = ["Classic", "Invisible", "★(YourName)★","𓂀𓄿𓀀", "≧∇≦", "(¬‿¬)"];
+  public availableStyles = ["Classic", "Invisible", "★(YourName)★","𓂀𓄿𓀀", "👉 Copy this 👈"];
 
   // Generate crash sequence based on selected option and length
   generate(option: keyof typeof this.crashSequences, length: number, breakCount: number, selectedStyle: string): string {
