@@ -8,7 +8,7 @@ const crashGenerator = new BidiCrashSequenceGenerator();
 const CrashCharSequenceGenerator: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedOption, setSelectedOption] = useState<string>(Object.keys(crashGenerator.crashSequences)[0]);
-  const [length, setLength] = useState<number>(2000);
+  const [length, setLength] = useState<number>(4000);
   const [countLength, setCountLength] = useState<number>(300);
   const [selectedStyle, setSelectedStyle] = useState<string>(crashGenerator.availableStyles[0]); // Default to first style
 
