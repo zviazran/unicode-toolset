@@ -15,18 +15,39 @@
   margin-bottom: 20px;
 }
 
-.outputContainer {
-  display: flex;
-  align-items: center;
-  margin: 0.5rem;
-  flex-direction: row;
-}
-
 .textBox {
   height: 3rem;
   min-height: auto;
   max-width: 11rem;
   min-width: 9rem;
   resize: none;
-  margin-left: auto;
+}
+
+.results {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 50rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultRow {
+  display: inline-flex;
+  align-items: baseline;
+  margin: 0.25rem 0;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.resultName {
+  font-weight: bold;
+  white-space: nowrap;
+  color: #333;
+}
+
+.resultValue {
+  font-family: monospace;
+  overflow-wrap: anywhere;
+  color: #000;
 }
