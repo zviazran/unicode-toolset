@@ -19,11 +19,26 @@ const shiftBits = (input: string, shift: number): string => {
     .join("");
 };
 
+const swapUtf16Endianness = (input: string): string => {
+  const output: string[] = [];
+
+  for (const char of input) {
+    const code = char.charCodeAt(0);
+    const hi = (code & 0xff00) >> 8;
+    const lo = code & 0x00ff;
+    const swapped = (lo << 8) | hi;
+    output.push(String.fromCharCode(swapped));
+  }
+
+  return output.join("");
+};
+
 const decodingStrategies: { name: string; transform: (input: string) => string }[] = [
-  { name: "UTF-16 → byte shift by 1", transform: (input) => shiftBytes(input, 1) },
-  { name: "UTF-16 → byte shift by 2", transform: (input) => shiftBytes(input, 2) },
   { name: "UTF-8 → bit shift left 1", transform: (input) => shiftBits(input, 1) },
   { name: "UTF-8 → bit shift right 1", transform: (input) => shiftBits(input, -1) },
+  { name: "UTF-16 → byte shift by 1", transform: (input) => shiftBytes(input, 1) },
+  { name: "UTF-16 → byte shift by 2", transform: (input) => shiftBytes(input, 2) },
+  { name: "UTF-16 endianness swap", transform: swapUtf16Endianness },
 ];
 
 const IsThisYourString: React.FC = () => {
@@ -44,14 +59,20 @@ const IsThisYourString: React.FC = () => {
           onChange={(e) => setInput(e.target.value)}
         />
 
-      <div className={styles.results}>
-        {decodingStrategies.map(({ name, transform }) => (
-          <div key={name} className={styles.resultRow}>
-            <div className={styles.resultName}>{name}</div>
-            <div className={styles.resultValue}>{transform(input)}</div>
-          </div>
-        ))}
-      </div>
+        <div className={styles.results}>
+          {decodingStrategies
+            .map(({ name, transform }) => {
+              const output = transform(input);
+              return { name, output };
+            })
+            .filter(({ output }) => output && output !== input)
+            .map(({ name, output }) => (
+              <div key={name} className={styles.resultRow}>
+                <div className={styles.resultName}>{name}</div>
+                <div className={styles.resultValue}>{output}</div>
+              </div>
+            ))}
+        </div>
     </div>
   );
 };
