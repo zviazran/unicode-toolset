@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styles from "./IsThisYourString.module.css";
+import styles from "./WasThisYourText.module.css";
 
 const offsetUtf8Bytes = (input: string, offset: number): string => {
   const encoder = new TextEncoder();
@@ -125,15 +125,15 @@ const decodingStrategies: { name: string; transform: (input: string) => string }
   { name: "Latin-1 → UTF-8 recovery", transform: latin1ToUtf8 },
 ];
 
-const IsThisYourString: React.FC = () => {
+const WasThisYourText: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState("");
 
   return (
-    <div className={styles.isThisYourString}>
+    <div className={styles.wasThisYourText}>
       <h1>Was This Your Text?</h1>
       <div className={styles.description}>
-        <p>Enter your corrupted text and maybe we can reverse the damage. Is one of them your original?</p>
+        <p>Enter your corrupted text and maybye we can find how it happend. Is one of them your original?</p>
       </div>
 
       <textarea
@@ -161,4 +161,4 @@ const IsThisYourString: React.FC = () => {
   );
 };
 
-export default IsThisYourString;
+export default WasThisYourText;

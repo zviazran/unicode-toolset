@@ -8,7 +8,7 @@ import DrUnicodeWrapper from "./components/Toolset/DrUnicode/DrUnicodeWrapper";
 import CrashCharSequenceGenerator from "./components/Toolset/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
 import EncodedPromptInjectionGenerator from "./components/Toolset/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
 import UrlTwisterComponent from "./components/Toolset/UrlTwister/UrlTwisterComponent";
-import IsThisYourString from "./components/Toolset/IsThisYourString/IsThisYourString";
+import WasThisYourText from "./components/Toolset/WasThisYourText/WasThisYourText";
 
 import Footer from "./components/Footer";
 import Resume from "./components/Resume/Resume";
@@ -30,7 +30,7 @@ const App: React.FC = () => {
           <Route path="/crash-char-sequence-generator" element={<CrashCharSequenceGenerator />} />
           <Route path="/url-twister" element={<UrlTwisterComponent />} />
           <Route path="/encoded-prompt-injection-generator" element={<EncodedPromptInjectionGenerator />} />
-          <Route path="/is-this-your-string" element={<IsThisYourString />} />
+          <Route path="/was-this-your-text" element={<WasThisYourText />} />
           <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1].replace("&", "?")  : "/home"} />} />
         </Routes>
         <Footer />
