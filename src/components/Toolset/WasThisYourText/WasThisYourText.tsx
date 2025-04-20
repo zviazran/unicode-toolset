@@ -1,19 +1,6 @@
 import React, { useRef, useState } from "react";
 import styles from "./WasThisYourText.module.css";
 
-const offsetUtf8Bytes = (input: string, offset: number): string => {
-  const encoder = new TextEncoder();
-  const bytes = encoder.encode(input);
-
-  const shiftedBytes = bytes.map(b => (b + offset) % 256);
-
-  try {
-    const decoder = new TextDecoder("utf-8", { fatal: false });
-    return decoder.decode(new Uint8Array(shiftedBytes));
-  } catch {
-    return "";
-  }
-};
 
 const swapUtf16Endianness = (input: string): string => {
   const output: string[] = [];
@@ -98,12 +85,6 @@ const utf16BytesAsUtf8 = (input: string): string => {
   return new TextDecoder("utf-8", { fatal: false }).decode(new Uint8Array(bytes));
 };
 
-const truncateUtf16To8bit = (input: string): string => {
-  return Array.from(input)
-    .map(c => String.fromCharCode(c.charCodeAt(0) & 0xff))
-    .join('');
-};
-
 const latin1ToUtf8 = (input: string): string => {
   const bytes = Uint8Array.from([...input].map(c => c.charCodeAt(0)));
   return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
@@ -111,15 +92,12 @@ const latin1ToUtf8 = (input: string): string => {
 
 
 const decodingStrategies: { name: string; transform: (input: string) => string }[] = [
-  { name: "UTF8 → byte shift left 1", transform: (input) => offsetUtf8Bytes(input, 1) },
-  { name: "UTF8 → byte shift right 1", transform: (input) => offsetUtf8Bytes(input, -1) },
   { name: "UTF8 → double Utf8 encoding", transform: decodeDoubleUtf8Encoding },
   { name: "UTF8 → decoded as UTF16", transform: utf8BytesAsUtf16 },
 
   { name: "UTF16 → byte shift by 1", transform: (input) => offsetUtf16Bytes(input, 1) },
   { name: "UTF16 → endianness swap", transform: swapUtf16Endianness },
   { name: "UTF16 → double Utf16 encoding", transform: decodeDoubleUtf16Encoding },
-  { name: "UTF16 → keep low byte only", transform: truncateUtf16To8bit },
   { name: "UTF16 → decoded as UTF8", transform: utf16BytesAsUtf8 },
 
   { name: "Latin-1 → UTF-8 recovery", transform: latin1ToUtf8 },
@@ -143,20 +121,34 @@ const WasThisYourText: React.FC = () => {
           onChange={(e) => setInput(e.target.value)}
         />
 
-        <div className={styles.results}>
-          {decodingStrategies
-            .map(({ name, transform }) => {
-              const output = transform(input);
-              return { name, output };
-            })
-            .filter(({ output }) => output && output !== input && ((output.match(/[\uDC00-\uDFFF]/g)?.length ?? 0) <= output.length / 2))
-            .map(({ name, output }) => (
-              <div key={name} className={styles.resultRow}>
-                <div className={styles.resultName}>{name}</div>
-                <div className={styles.resultValue}>{output}</div>
-              </div>
-            ))}
-        </div>
+      <div className={styles.resultsTableContainer}>
+        <table className={styles.resultsTable}>
+          <thead>
+            <tr>
+              <th>Decoding Attempt</th>
+              <th>Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            {decodingStrategies
+              .map(({ name, transform }) => {
+                const output = transform(input);
+                return { name, output };
+              })
+              .filter(({ output }) =>
+                output && output !== input &&
+                ((output.match(/[\uDC00-\uDFFF]/g)?.length ?? 0) <= output.length / 2)
+              )
+              .map(({ name, output }) => (
+                <tr key={name}>
+                  <td>{name}</td>
+                  <td>{output}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   );
 };
