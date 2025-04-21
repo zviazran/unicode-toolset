@@ -65,12 +65,6 @@ const utf16BytesAsUtf8 = (input: string): string => {
   return new TextDecoder("utf-8", { fatal: false }).decode(new Uint8Array(bytes));
 };
 
-const latin1ToUtf8 = (input: string): string => {
-  const bytes = Uint8Array.from([...input].map(c => c.charCodeAt(0)));
-  return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-};
-
-
 const decodingAttempts: { name: string; transform: (input: string) => string }[] = [
   { name: "UTF8 → double Utf8 encode", transform: decodeDoubleUtf8Encoding },
   { name: "UTF8 → decoded as UTF16", transform: utf8BytesAsUtf16 },
@@ -78,8 +72,6 @@ const decodingAttempts: { name: string; transform: (input: string) => string }[]
   { name: "UTF16 → endianness swap", transform: swapUtf16Endianness },
   { name: "UTF16 → double Utf16 encoding", transform: decodeDoubleUtf16Encoding },
   { name: "UTF16 → decoded as UTF8", transform: utf16BytesAsUtf8 },
-
-  { name: "Latin-1 → UTF8 recovery", transform: latin1ToUtf8 },
 ];
 
 const WasThisYourText: React.FC = () => {
@@ -116,7 +108,7 @@ const WasThisYourText: React.FC = () => {
               })
               .filter(({ output }) =>
                 output && output !== input &&
-                ((output.match(/[\uDC00-\uDFFF]/g)?.length ?? 0) <= output.length / 2)
+                ((output.match(/[\uDC00-\uFFFD,\uFFF0-\uFFFF]/g)?.length ?? 0) <= output.length / 3)
               )
               .map(({ name, output }) => (
                 <tr key={name}>
