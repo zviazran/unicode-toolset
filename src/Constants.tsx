@@ -2,6 +2,7 @@ import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
 import URL_TWISTER from "./Assets/Toolsets/url-twister.png";
+import WAS_THIS_YOUR_TEXT from "./Assets/Toolsets/was-this-your-text.png";
 import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/encoded-prompt-injection-generator.png";
 
 import UNICODE_CODE_CONVERTER from "./Assets/Recommendations/unicode-code-converter.png";
@@ -32,6 +33,13 @@ export const TOOLSETS = [
     link: "url-twister",
   },
   {
+    image: WAS_THIS_YOUR_TEXT,
+    name: "Was This Your Text?",
+    joke: "Having text problems? �� ��� ����!",
+    description: "Enter your corrupted text and maybe we can find how it happened. Is one of them your original?",
+    link: "was-this-your-text",
+  },
+  {
     image: DR_UNICODE,
     name: "Dr. Unicode",
     joke: "An isValid(string) a day keeps the bugs away 🐞",
@@ -50,7 +58,7 @@ export const TOOLSETS = [
 export const RECOMMENDATIONS = [
   {
     image: UNICODE_CODE_CONVERTER,
-    name: "Unicode code converter",
+    name: "Unicode Code Converter",
     joke: "Daddy? Is it you? 🧐",
     description: "The swift army knife of unicode encodings.",
     link: "https://r12a.github.io/app-conversion/",

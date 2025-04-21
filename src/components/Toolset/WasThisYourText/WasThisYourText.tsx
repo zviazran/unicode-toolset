@@ -82,7 +82,7 @@ const WasThisYourText: React.FC = () => {
     <div className={styles.wasThisYourText}>
       <h1>Was This Your Text?</h1>
       <div className={styles.description}>
-        <p>Enter your corrupted text and maybye we can find how it happend. Is one of them your original?</p>
+        <p>Enter your corrupted text and maybe we can find how it happened. Is one of them your original?</p>
       </div>
 
       <textarea
