@@ -16,26 +16,6 @@ const swapUtf16Endianness = (input: string): string => {
   return output.join("");
 };
 
-const offsetUtf16Bytes = (input: string, offset: number): string => {
-  const buf = new ArrayBuffer(input.length * 2);
-  const view = new DataView(buf);
-
-  // Write the string as UTF-16 (2 bytes per char)
-  for (let i = 0; i < input.length; i++) {
-    view.setUint16(i * 2, input.charCodeAt(i), true); // little endian
-  }
-
-  // Corrupt the individual bytes (not code units)
-  for (let i = 0; i < buf.byteLength; i++) {
-    const original = view.getUint8(i);
-    view.setUint8(i, (original + offset) % 256);
-  }
-
-  // Read back as UTF-16
-  const corruptedView = new Uint16Array(buf);
-  return String.fromCharCode(...corruptedView);
-};
-
 const decodeDoubleUtf8Encoding = (input: string): string => {
   const byteValues = [...input].map(char => char.charCodeAt(0));
   try {
@@ -91,21 +71,20 @@ const latin1ToUtf8 = (input: string): string => {
 };
 
 
-const decodingStrategies: { name: string; transform: (input: string) => string }[] = [
-  { name: "UTF8 → double Utf8 encoding", transform: decodeDoubleUtf8Encoding },
+const decodingAttempts: { name: string; transform: (input: string) => string }[] = [
+  { name: "UTF8 → double Utf8 encode", transform: decodeDoubleUtf8Encoding },
   { name: "UTF8 → decoded as UTF16", transform: utf8BytesAsUtf16 },
 
-  { name: "UTF16 → byte shift by 1", transform: (input) => offsetUtf16Bytes(input, 1) },
   { name: "UTF16 → endianness swap", transform: swapUtf16Endianness },
   { name: "UTF16 → double Utf16 encoding", transform: decodeDoubleUtf16Encoding },
   { name: "UTF16 → decoded as UTF8", transform: utf16BytesAsUtf8 },
 
-  { name: "Latin-1 → UTF-8 recovery", transform: latin1ToUtf8 },
+  { name: "Latin-1 → UTF8 recovery", transform: latin1ToUtf8 },
 ];
 
 const WasThisYourText: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("栀攀氀氀漀 眀漀爀氀搀℀");
 
   return (
     <div className={styles.wasThisYourText}>
@@ -130,7 +109,7 @@ const WasThisYourText: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {decodingStrategies
+            {decodingAttempts
               .map(({ name, transform }) => {
                 const output = transform(input);
                 return { name, output };
