@@ -1,7 +1,6 @@
-// src/components/InvisibleCharEditor.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import styles from './InvisibleCharEditor.module.css';
+import styles from './CodepointEditor.module.css';
 import CounterBar from '../CounterBar';
 import { invisibleCharRanges } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
@@ -39,7 +38,7 @@ const computeValidRanges = (): [number, number][] => {
   return validRanges;
 };
 
-const InvisibleCharEditor: React.FC = () => {
+const CodepointEditor: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [normalText, setNormalText] = useState("");
   const [processedText, setProcessedText] = useState<string>("");
@@ -111,10 +110,10 @@ const InvisibleCharEditor: React.FC = () => {
   };
 
   return (
-    <div className={styles.invisibleCharEditor}>
-      <h1>Invisible Characters Editor</h1>
+    <div className={styles.codepointEditor}>
+      <h1>Character Editor</h1>
       <div className={styles.description}>
-        <p>Online tool to display and add invisible characters to text.</p>
+        <p>Inspect and edit text at the codepoint level.</p>
       </div>
       <div className={styles.editor}>
         <div className={styles.textBox}>
@@ -151,4 +150,4 @@ const InvisibleCharEditor: React.FC = () => {
   );
 };
 
-export default InvisibleCharEditor;
+export default CodepointEditor;

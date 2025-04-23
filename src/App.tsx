@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home/Home";
 import About from "./components/About/About";
 import Toolsets from "./components/Toolset/Toolsets";
-import InvisibleCharEditor from "./components/Toolset/InvisibleCharEditor/InvisibleCharEditor";
+import CodepointEditor from "./components/Toolset/CodepointEditor/CodepointEditor";
 import DrUnicodeWrapper from "./components/Toolset/DrUnicode/DrUnicodeWrapper";
 import CrashCharSequenceGenerator from "./components/Toolset/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
 import EncodedPromptInjectionGenerator from "./components/Toolset/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
@@ -25,7 +25,8 @@ const App: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/toolset" element={<Toolsets />} />
-          <Route path="/invisible-char-editor" element={<InvisibleCharEditor />} />
+          <Route path="/char-editor" element={<CodepointEditor />} />
+          <Route path="/invisible-char-editor" element={<CodepointEditor />} />
           <Route path="/drunicode" element={<DrUnicodeWrapper />} />
           <Route path="/crash-char-sequence-generator" element={<CrashCharSequenceGenerator />} />
           <Route path="/url-twister" element={<UrlTwisterComponent />} />

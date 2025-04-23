@@ -13,10 +13,10 @@ import UNICODE_TECHNICAL_SITE from "./Assets/Recommendations/unicode-technical-s
 export const TOOLSETS = [
   {
     image: INVISIBLE_CHAR_EDITOR,
-    name: "Invisible Characters Editor",
+    name: "Character Editor",
     joke: "It's not a bug, it's an invisible character 👻",
-    description: "Online tool to display and add invisible characters to text. To be used for simple homograph spoofing - when the computer and we see different things. Please use responsibly.",
-    link: "invisible-char-editor",
+    description: "Inspect and edit text at the codepoint level — including invisible characters. What you see isn’t always what your computer sees.",
+    link: "char-editor",
   },
   {
     image: CRASH_CHAR_SEQUENCE_GENERATOR,
