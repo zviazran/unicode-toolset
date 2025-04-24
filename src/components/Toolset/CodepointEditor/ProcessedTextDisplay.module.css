@@ -29,6 +29,28 @@
   line-height: 1.2em;
 }
 
+.wordBreakChar {
+  background-color: rgba(173, 216, 230, 0.3);
+  color: black;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  font-size: 1rem;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+.whitespaceChar {
+  background-color: rgba(144, 238, 144, 0.3);
+  color: black;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  font-size: 1rem;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
 .invisibleChar {
   min-width: 2.5em;
 }

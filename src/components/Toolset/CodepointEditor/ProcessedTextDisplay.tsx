@@ -15,6 +15,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
+  const wordBreakCharRegex = /[\u0020\u0085\u200B\u2028\u2029]/;
+  const whitespaceCharRegex = /[\u000B\u000C\u000D\u1680\u2000-\u200A\u202F\u205F\u3000]/;
+
   const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
   
@@ -24,7 +27,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const startIndex = i;
       const isInvisible = isInvisibleCodePoint(codePoint);
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
-  
+      const isWordBreakChar = wordBreakCharRegex.test(char);
+      const isWhitespaceChar = whitespaceCharRegex.test(char);
+
       if (codePoint === 0x0D || codePoint === 0x0A) {
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
           i++; 
@@ -34,7 +39,13 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         result.push(
           <span
             key={startIndex}
-            className={isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar) : styles.visibleChar}
+            className={
+              isWordBreakChar
+                ? styles.wordBreakChar
+                : isInvisible
+                ? (isTagChar ? styles.tagChar : styles.invisibleChar)
+                : styles.visibleChar
+            }
             contentEditable
             suppressContentEditableWarning
             data-original={char}
@@ -43,7 +54,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               if (!isInvisible) {
                 const target = e.currentTarget;
                 target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-                target.className = styles.invisibleChar;
+                target.className = isWordBreakChar ? styles.wordBreakChar : styles.invisibleChar;
               }
             }}
             onBlur={(e) => {
@@ -51,7 +62,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               if (!isInvisible) {
                 const originalChar = e.target.dataset.original ?? "";
                 e.target.textContent = originalChar;
-                e.target.className = styles.visibleChar;
+                e.target.className = isWordBreakChar ? styles.wordBreakChar : styles.visibleChar;
               }
             }}
             onKeyDown={(e) => {
