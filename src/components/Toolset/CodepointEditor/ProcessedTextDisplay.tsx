@@ -40,8 +40,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           <span
             key={startIndex}
             className={
-              isWordBreakChar
-                ? styles.wordBreakChar
+              isWordBreakChar || isWhitespaceChar
+                ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar)
                 : isInvisible
                 ? (isTagChar ? styles.tagChar : styles.invisibleChar)
                 : styles.visibleChar
@@ -54,7 +54,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               if (!isInvisible) {
                 const target = e.currentTarget;
                 target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-                target.className = isWordBreakChar ? styles.wordBreakChar : styles.invisibleChar;
+                target.className = styles.editableChar;
               }
             }}
             onBlur={(e) => {
@@ -62,7 +62,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               if (!isInvisible) {
                 const originalChar = e.target.dataset.original ?? "";
                 e.target.textContent = originalChar;
-                e.target.className = isWordBreakChar ? styles.wordBreakChar : styles.visibleChar;
+                e.target.className = isWordBreakChar || isWhitespaceChar ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar) : styles.visibleChar;
               }
             }}
             onKeyDown={(e) => {
