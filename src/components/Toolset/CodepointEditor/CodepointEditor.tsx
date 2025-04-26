@@ -5,6 +5,8 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 
+// Todo: add an button for sending the text in a link
+// Todo: add legend indexing
 
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [  

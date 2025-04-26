@@ -16,7 +16,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   };
 
   const wordBreakCharRegex = /[\u0020\u0085\u200B\u2028\u2029]/;
-  const whitespaceCharRegex = /[\u000B\u000C\u000D\u1680\u2000-\u200A\u202F\u205F\u3000]/;
+  const whitespaceCharRegex = /[\u000A-\u000D\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/;
 
   const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
@@ -51,19 +51,19 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()}`}
             onClick={(e) => {
-              if (!isInvisible) {
-                const target = e.currentTarget;
-                target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-                target.className = styles.editableChar;
-              }
+              const target = e.currentTarget;
+              target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
+              target.className = styles.editableChar;
             }}
             onBlur={(e) => {
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
-              if (!isInvisible) {
                 const originalChar = e.target.dataset.original ?? "";
-                e.target.textContent = originalChar;
-                e.target.className = isWordBreakChar || isWhitespaceChar ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar) : styles.visibleChar;
-              }
+                e.target.textContent = (!isInvisible && !isWordBreakChar && !isWhitespaceChar) ? originalChar : `U+${codePoint.toString(16).toUpperCase()}`;
+                e.target.className = isWordBreakChar || isWhitespaceChar
+                  ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar)
+                  : isInvisible
+                  ? (isTagChar ? styles.tagChar : styles.invisibleChar)
+                  : styles.visibleChar;
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -73,7 +73,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               }
             }}
           >
-            {isInvisible ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
+            {isInvisible || isWordBreakChar || isWhitespaceChar ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
           </span>
         );
       }
