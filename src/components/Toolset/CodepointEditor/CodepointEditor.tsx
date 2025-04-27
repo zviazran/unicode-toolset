@@ -132,7 +132,13 @@ const CodepointEditor: React.FC = () => {
           <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setNormalText}/>
         </div>
       </div>
-      <CounterBar textareaRef={textareaRef} />
+      <CounterBar
+        textareaRef={textareaRef}
+        generateQueryString={() => {
+          const text = textareaRef.current?.value || "";
+          return text ? `?text=${encodeURIComponent(text)}` : "";
+        }}
+      />
       <div className={styles.buttonContainer}>
         <label className={styles.tagToggle}>
           <input

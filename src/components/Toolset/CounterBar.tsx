@@ -1,13 +1,15 @@
-import { useState, useEffect, RefObject } from "react";
-import { AiOutlineCopy, AiOutlineCheck } from "react-icons/ai";
+import { useState, useEffect, RefObject } from "react"; 
+import { AiOutlineCopy, AiOutlineCheck, AiOutlineLink } from "react-icons/ai";
 import styles from "./CounterBar.module.css";
 
 interface CounterBarProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
+  generateQueryString?: () => string; // no parameters no link button added
 }
 
-export default function CounterBar({ textareaRef }: CounterBarProps) {
+export default function CounterBar({ textareaRef, generateQueryString }: CounterBarProps) {
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const [byteCount, setByteCount] = useState(0);
 
@@ -20,6 +22,17 @@ export default function CounterBar({ textareaRef }: CounterBarProps) {
     }
   };
 
+  const handleCopyLink = () => {
+    if (generateQueryString) {
+      const queryString = generateQueryString();
+      const url = `${window.location.origin}${window.location.pathname}${queryString}`;
+      navigator.clipboard.writeText(url).then(() => {
+        setLinkCopied(true);
+        setTimeout(() => setLinkCopied(false), 2000);
+      });
+    }
+  };
+
   const updateCounts = () => {
     if (textareaRef.current) {
       const text = textareaRef.current.value;
@@ -28,7 +41,6 @@ export default function CounterBar({ textareaRef }: CounterBarProps) {
     }
   };
 
-  // Run `updateCounts` whenever the component renders
   useEffect(() => {
     updateCounts();
   });
@@ -46,6 +58,19 @@ export default function CounterBar({ textareaRef }: CounterBarProps) {
           <AiOutlineCopy className={`${styles.icon} ${styles.iconCopy}`} />
         )}
       </button>
+      {generateQueryString && (
+        <button
+          onClick={handleCopyLink}
+          className={styles.copyButton}
+          title="Copy link with parameters"
+        >
+          {linkCopied ? (
+            <AiOutlineCheck className={`${styles.icon} ${styles.iconCheck}`} />
+          ) : (
+            <AiOutlineLink className={`${styles.icon} ${styles.iconCopy}`} />
+          )}
+        </button>
+      )}
       <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
     </div>
   );
