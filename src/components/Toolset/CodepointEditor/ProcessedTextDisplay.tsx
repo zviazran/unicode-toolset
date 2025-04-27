@@ -30,6 +30,17 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const isWordBreakChar = wordBreakCharRegex.test(char);
       const isWhitespaceChar = whitespaceCharRegex.test(char);
 
+      const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isWhitespaceChar: boolean) =>
+        `${styles.styledChar} ${
+          isWordBreakChar ? styles.wordBreakChar
+          : isWhitespaceChar ? styles.whitespaceChar
+          : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
+          : styles.visibleChar
+        }`;      
+      
+      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isWhitespaceChar: boolean) => 
+        isInvisible || isWordBreakChar || isWhitespaceChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
+
       if (codePoint === 0x0D || codePoint === 0x0A) {
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
           i++; 
@@ -39,13 +50,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         result.push(
           <span
             key={startIndex}
-            className={
-              isWordBreakChar || isWhitespaceChar
-                ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar)
-                : isInvisible
-                ? (isTagChar ? styles.tagChar : styles.invisibleChar)
-                : styles.visibleChar
-            }
+            className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar)}
             contentEditable
             suppressContentEditableWarning
             data-original={char}
@@ -53,17 +58,13 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             onClick={(e) => {
               const target = e.currentTarget;
               target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-              target.className = styles.editableChar;
+              target.className = `${styles.styledChar} ${styles.editableChar}`;
             }}
             onBlur={(e) => {
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
                 const originalChar = e.target.dataset.original ?? "";
-                e.target.textContent = (!isInvisible && !isWordBreakChar && !isWhitespaceChar) ? originalChar : `U+${codePoint.toString(16).toUpperCase()}`;
-                e.target.className = isWordBreakChar || isWhitespaceChar
-                  ? (isWordBreakChar ? styles.wordBreakChar : styles.whitespaceChar)
-                  : isInvisible
-                  ? (isTagChar ? styles.tagChar : styles.invisibleChar)
-                  : styles.visibleChar;
+                e.target.textContent = getDisplayedChar(originalChar, codePoint, isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar);
+                e.target.className = getCharClassName(isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -73,7 +74,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               }
             }}
           >
-            {isInvisible || isWordBreakChar || isWhitespaceChar ? (isTagChar ? String.fromCharCode(codePoint - 0xe0000) : `U+${codePoint.toString(16).toUpperCase()}`) : char}
+            {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar)}
           </span>
         );
       }
