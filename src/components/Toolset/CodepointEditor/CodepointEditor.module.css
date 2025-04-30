@@ -2,6 +2,7 @@
   text-align: center;
   margin-top: 8rem;
   min-height: 33rem;
+  display: grid;
 }
 
 .editor {
@@ -62,25 +63,45 @@
   accent-color: #007bff;
 }
 
-.invisibleCharButton {
-  display: inline-block;
-  background-color: #28a745;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 4px;
-  font-size: 1rem;
+.buttonColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.charButton {
   cursor: pointer;
-  margin-top: 20px;
-  margin-bottom: 10px;
   border: none;
+  max-width: 20rem;
+  width: 100%;
+  padding: 10px 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  white-space: normal;
+  word-break: break-word; 
 }
 
-.invisibleCharButton:hover {
-  background-color: #218838;
+.invisibleChar {
+  background-color: rgba(255, 180, 190, 0.5);
 }
 
-.invisibleCharButton:active {
-  background-color: #1e7e34;
+.wordBreakChar {
+  background-color: rgba(173, 216, 230, 0.3);
+}
+
+.nonWordBreakChar {
+  background-color: rgba(144, 238, 144, 0.3);
+}
+
+.charButton:hover {
+  filter: brightness(0.8);
+}
+
+.charButton:active {
+  transform: scale(0.98);
 }
 
 .counters {

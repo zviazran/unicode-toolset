@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from './CodepointEditor.module.css';
 import CounterBar from '../CounterBar';
-import { invisibleCharRanges } from "../CodePointsConsts";
+import { invisibleCharRanges, wordBreakCharRegex, whitespaceCharRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 
 // Todo: add an button for sending the text in a link
@@ -98,8 +98,21 @@ const CodepointEditor: React.FC = () => {
     return String.fromCodePoint(codePoint);
   };
   
-  const handleAddInvisibleChars = () => {
-    const randomChar = getRandomInvisibleChar();
+  function getRandomCharFromRegex(regex: RegExp): string {
+    const codes = [...regex.source.matchAll(/\\u([\dA-Fa-f]{4})/g)].map(m => String.fromCharCode(parseInt(m[1], 16)));
+    return codes[Math.floor(Math.random() * codes.length)] || "";
+  }
+
+  const handleAddChar = (type: "invisible" | "wordBreak" | "nonWordBreak") => {
+    let randomChar = "";
+  
+    if (type === "invisible") {
+      randomChar = getRandomInvisibleChar();
+    } else if (type === "wordBreak") {
+      randomChar = getRandomCharFromRegex(wordBreakCharRegex);
+    } else if (type === "nonWordBreak") {
+      randomChar = getRandomCharFromRegex(whitespaceCharRegex);
+    }
 
     // Calculate random position with edge handling
     const randomPosition = normalText.length > 4
@@ -149,9 +162,15 @@ const CodepointEditor: React.FC = () => {
           <span>Tag Typing</span>
         </label>
       </div>
-      <div className={styles.buttonContainer}>
-        <button onClick={handleAddInvisibleChars} className={styles.invisibleCharButton}>
+      <div className={styles.buttonColumn}>
+        <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${styles.invisibleChar}`}>
           Add Random Invisible Character
+        </button>
+        <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
+          Add Random Word-Break Whitespace
+        </button>
+        <button onClick={() => handleAddChar("nonWordBreak")} className={`${styles.charButton} ${styles.nonWordBreakChar}`}>
+          Add Random Non Word-Break Whitespace
         </button>
       </div>
     </div>

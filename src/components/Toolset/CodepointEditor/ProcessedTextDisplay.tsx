@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
-import { invisibleCharRanges } from "../CodePointsConsts";
+import { invisibleCharRanges, wordBreakCharRegex, whitespaceCharRegex } from "../CodePointsConsts";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -14,9 +14,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   const isInvisibleCodePoint = (code: number): boolean => {
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
-
-  const wordBreakCharRegex = /[\u0020\u0085\u200B\u2028\u2029]/;
-  const whitespaceCharRegex = /[\u000A-\u000D\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/;
 
   const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];

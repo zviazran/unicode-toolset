@@ -26,3 +26,6 @@ export const bidiCharacters = new Map<string, number>([
   ["RLM", 0x200F], // RIGHT-TO-LEFT MARK
   ["ALM", 0x061C], // ARABIC LETTER MARK
 ]);
+
+export const wordBreakCharRegex = /[\u0020\u200B\u2028\u2029]/;
+export const whitespaceCharRegex = /[\u000A-\u000D\u00A0\u2000-\u200A\u202F\u205F\u3000]/;
