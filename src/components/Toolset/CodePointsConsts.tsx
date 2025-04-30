@@ -28,4 +28,4 @@ export const bidiCharacters = new Map<string, number>([
 ]);
 
 export const wordBreakCharRegex = /[\u0020\u200B\u2028\u2029]/;
-export const whitespaceCharRegex = /[\u000A-\u000D\u00A0\u2000-\u200A\u202F\u205F\u3000]/;
+export const whitespaceCharRegex = /[\u000C\u00A0\u2000-\u200A\u202F\u205F\u3000]/;

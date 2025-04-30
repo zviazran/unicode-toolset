@@ -99,9 +99,23 @@ const CodepointEditor: React.FC = () => {
   };
   
   function getRandomCharFromRegex(regex: RegExp): string {
-    const codes = [...regex.source.matchAll(/\\u([\dA-Fa-f]{4})/g)].map(m => String.fromCharCode(parseInt(m[1], 16)));
-    return codes[Math.floor(Math.random() * codes.length)] || "";
-  }
+    const cps = new Set<number>();
+    const rx = regex.source;
+  
+    rx.replace(/\\u\{([0-9a-fA-F]+)\}|\\u([0-9a-fA-F]{4})/g, (_, braced, short) => {
+      cps.add(parseInt(braced || short, 16));
+      return "";
+    });
+  
+    rx.replace(/\\u(?:\{)?([0-9a-fA-F]+)(?:\})?-\\u(?:\{)?([0-9a-fA-F]+)(?:\})?/g, (_, a, b) => {
+      for (let i = parseInt(a, 16); i <= parseInt(b, 16); i++) cps.add(i);
+      return "";
+    });
+  
+    const list = [...cps];
+    const cp = list[Math.floor(Math.random() * list.length)];
+    return cp !== undefined ? String.fromCodePoint(cp) : "";
+  }  
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "nonWordBreak") => {
     let randomChar = "";
@@ -115,10 +129,12 @@ const CodepointEditor: React.FC = () => {
     }
 
     // Calculate random position with edge handling
-    const randomPosition = normalText.length > 4
-      ? Math.floor(Math.random() * (normalText.length - 1)) + 1 // Between 1 and length - 1
-      : Math.floor(Math.random() * (normalText.length + 1));    // Allow edges for short text
-    const updatedText = normalText.slice(0, randomPosition) + randomChar + normalText.slice(randomPosition);
+    const chars = [...normalText]; // full Unicode-aware characters
+    const insertPos = chars.length > 4
+      ? Math.floor(Math.random() * (chars.length - 1)) + 1
+      : Math.floor(Math.random() * (chars.length + 1));
+    chars.splice(insertPos, 0, randomChar);
+    const updatedText = chars.join('');
 
     setNormalText(updatedText);
     setProcessedText(updatedText);
