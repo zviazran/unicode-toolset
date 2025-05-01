@@ -92,8 +92,8 @@
   background-color: rgba(173, 216, 230, 0.3);
 }
 
-.nonWordBreakChar {
-  background-color: rgba(144, 238, 144, 0.3);
+.noBreakChar {
+  background-color: rgba(144, 238, 144, 0.2);
 }
 
 .charButton:hover {

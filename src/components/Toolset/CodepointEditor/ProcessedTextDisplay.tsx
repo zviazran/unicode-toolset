@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
-import { invisibleCharRanges, wordBreakCharRegex, whitespaceCharRegex } from "../CodePointsConsts";
+import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -24,19 +24,19 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const startIndex = i;
       const isInvisible = isInvisibleCodePoint(codePoint);
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
-      const isWordBreakChar = wordBreakCharRegex.test(char);
-      const isWhitespaceChar = whitespaceCharRegex.test(char);
+      const isWordBreakChar = WordBreakWSegSpaceNewlineRegex.test(char);
+      const isNoBreakChar = DecompositionTypeNoBreakRegex.test(char);
 
-      const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isWhitespaceChar: boolean) =>
+      const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) =>
         `${styles.styledChar} ${
           isWordBreakChar ? styles.wordBreakChar
-          : isWhitespaceChar ? styles.whitespaceChar
+          : isNoBreakChar ? styles.noBreakChar
           : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
           : styles.visibleChar
         }`;      
       
-      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isWhitespaceChar: boolean) => 
-        isInvisible || isWordBreakChar || isWhitespaceChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
+      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => 
+        isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
@@ -47,7 +47,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         result.push(
           <span
             key={startIndex}
-            className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar)}
+            className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
             contentEditable
             suppressContentEditableWarning
             data-original={char}
@@ -60,8 +60,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             onBlur={(e) => {
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
                 const originalChar = e.target.dataset.original ?? "";
-                e.target.textContent = getDisplayedChar(originalChar, codePoint, isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar);
-                e.target.className = getCharClassName(isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar);
+                e.target.textContent = getDisplayedChar(originalChar, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar);
+                e.target.className = getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -71,7 +71,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               }
             }}
           >
-            {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isWhitespaceChar)}
+            {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
           </span>
         );
       }

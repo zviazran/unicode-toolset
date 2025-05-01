@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from './CodepointEditor.module.css';
 import CounterBar from '../CounterBar';
-import { invisibleCharRanges, wordBreakCharRegex, whitespaceCharRegex } from "../CodePointsConsts";
+import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 
 // Todo: add an button for sending the text in a link
@@ -117,15 +117,15 @@ const CodepointEditor: React.FC = () => {
     return cp !== undefined ? String.fromCodePoint(cp) : "";
   }  
 
-  const handleAddChar = (type: "invisible" | "wordBreak" | "nonWordBreak") => {
+  const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
     let randomChar = "";
   
     if (type === "invisible") {
       randomChar = getRandomInvisibleChar();
     } else if (type === "wordBreak") {
-      randomChar = getRandomCharFromRegex(wordBreakCharRegex);
-    } else if (type === "nonWordBreak") {
-      randomChar = getRandomCharFromRegex(whitespaceCharRegex);
+      randomChar = getRandomCharFromRegex(WordBreakWSegSpaceNewlineRegex);
+    } else if (type === "noBreak") {
+      randomChar = getRandomCharFromRegex(DecompositionTypeNoBreakRegex);
     }
 
     // Calculate random position with edge handling
@@ -142,7 +142,7 @@ const CodepointEditor: React.FC = () => {
 
   return (
     <div className={styles.codepointEditor}>
-      <h1>Character Editor</h1>
+      <h1>Unseen Characters Editor</h1>
       <div className={styles.description}>
         <p>Inspect and edit text at the codepoint level.</p>
       </div>
@@ -185,8 +185,8 @@ const CodepointEditor: React.FC = () => {
         <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
           Add Random Word-Break Whitespace
         </button>
-        <button onClick={() => handleAddChar("nonWordBreak")} className={`${styles.charButton} ${styles.nonWordBreakChar}`}>
-          Add Random Non Word-Break Whitespace
+        <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
+          Add Random No-Break Whitespace
         </button>
       </div>
     </div>

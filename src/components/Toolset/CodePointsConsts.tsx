@@ -27,5 +27,6 @@ export const bidiCharacters = new Map<string, number>([
   ["ALM", 0x061C], // ARABIC LETTER MARK
 ]);
 
-export const wordBreakCharRegex = /[\u0020\u200B\u2028\u2029]/;
-export const whitespaceCharRegex = /[\u000C\u00A0\u2000-\u200A\u202F\u205F\u3000]/;
+// about 25 options total 
+export const WordBreakWSegSpaceNewlineRegex = /[\u0020\u000C\u2000-\u2006\u2008-\u200A\u2028\u2029\u205F\u3000]/;
+export const DecompositionTypeNoBreakRegex = /[\u00A0\u2007\u202F]/;
