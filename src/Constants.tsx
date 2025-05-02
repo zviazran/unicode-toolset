@@ -1,4 +1,4 @@
-import INVISIBLE_CHAR_EDITOR from "./Assets/Toolsets/invisible-char-editor.png";
+import CODEPOINT_EDITOR from "./Assets/Toolsets/codepoint-editor.png";
 import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
 import URL_TWISTER from "./Assets/Toolsets/url-twister.png";
@@ -12,7 +12,7 @@ import UNICODE_TECHNICAL_SITE from "./Assets/Recommendations/unicode-technical-s
 
 export const TOOLSETS = [
   {
-    image: INVISIBLE_CHAR_EDITOR,
+    image: CODEPOINT_EDITOR,
     name: "Unseen Characters Editor",
     joke: "It's not a bug, it's an invisible character 👻",
     description: "Inspect and edit text at the codepoint level — including invisible characters. What you see isn’t always what your computer sees.",
