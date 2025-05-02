@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import { ImPointRight } from "react-icons/im";
+import { Icon } from "@iconify/react";
 
 const activities: string[] = [
   "Playing board and retro games",
@@ -29,7 +29,7 @@ const AboutCard: React.FC = () => {
           <ul>
             {activities.map((activity, index) => (
               <li className="about-activity" key={index}>
-                <ImPointRight /> {activity}
+                <Icon icon="mdi:chevron-right" /> {activity}
               </li>
             ))}
           </ul>

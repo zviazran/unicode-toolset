@@ -3,13 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
-import {
-  AiOutlineHome,
-  AiOutlineFundProjectionScreen,
-  AiOutlineUser,
-} from "react-icons/ai";
-
-import { CgFileDocument } from "react-icons/cg";
+import { Icon } from "@iconify/react";
 
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
@@ -33,7 +27,12 @@ function NavBar() {
       className={navColour ? "sticky" : "navbar"}
     >
       <Container>
-        <Nav.Link as={Link} to="/home" onClick={() => updateExpanded(false)} className="navbar-text-container">
+        <Nav.Link
+          as={Link}
+          to="/home"
+          onClick={() => updateExpanded(false)}
+          className="navbar-text-container"
+        >
           zvi.azran
         </Nav.Link>
         <Navbar.Toggle
@@ -49,8 +48,12 @@ function NavBar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto" defaultActiveKey="#home">
             <Nav.Item>
-              <Nav.Link as={Link} to="/home" onClick={() => updateExpanded(false)}>
-                <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
+              <Nav.Link
+                as={Link}
+                to="/home"
+                onClick={() => updateExpanded(false)}
+              >
+                <Icon icon="ant-design:home-outlined" style={{ marginBottom: "3px" }} /> Home
               </Nav.Link>
             </Nav.Item>
 
@@ -60,7 +63,7 @@ function NavBar() {
                 to="/about"
                 onClick={() => updateExpanded(false)}
               >
-                <AiOutlineUser style={{ marginBottom: "2px" }} /> About
+                <Icon icon="ant-design:user-outlined" style={{ marginBottom: "3px" }} /> About
               </Nav.Link>
             </Nav.Item>
 
@@ -70,10 +73,7 @@ function NavBar() {
                 to="/toolset"
                 onClick={() => updateExpanded(false)}
               >
-                <AiOutlineFundProjectionScreen
-                  style={{ marginBottom: "2px" }}
-                />{" "}
-                Unicode Toolset
+                <Icon icon="ant-design:fund-projection-screen-outlined" style={{ marginBottom: "3px" }} /> Unicode Toolset
               </Nav.Link>
             </Nav.Item>
 
@@ -83,7 +83,7 @@ function NavBar() {
                 to="/resume"
                 onClick={() => updateExpanded(false)}
               >
-                <CgFileDocument style={{ marginBottom: "2px" }} /> Resume
+                <Icon icon="mdi:file-account-outline" style={{ marginBottom: "3px" }} /> Resume
               </Nav.Link>
             </Nav.Item>
           </Nav>

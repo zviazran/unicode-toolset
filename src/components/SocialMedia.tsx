@@ -1,8 +1,4 @@
-import {
-  AiFillGithub,
-} from "react-icons/ai";
-import { MdEmail } from "react-icons/md";
-import { FaLinkedinIn } from "react-icons/fa";
+import { Icon } from '@iconify/react';
 
 function SocialMedia() {
   return (
@@ -12,9 +8,9 @@ function SocialMedia() {
           href="https://github.com/zviazran"
           target="_blank"
           rel="noreferrer"
-          className="icon-colour  home-social-icons"
+          className="icon-colour home-social-icons"
         >
-          <AiFillGithub className="social-icon" />
+          <Icon icon="mdi:github" className="social-icon" />
         </a>
       </li>
       <li className="social-icons">
@@ -24,7 +20,7 @@ function SocialMedia() {
           rel="noreferrer"
           className="icon-colour home-social-icons"
         >
-          <FaLinkedinIn className="social-icon" />
+          <Icon icon="fa6-brands:linkedin-in" className="social-icon" />
         </a>
       </li>
       <li className="social-icons">
@@ -34,10 +30,11 @@ function SocialMedia() {
           rel="noreferrer"
           className="icon-colour home-social-icons"
         >
-          <MdEmail className="social-icon" />
+          <Icon icon="mdi:email" className="social-icon" />
         </a>
       </li>
     </ul>
   );
 }
+
 export default SocialMedia;

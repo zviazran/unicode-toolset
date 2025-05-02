@@ -1,10 +1,10 @@
-import { useState, useEffect, RefObject } from "react"; 
-import { AiOutlineCopy, AiOutlineCheck, AiOutlineLink } from "react-icons/ai";
+import { useState, useEffect, RefObject } from "react";
+import { Icon } from "@iconify/react";
 import styles from "./CounterBar.module.css";
 
 interface CounterBarProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
-  generateQueryString?: () => string; // no parameters no link button added
+  generateQueryString?: () => string;
 }
 
 export default function CounterBar({ textareaRef, generateQueryString }: CounterBarProps) {
@@ -52,11 +52,10 @@ export default function CounterBar({ textareaRef, generateQueryString }: Counter
         className={styles.copyButton}
         title="Copy to clipboard"
       >
-        {copied ? (
-          <AiOutlineCheck className={`${styles.icon} ${styles.iconCheck}`} />
-        ) : (
-          <AiOutlineCopy className={`${styles.icon} ${styles.iconCopy}`} />
-        )}
+        <Icon
+          icon={copied ? "mdi:check" : "mdi:content-copy"}
+          className={`${styles.icon} ${copied ? styles.iconCheck : styles.iconCopy}`}
+        />
       </button>
       {generateQueryString && (
         <button
@@ -64,11 +63,10 @@ export default function CounterBar({ textareaRef, generateQueryString }: Counter
           className={styles.copyButton}
           title="Copy link with parameters"
         >
-          {linkCopied ? (
-            <AiOutlineCheck className={`${styles.icon} ${styles.iconCheck}`} />
-          ) : (
-            <AiOutlineLink className={`${styles.icon} ${styles.iconCopy}`} />
-          )}
+          <Icon
+            icon={linkCopied ? "mdi:check" : "mdi:link-variant"}
+            className={`${styles.icon} ${linkCopied ? styles.iconCheck : styles.iconCopy}`}
+          />
         </button>
       )}
       <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
