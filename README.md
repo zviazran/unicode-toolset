@@ -1,14 +1,16 @@
 
-# Unicode Toolset
+# Unicode Security Toolset
 
 This is a portfolio and collection of utilities aimed at simplifying the process of analyzing, editing, and visualizing Unicode characters. This toolset is particularly useful for developers working with text encoding, Unicode vulnerabilities, or those interested in character manipulation techniques like spoofing and crash testing.
 Built with **Vite** for fast development, this project showcases my knowledge and provides useful utilities for developers and enthusiasts working with Unicode.
 
 ## Features
 
-- **Invisible Characters Editor**: Online tool to display and add invisible characters to text. To be used for simple homograph spoofing.
-- **Dr. Unicode**: A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.
+- **Unseen Characters Editor**: Online tool to display, edit and add invisible characters and breaks to text. To be used for simple homograph spoofing and detection.
 - **Crash Char Sequence Generator**: Generate a crash making character combination. Try this at your own risk.
+- **URL Twister**: Enter a URL to generate random tricky spoofing versions. Would you be fooled?
+- **Was This Your Text?**: Enter your corrupted text and maybe we can find how it happened. Is one of them your original?
+- **Dr. Unicode**: A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.
 - **Encoded Prompt Injection Generator**: Explore how encoded inputs can trick AI systems.
 
 ## Getting Started
@@ -39,14 +41,6 @@ Make sure you have [Node.js](https://nodejs.org/) and [Vite](https://vitejs.dev/
    ```
 
 Your Vite application should now be running at `http://localhost:5173`.
-
-## Usage
-
-Each tool in the Unicode Toolset has its own unique interface and functionality. Below is a quick guide for each tool:
-- **Invisible Characters Editor**: Simply paste your text into the input box and add invisible characters where needed. You can copy the resulting text to use in your own applications.
-- **Dr. Unicode**: Upload or paste text to analyze common string corruptions and encoding issues. The tool will highlight potential problems.
-- **Crash Char Sequence Generator**: Click to generate a sequence of characters that may cause crashes in vulnerable systems.
-- **Encoded Prompt Injection Generator**: Generate various encoded inputs to test how they affect AI systems.
 
 ## Tools and Libraries
 

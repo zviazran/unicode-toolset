@@ -73,7 +73,7 @@ function NavBar() {
                 to="/toolset"
                 onClick={() => updateExpanded(false)}
               >
-                <Icon icon="ant-design:fund-projection-screen-outlined" style={{ marginBottom: "3px" }} /> Unicode Toolset
+                <Icon icon="mdi:shield-search" style={{ marginBottom: "3px" }} /> Unicode Security Toolset
               </Nav.Link>
             </Nav.Item>
 
