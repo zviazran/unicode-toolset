@@ -47,6 +47,7 @@ const CodepointEditor: React.FC = () => {
   const [isTagTyping, setIsAddTagsMode] = useState(false);
   const validRanges: [number, number][] = computeValidRanges();
   const location = useLocation();
+  const [lastSelection, setLastSelection] = useState<{ start: number; end: number } | null>(null);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -56,6 +57,28 @@ const CodepointEditor: React.FC = () => {
       setProcessedText(text);
     }
   }, []); // Empty dependency array ensures it only runs once on mount
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+  
+    const handleSelectionChange = () => {
+      const active = document.activeElement;
+  
+      if (active === textarea) {
+        setLastSelection({
+          start: textarea.selectionStart ?? -1,
+          end: textarea.selectionEnd ?? -1,
+        });
+      } else if (active?.tagName !== "BUTTON") {
+        setLastSelection({ start: -1, end: -1 });
+      }
+    };
+  
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => document.removeEventListener("selectionchange", handleSelectionChange);
+  }, []);
+  
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
@@ -119,7 +142,7 @@ const CodepointEditor: React.FC = () => {
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
     let randomChar = "";
-  
+
     if (type === "invisible") {
       randomChar = getRandomInvisibleChar();
     } else if (type === "wordBreak") {
@@ -128,13 +151,20 @@ const CodepointEditor: React.FC = () => {
       randomChar = getRandomCharFromRegex(DecompositionTypeNoBreakRegex);
     }
 
-    // Calculate random position with edge handling
-    const chars = [...normalText]; // full Unicode-aware characters
-    const insertPos = chars.length > 4
-      ? Math.floor(Math.random() * (chars.length - 1)) + 1
-      : Math.floor(Math.random() * (chars.length + 1));
-    chars.splice(insertPos, 0, randomChar);
-    const updatedText = chars.join('');
+    let updatedText = "";
+
+    if (lastSelection && textareaRef.current && lastSelection.start >= 0 && lastSelection.end >= 0) {
+      const { start, end } = lastSelection;
+      updatedText = normalText.slice(0, start) + randomChar + normalText.slice(end);
+      setLastSelection({ start: -1, end: -1 });
+    } else {
+      const chars = [...normalText]; // Unicode-safe
+      const insertPos = chars.length > 4
+        ? Math.floor(Math.random() * (chars.length - 1)) + 1
+        : Math.floor(Math.random() * (chars.length + 1));
+      chars.splice(insertPos, 0, randomChar);
+      updatedText = chars.join('');
+    }
 
     setNormalText(updatedText);
     setProcessedText(updatedText);
@@ -183,10 +213,10 @@ const CodepointEditor: React.FC = () => {
           Add Random Invisible Character
         </button>
         <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
-          Add Random Word-Break Whitespace
+          Add Random Word-Break Space
         </button>
         <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
-          Add Random No-Break Whitespace
+          Add Random No-Break Space
         </button>
       </div>
     </div>
