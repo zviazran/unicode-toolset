@@ -5,8 +5,10 @@ import styles from "./CounterBar.module.css";
 interface CounterBarProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
   generateQueryString?: () => string;
-  showUploadFile?: boolean;
   showDownloadFile?: boolean;
+  showUploadFile?: boolean;
+  showClear?: boolean;
+  onSetText?: (text : string) => void;
 }
 
 export default function CounterBar({
@@ -14,12 +16,16 @@ export default function CounterBar({
   generateQueryString,
   showUploadFile,
   showDownloadFile,
+  showClear,
+  onSetText: onSetText
 }: CounterBarProps) {
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const [byteCount, setByteCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_UPLOAD_LENGTH = 10000;
 
   const handleCopy = () => {
     if (textareaRef.current) {
@@ -79,14 +85,16 @@ export default function CounterBar({
   
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && textareaRef.current) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        textareaRef.current!.value = reader.result as string;
-        updateCounts();
-      };
-      reader.readAsText(file);
-    }
+    if (!file) return;
+  
+    // Slice only the first N bytes (safe for plain text or UTF-8 ASCII)
+    const slicedBlob = file.slice(0, MAX_UPLOAD_LENGTH);
+  
+    const reader = new FileReader();
+    reader.onload = () => {
+      onSetText?.(reader.result as string);
+    };
+    reader.readAsText(slicedBlob);
   };
 
   const updateCounts = () => {
@@ -156,6 +164,15 @@ export default function CounterBar({
         </>
       )}
 
+      {showClear && onSetText && (
+        <button
+          onClick={() => onSetText("")}
+          className={styles.copyButton}
+          title="Clear text"
+        >
+          <Icon icon="mdi:delete-outline" className={styles.icon} />
+        </button>
+      )}
       <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
     </div>
   );

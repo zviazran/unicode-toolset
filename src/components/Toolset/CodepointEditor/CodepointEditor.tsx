@@ -49,12 +49,16 @@ const CodepointEditor: React.FC = () => {
   const location = useLocation();
   const [lastSelection, setLastSelection] = useState<{ start: number; end: number } | null>(null);
 
+  const setText = (text: string) => {
+    setNormalText(text);
+    setProcessedText(text);
+  };
+  
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const text = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
     if (text){
-      setNormalText(text);
-      setProcessedText(text);
+      setText(text);
     }
   }, []); // Empty dependency array ensures it only runs once on mount
 
@@ -100,8 +104,7 @@ const CodepointEditor: React.FC = () => {
         newValue.slice(cursorPosition);
   
       // Update state with the new value
-      setNormalText(updatedValue);
-      setProcessedText(updatedValue);
+      setText(updatedValue);
 
       // Adjust cursor position to after the processed text
       setTimeout(() => {
@@ -109,8 +112,7 @@ const CodepointEditor: React.FC = () => {
       }, 0);
     } else {
       // Handle deletions or no changes
-      setNormalText(newValue);
-      setProcessedText(newValue);
+      setText(newValue);
     }
   };
 
@@ -166,8 +168,7 @@ const CodepointEditor: React.FC = () => {
       updatedText = chars.join('');
     }
 
-    setNormalText(updatedText);
-    setProcessedText(updatedText);
+    setText(updatedText);
   };
 
   return (
@@ -197,8 +198,10 @@ const CodepointEditor: React.FC = () => {
           const text = textareaRef.current?.value || "";
           return text ? `?text=${encodeURIComponent(text)}` : "";
         }}
-        showUploadFile
         showDownloadFile
+        showUploadFile
+        showClear
+        onSetText={setText}
       />
       <div className={styles.buttonContainer}>
         <label className={styles.tagToggle}>
