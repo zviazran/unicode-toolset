@@ -1,17 +1,25 @@
-import { useState, useEffect, RefObject } from "react";
+import { useState, useEffect, RefObject, useRef } from "react";
 import { Icon } from "@iconify/react";
 import styles from "./CounterBar.module.css";
 
 interface CounterBarProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
   generateQueryString?: () => string;
+  showUploadFile?: boolean;
+  showDownloadFile?: boolean;
 }
 
-export default function CounterBar({ textareaRef, generateQueryString }: CounterBarProps) {
+export default function CounterBar({
+  textareaRef,
+  generateQueryString,
+  showUploadFile,
+  showDownloadFile,
+}: CounterBarProps) {
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const [byteCount, setByteCount] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCopy = () => {
     if (textareaRef.current) {
@@ -30,6 +38,54 @@ export default function CounterBar({ textareaRef, generateQueryString }: Counter
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000);
       });
+    }
+  };
+
+  const handleDownloadFile = async () => {
+    const text = textareaRef.current?.value || "";
+  
+    // Use TS-safe access to experimental API
+    const showSaveFilePicker = (window as any).showSaveFilePicker;
+  
+    if (typeof showSaveFilePicker === "function") {
+      try {
+        const fileHandle = await showSaveFilePicker({
+          suggestedName: "text.txt",
+          types: [{
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+          }],
+        });
+  
+        const writable = await fileHandle.createWritable();
+        await writable.write(text);
+        await writable.close();
+        return;
+      } catch (e) {
+        console.warn("User canceled or error:", e);
+        return;
+      }
+    }
+  
+    // Fallback to auto-download
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "text.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  
+  const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && textareaRef.current) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        textareaRef.current!.value = reader.result as string;
+        updateCounts();
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -57,6 +113,7 @@ export default function CounterBar({ textareaRef, generateQueryString }: Counter
           className={`${styles.icon} ${copied ? styles.iconCheck : styles.iconCopy}`}
         />
       </button>
+
       {generateQueryString && (
         <button
           onClick={handleCopyLink}
@@ -69,6 +126,36 @@ export default function CounterBar({ textareaRef, generateQueryString }: Counter
           />
         </button>
       )}
+
+      {showDownloadFile && (
+        <button
+          onClick={handleDownloadFile}
+          className={styles.copyButton}
+          title="Download file"
+        >
+          <Icon icon="mdi:download" className={styles.icon} />
+        </button>
+      )}
+
+      {showUploadFile && (
+        <>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className={styles.copyButton}
+            title="Upload file"
+          >
+            <Icon icon="mdi:upload" className={styles.icon} />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".txt"
+            style={{ display: "none" }}
+            onChange={handleUploadFile}
+          />
+        </>
+      )}
+
       <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
     </div>
   );

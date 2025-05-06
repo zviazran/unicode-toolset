@@ -197,6 +197,8 @@ const CodepointEditor: React.FC = () => {
           const text = textareaRef.current?.value || "";
           return text ? `?text=${encodeURIComponent(text)}` : "";
         }}
+        showUploadFile
+        showDownloadFile
       />
       <div className={styles.buttonContainer}>
         <label className={styles.tagToggle}>
