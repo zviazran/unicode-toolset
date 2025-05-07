@@ -56,6 +56,15 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               const target = e.currentTarget;
               target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
               target.className = `${styles.styledChar} ${styles.editableChar}`;
+
+              // Move cursor to the end
+              const range = document.createRange();
+              range.selectNodeContents(target);
+              range.collapse(false); // false = move to end
+            
+              const sel = window.getSelection();
+              sel?.removeAllRanges();
+              sel?.addRange(range);
             }}
             onBlur={(e) => {
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
