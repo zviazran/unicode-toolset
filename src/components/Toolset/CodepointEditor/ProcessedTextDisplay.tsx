@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 
@@ -10,6 +10,7 @@ type ProcessedTextDisplayProps = {
 
 const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText }) => {
   const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
+  const longPressTimeout = useRef<number | null>(null);
 
   const isInvisibleCodePoint = (code: number): boolean => {
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
@@ -48,25 +49,40 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           <span
             key={startIndex}
             className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
-            contentEditable
+            contentEditable={false}
             suppressContentEditableWarning
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()}`}
+            onPointerDown={() => {
+              longPressTimeout.current = window.setTimeout(() => {
+                window.open(`https://util.unicode.org/UnicodeJsps/character.jsp?a=${codePoint.toString(16).toLowerCase()}`, "_blank");
+              }, 1500);
+            }}
+            onPointerUp={() => longPressTimeout.current && clearTimeout(longPressTimeout.current)}
+            onPointerLeave={() => longPressTimeout.current && clearTimeout(longPressTimeout.current)}
             onClick={(e) => {
+              if (longPressTimeout.current) {
+                clearTimeout(longPressTimeout.current);
+                longPressTimeout.current = null;
+              }
+
               const target = e.currentTarget;
               target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
               target.className = `${styles.styledChar} ${styles.editableChar}`;
 
-              // Move cursor to the end
-              const range = document.createRange();
-              range.selectNodeContents(target);
-              range.collapse(false); // false = move to end
-            
-              const sel = window.getSelection();
-              sel?.removeAllRanges();
-              sel?.addRange(range);
+              if (!target.contentEditable){
+                const range = document.createRange();
+                range.selectNodeContents(target);
+                range.collapse(false); // false = move to end
+  
+                const sel = window.getSelection();
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+              }
+              target.contentEditable = "true";
             }}
             onBlur={(e) => {
+              e.target.contentEditable = "false";
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
                 const originalChar = e.target.dataset.original ?? "";
                 e.target.textContent = getDisplayedChar(originalChar, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar);
