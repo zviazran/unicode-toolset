@@ -60,3 +60,9 @@
 .editableChar:hover {
   opacity: initial;
 }
+
+.holdHint {
+  color: #1a0dab; /* classic link blue */
+  text-decoration: underline;
+  cursor: pointer;
+}
