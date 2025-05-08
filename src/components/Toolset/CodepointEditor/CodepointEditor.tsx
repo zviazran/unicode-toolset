@@ -200,7 +200,7 @@ const CodepointEditor: React.FC = () => {
         }}
         showDownloadFile
         showUploadFile
-        showClear
+        showDirectionToggle
         onSetText={setText}
       />
       <div className={styles.buttonContainer}>

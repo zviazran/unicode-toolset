@@ -11,7 +11,7 @@
     color: #333;
   }
   
-  .copyButton {
+  .barButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -22,7 +22,7 @@
     justify-content: center;
   }
   
-  .copyButton:hover {
+  .barButton:hover {
     color: #007bff; 
   }
   
@@ -40,15 +40,37 @@
     color: #4a4a4a; 
   }
   
-  .copyButton:hover .iconCopy {
+  .barButton:hover .iconCopy {
     color: #007bff; 
   }
   
-  .copyButton .iconCheck {
+  .barButton .iconCheck {
     color: #28a745; 
   }
   
-  .copyButton:hover .icon {
+  .barButton:hover .icon {
     transform: scale(1.1);
   }
-  
+
+.iconStack {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
+.iconAutoLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 25px;
+  color: #4a4a4a;
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.barButton:hover .iconAutoLayer {
+  transform: scale(1.1);
+  color: #007bff;
+}
+

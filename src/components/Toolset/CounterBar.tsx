@@ -1,5 +1,6 @@
 import { useState, useEffect, RefObject, useRef } from "react";
 import { Icon } from "@iconify/react";
+import DirectionIcon from "../../assets/icons/DirectionIcon";
 import styles from "./CounterBar.module.css";
 
 interface CounterBarProps {
@@ -8,6 +9,7 @@ interface CounterBarProps {
   showDownloadFile?: boolean;
   showUploadFile?: boolean;
   showClear?: boolean;
+  showDirectionToggle?: boolean;
   onSetText?: (text : string) => void;
 }
 
@@ -17,14 +19,16 @@ export default function CounterBar({
   showUploadFile,
   showDownloadFile,
   showClear,
-  onSetText: onSetText
+  showDirectionToggle,
+  onSetText,
 }: CounterBarProps) {
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const [byteCount, setByteCount] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [direction, setDirection] = useState<"auto" | "ltr" | "rtl">("auto");
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_UPLOAD_LENGTH = 10000;
 
   const handleCopy = () => {
@@ -49,20 +53,21 @@ export default function CounterBar({
 
   const handleDownloadFile = async () => {
     const text = textareaRef.current?.value || "";
-  
-    // Use TS-safe access to experimental API
+
     const showSaveFilePicker = (window as any).showSaveFilePicker;
-  
+
     if (typeof showSaveFilePicker === "function") {
       try {
         const fileHandle = await showSaveFilePicker({
           suggestedName: "text.txt",
-          types: [{
-            description: "Text Files",
-            accept: { "text/plain": [".txt"] },
-          }],
+          types: [
+            {
+              description: "Text Files",
+              accept: { "text/plain": [".txt"] },
+            },
+          ],
         });
-  
+
         const writable = await fileHandle.createWritable();
         await writable.write(text);
         await writable.close();
@@ -72,8 +77,7 @@ export default function CounterBar({
         return;
       }
     }
-  
-    // Fallback to auto-download
+
     const blob = new Blob([text], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -82,14 +86,13 @@ export default function CounterBar({
     a.click();
     URL.revokeObjectURL(url);
   };
-  
+
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     // Slice only the first N bytes (safe for plain text or UTF-8 ASCII)
     const slicedBlob = file.slice(0, MAX_UPLOAD_LENGTH);
-  
     const reader = new FileReader();
     reader.onload = () => {
       onSetText?.(reader.result as string);
@@ -107,13 +110,16 @@ export default function CounterBar({
 
   useEffect(() => {
     updateCounts();
+    if (textareaRef.current) {
+      textareaRef.current.dir = direction;
+    }
   });
 
   return (
     <div className={styles.counterBar}>
       <button
         onClick={handleCopy}
-        className={styles.copyButton}
+        className={styles.barButton}
         title="Copy to clipboard"
       >
         <Icon
@@ -125,7 +131,7 @@ export default function CounterBar({
       {generateQueryString && (
         <button
           onClick={handleCopyLink}
-          className={styles.copyButton}
+          className={styles.barButton}
           title="Copy link with parameters"
         >
           <Icon
@@ -138,7 +144,7 @@ export default function CounterBar({
       {showDownloadFile && (
         <button
           onClick={handleDownloadFile}
-          className={styles.copyButton}
+          className={styles.barButton}
           title="Download file"
         >
           <Icon icon="mdi:download" className={styles.icon} />
@@ -149,7 +155,7 @@ export default function CounterBar({
         <>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className={styles.copyButton}
+            className={styles.barButton}
             title="Upload file"
           >
             <Icon icon="mdi:upload" className={styles.icon} />
@@ -167,12 +173,27 @@ export default function CounterBar({
       {showClear && onSetText && (
         <button
           onClick={() => onSetText("")}
-          className={styles.copyButton}
+          className={styles.barButton}
           title="Clear text"
         >
           <Icon icon="mdi:delete-outline" className={styles.icon} />
         </button>
       )}
+
+      {showDirectionToggle && (
+        <button
+          onClick={() =>
+            setDirection((prev) =>
+              prev === "auto" ? "ltr" : prev === "ltr" ? "rtl" : "auto"
+            )
+          }
+          className={styles.barButton}
+          title={`Direction: ${direction.toUpperCase()} (click to change)`}
+        >
+          <DirectionIcon direction={direction} className={styles.icon} />
+        </button>
+      )}
+
       <p>{characterCount}&nbsp;characters {byteCount}&nbsp;bytes</p>
     </div>
   );
