@@ -173,7 +173,7 @@ const CodepointEditor: React.FC = () => {
 
   return (
     <div className={styles.codepointEditor}>
-      <h1>Unseen Characters Editor</h1>
+      <h1>The Unseen Side Of Text</h1>
       <div className={styles.description}>
         <p>Inspect and edit text at the codepoint level.</p>
       </div>

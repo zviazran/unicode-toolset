@@ -13,7 +13,7 @@ import UNICODE_TECHNICAL_SITE from "./Assets/Recommendations/unicode-technical-s
 export const TOOLSETS = [
   {
     image: CODEPOINT_EDITOR,
-    name: "Unseen Characters Editor",
+    name: "The Unseen Side of Text",
     joke: "It's not a bug, it's an invisible character 👻",
     description: "Inspect and edit text at the codepoint level — including invisible characters. What you see isn’t always what your computer sees.",
     link: "char-editor",
