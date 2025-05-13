@@ -58,10 +58,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               const span = e.currentTarget;
               longPressVisualTimeout.current = setTimeout(() => {
                 span.classList.add(styles.holdHint);
-                setTimeout(() => span.classList.remove(styles.holdHint), 700);
+                setTimeout(() => span.classList.remove(styles.holdHint), 1000);
               }, 500);
               longPressTimeout.current = setTimeout(() =>
-                window.open(`https://util.unicode.org/UnicodeJsps/character.jsp?a=${codePoint.toString(16).toLowerCase()}`, "_blank"), 1200);
+                window.open(`https://util.unicode.org/UnicodeJsps/character.jsp?a=${codePoint.toString(16).toLowerCase()}`, "_blank"), 1500);
             }}
             onPointerUp={() => {clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!);}}
             onPointerLeave={() => {clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!);}}
