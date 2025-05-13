@@ -4,6 +4,7 @@ import styles from './CodepointEditor.module.css';
 import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
+import CollapsiblePanel from "./CollapsiblePanel";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
@@ -203,27 +204,27 @@ const CodepointEditor: React.FC = () => {
         showDirectionToggle
         onSetText={setText}
       />
-      <div className={styles.buttonContainer}>
-        <label className={styles.tagToggle}>
-          <input
-            type="checkbox"
-            checked={isTagTyping}
-            onChange={() => setIsAddTagsMode((prev) => !prev)}
-          />
-          <span>Tag Typing</span>
-        </label>
-      </div>
-      <div className={styles.buttonColumn}>
-        <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${styles.invisibleChar}`}>
-          Add Random Invisible Character
-        </button>
-        <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
-          Add Random Word-Break Space
-        </button>
-        <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
-          Add Random No-Break Space
-        </button>
-      </div>
+      <CollapsiblePanel title="Add Unseen Characters">
+        <div className={styles.buttonColumn}>
+            <label className={styles.tagToggle}>
+            <input
+              type="checkbox"
+              checked={isTagTyping}
+              onChange={() => setIsAddTagsMode((prev) => !prev)}
+            />
+            <span>Tag Typing</span>
+          </label>
+          <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${styles.invisibleChar}`}>
+            Add Random Invisible Character
+          </button>
+          <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
+            Add Random Word-Break Space
+          </button>
+          <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
+            Add Random No-Break Space
+          </button>
+        </div>      
+      </CollapsiblePanel>
     </div>
   );
 };
