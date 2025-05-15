@@ -5,6 +5,7 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
+import { RunTypingSequence } from "./RunTypingSequence";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
@@ -60,6 +61,21 @@ const CodepointEditor: React.FC = () => {
     const text = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
     if (text){
       setText(text);
+    } else {
+      const controller = RunTypingSequence(
+        ["Watch this…", "Now it's gone!"],
+        setText,
+        () => normalText,
+        {
+          pauseBeforeDelete: 1000,
+          pauseBetweenItems: 800,
+          onComplete: () => setText("")
+        }
+      );
+
+      return () => {
+        controller.cancel(); // Prevent memory leaks & state updates on unmounted component
+      };
     }
   }, []); // Empty dependency array ensures it only runs once on mount
 
@@ -83,7 +99,6 @@ const CodepointEditor: React.FC = () => {
     document.addEventListener("selectionchange", handleSelectionChange);
     return () => document.removeEventListener("selectionchange", handleSelectionChange);
   }, []);
-  
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
