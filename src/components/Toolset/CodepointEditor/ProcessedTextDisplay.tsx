@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 
@@ -6,9 +6,10 @@ type ProcessedTextDisplayProps = {
   text: string;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   setText: (text: string) => void;
+  selectionRange: { start: number; end: number };
 };
 
-const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText }) => {
+const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText, selectionRange }) => {
   const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
@@ -29,6 +30,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const isWordBreakChar = WordBreakWSegSpaceNewlineRegex.test(char);
       const isNoBreakChar = DecompositionTypeNoBreakRegex.test(char);
 
+      const isSelected = i >= selectionRange.start && i < selectionRange.end;
+      const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;
+
       const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) =>
         `${styles.styledChar} ${
           isWordBreakChar ? styles.wordBreakChar
@@ -36,7 +40,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
           : styles.visibleChar
         }`;
-      
+
       const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => 
         isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
 
@@ -101,6 +105,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               }
             }}
           >
+            {isSelected && <span className={styles.selectionOverlay} />}
+            {isCursorHere && <span className={styles.cursorBar} />}
             {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
           </span>
         );
@@ -108,7 +114,15 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   
       i += char.length;
     }
-  
+
+    if (selectionRange.start === selectionRange.end && selectionRange.start === text.length) {
+      result.push(
+        <span key="cursor-end" className={styles.styledChar}>
+          <span className={styles.cursorBar} />؜
+        </span>
+      );
+    }
+
     return result;
   };
   
@@ -141,7 +155,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
   
   useEffect(() => {
     setProcessedText(replaceInvisibleChars(text));
-  }, [text]);
+  }, [text, selectionRange]);
 
   return (
     <div className={styles.processedText}>

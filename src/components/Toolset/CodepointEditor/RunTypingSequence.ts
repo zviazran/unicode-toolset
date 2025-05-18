@@ -63,7 +63,7 @@ export function RunTypingSequence(
       i++;
 
       const isBreak = char === " " || char === "\n" || char === "\u200B";
-      const delay = isBreak ? 300 : 200;
+      const delay = isBreak ? 200 : 150;
 
       setTimeout(typeNext, delay);
     }

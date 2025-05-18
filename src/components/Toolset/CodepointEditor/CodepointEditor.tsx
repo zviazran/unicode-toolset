@@ -49,7 +49,7 @@ const CodepointEditor: React.FC = () => {
   const [isTagTyping, setIsAddTagsMode] = useState(false);
   const validRanges: [number, number][] = computeValidRanges();
   const location = useLocation();
-  const [lastSelection, setLastSelection] = useState<{ start: number; end: number } | null>(null);
+  const [lastSelection, setLastSelection] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -67,8 +67,8 @@ const CodepointEditor: React.FC = () => {
         setText,
         () => normalText,
         {
-          pauseBeforeDelete: 1000,
-          pauseBetweenItems: 800,
+          pauseBeforeDelete: 700,
+          pauseBetweenItems: 500,
           onComplete: () => setText("")
         }
       );
@@ -205,7 +205,7 @@ const CodepointEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees</h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setNormalText}/>
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setNormalText} selectionRange={lastSelection}/>
         </div>
       </div>
       <CounterBar
