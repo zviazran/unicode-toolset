@@ -48,7 +48,13 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
           i++; 
         }
-        result.push(<br key={startIndex} />);
+        result.push(
+            <span key={startIndex} className={`${styles.styledChar} ${styles.newlineVisual}`}>
+              {isSelected && <span className={styles.selectionOverlay} />}
+              {isCursorHere && <span className={styles.cursorBar} />}
+              ↵
+            </span>);
+          result.push(<br key={`br-${startIndex}`} />);
       } else {
         result.push(
           <span
