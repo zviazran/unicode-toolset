@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 
@@ -10,7 +10,6 @@ type ProcessedTextDisplayProps = {
 };
 
 const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText, selectionRange }) => {
-  const [processedText, setProcessedText] = useState<(string | JSX.Element)[]>([]);
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
 
@@ -18,7 +17,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
-  const replaceInvisibleChars = (text: string): (string | JSX.Element)[] => {
+  const replaceInvisibleChars = (text: string, selectionRange: { start: number; end: number }): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
   
     for (let i = 0; i < text.length; ) {
@@ -49,16 +48,16 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           i++; 
         }
         result.push(
-            <span key={startIndex} className={`${styles.styledChar} ${styles.newlineVisual}`}>
+            <span key={`${startIndex}-${codePoint}`} className={`${styles.styledChar} ${styles.newlineVisual}`}>
               {isSelected && <span className={styles.selectionOverlay} />}
               {isCursorHere && <span className={styles.cursorBar} />}
               ↵
             </span>);
-          result.push(<br key={`br-${startIndex}`} />);
+          result.push(<br key={`${startIndex}-br`} />);
       } else {
         result.push(
           <span
-            key={startIndex}
+            key={`${startIndex}-${codePoint}`}
             className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
             contentEditable={false}
             suppressContentEditableWarning
@@ -97,16 +96,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               target.contentEditable = "true";
             }}
             onBlur={(e) => {
-              e.target.contentEditable = "false";
               handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
-                const originalChar = e.target.dataset.original ?? "";
-                e.target.textContent = getDisplayedChar(originalChar, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar);
-                e.target.className = getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                handleContentChange(isInvisible, e.currentTarget.innerText, startIndex, e.currentTarget.dataset.original ?? "");
                 e.currentTarget.blur();
               }
             }}
@@ -156,12 +150,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     const updatedText = beforeChange + newContent + afterChange;
   
     setText(updatedText);
-    setProcessedText(replaceInvisibleChars(updatedText));
   };
-  
-  useEffect(() => {
-    setProcessedText(replaceInvisibleChars(text));
-  }, [text, selectionRange]);
+
+  const processedText = useMemo(() => replaceInvisibleChars(text, selectionRange), [text, selectionRange]);
 
   return (
     <div className={styles.processedText}>

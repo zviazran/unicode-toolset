@@ -205,7 +205,7 @@ const CodepointEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees</h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setNormalText} selectionRange={lastSelection}/>
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection}/>
         </div>
       </div>
       <CounterBar
