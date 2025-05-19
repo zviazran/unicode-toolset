@@ -62,8 +62,18 @@ const CodepointEditor: React.FC = () => {
     if (text){
       setText(text);
     } else {
+      const texts = [
+          //"🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦", 
+          //"😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿", 
+          "This text is 󠁩󠁮visible󠀠󠁢󠁹󠀠󠁵󠁳󠁩󠁮󠁧󠀠󠁴󠁡󠁧󠁳!", 
+          "Only this character ‮.kcatta edirrevo idib siht seod",
+          "זה feature זה לא bug",
+          "\<div title=\"ل\"\>ع\<\/div\>",
+          //"Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
+        ];
+      const one = texts[Math.floor(Math.random() * texts.length)];
       const controller = RunTypingSequence(
-        ["Watch this…", "Now it's gone!"],
+        [one],
         setText,
         () => normalText,
         {
