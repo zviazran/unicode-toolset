@@ -5,7 +5,7 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
-import { RunTypingSequence } from "./RunTypingSequence";
+import { TypingController, TypingSequenceController } from "./TypingSequenceAnimation";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
@@ -56,59 +56,60 @@ const CodepointEditor: React.FC = () => {
     setProcessedText(text);
   };
   
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const text = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
-    if (text){
-      setText(text);
-    } else {
-      const texts = [
-          //"🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦", 
-          //"😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿", 
-          "This text is 󠁩󠁮visible󠀠󠁢󠁹󠀠󠁵󠁳󠁩󠁮󠁧󠀠󠁴󠁡󠁧󠁳!", 
-          "Only this character ‮.kcatta edirrevo idib siht seod",
-          "זה feature זה לא bug",
-          "\<div title=\"ل\"\>ع\<\/div\>",
-          //"Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
-        ];
-      const one = texts[Math.floor(Math.random() * texts.length)];
-      const controller = RunTypingSequence(
-        [one],
-        setText,
-        () => normalText,
-        {
-          pauseBeforeDelete: 700,
-          pauseBetweenItems: 500,
-          onComplete: () => setText("")
-        }
-      );
+useEffect(() => {
+  const textarea = textareaRef.current;
+  if (!textarea) return;
 
-      return () => {
-        controller.cancel(); // Prevent memory leaks & state updates on unmounted component
-      };
-    }
-  }, []); // Empty dependency array ensures it only runs once on mount
+  const query = new URLSearchParams(location.search);
+  const urlText = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
+  let controller: TypingController | null = null;
 
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-  
-    const handleSelectionChange = () => {
-      const active = document.activeElement;
-  
-      if (active === textarea) {
-        setLastSelection({
-          start: textarea.selectionStart ?? -1,
-          end: textarea.selectionEnd ?? -1,
-        });
-      } else if (active?.tagName !== "BUTTON") {
-        setLastSelection({ start: -1, end: -1 });
+  if (urlText) {
+    setText(urlText);
+  } else if (!normalText) {
+    const samples = [
+      //"🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦", 
+      //"😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿", 
+      "This text is 󠁩󠁮visible󠀠󠁢󠁹󠀠󠁵󠁳󠁩󠁮󠁧󠀠󠁴󠁡󠁧󠁳!", 
+      "Only this character ‮.kcatta edirrevo idib siht seod",
+      "זה feature זה לא bug",
+      "\<div title=\"ل\"\>ع\<\/div\>",
+      //"Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
+    ];
+    controller = TypingSequenceController(
+      [samples[Math.floor(Math.random() * samples.length)]],
+      setText,
+      () => normalText,
+      {
+        pauseBeforeDelete: 3000,
+        pauseBetweenItems: 500,
+        onComplete: () => setText(""),
       }
-    };
-  
-    document.addEventListener("selectionchange", handleSelectionChange);
-    return () => document.removeEventListener("selectionchange", handleSelectionChange);
-  }, []);
+    );
+  }
+
+  const onSelect = () => {
+    const active = document.activeElement;
+    if (active === textarea) {
+      setLastSelection({
+        start: textarea.selectionStart ?? -1,
+        end: textarea.selectionEnd ?? -1,
+      });
+      if (controller && !controller.isCancelled()) {
+        controller.cancel();
+        setText("");
+      }
+    } else if (active?.tagName !== "BUTTON") {
+      setLastSelection({ start: -1, end: -1 });
+    }
+  };
+
+  document.addEventListener("selectionchange", onSelect);
+  return () => {
+    controller?.cancel();
+    document.removeEventListener("selectionchange", onSelect);
+  };
+}, []);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;

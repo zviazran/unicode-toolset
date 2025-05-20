@@ -1,9 +1,9 @@
-type TypingController = {
+export type TypingController = {
   cancel: () => void;
   isCancelled: () => boolean;
 };
 
-export function RunTypingSequence(
+export function TypingSequenceController(
   texts: string[],
   setText: (t: string) => void,
   getCurrentText: () => string,
@@ -42,6 +42,7 @@ export function RunTypingSequence(
   }
 
   function simulateOne(text: string, onDone: () => void) {
+    const codePoints = Array.from(text);
     let i = 0;
     let currentText = "";
 
@@ -50,14 +51,14 @@ export function RunTypingSequence(
     function typeNext() {
       if (controller.isCancelled()) return;
 
-      if (i >= text.length) {
+      if (i >= codePoints.length) {
         setTimeout(() => {
           if (!controller.isCancelled()) deleteNext();
         }, pauseBeforeDelete);
         return;
       }
 
-      const char = text[i];
+      const char = codePoints[i];
       currentText += char;
       setText(currentText);
       i++;
@@ -71,13 +72,14 @@ export function RunTypingSequence(
     function deleteNext() {
       if (controller.isCancelled()) return;
 
-      const current = getCurrentText();
-      if (!current) {
+      const current = Array.from(getCurrentText()); // Break into code points
+      if (current.length === 0) {
         onDone();
         return;
       }
 
-      setText(current.slice(0, -1));
+      current.pop();
+      setText(current.join(""));
 
       const delay = 25 + Math.random() * 15;
       setTimeout(deleteNext, delay);
