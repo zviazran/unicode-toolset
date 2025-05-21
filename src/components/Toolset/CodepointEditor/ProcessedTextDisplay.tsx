@@ -17,7 +17,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
-  const replaceInvisibleChars = (text: string, selectionRange: { start: number; end: number }): (string | JSX.Element)[] => {
+  const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
   
     for (let i = 0; i < text.length; ) {
@@ -152,7 +152,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     setText(updatedText);
   };
 
-  const processedText = useMemo(() => replaceInvisibleChars(text, selectionRange), [text, selectionRange]);
+  const processedText = useMemo(() => replaceUnseenChars(text, selectionRange), [text, selectionRange]);
 
   return (
     <div className={styles.processedText}>
