@@ -223,7 +223,14 @@ useEffect(() => {
         textareaRef={textareaRef}
         generateQueryString={() => {
           const text = textareaRef.current?.value || "";
-          return text ? `?text=${encodeURIComponent(text)}` : "";
+          const dir = textareaRef.current?.dir || "auto";
+
+          const params = new URLSearchParams();
+          if (text) params.set("text", text);
+          if (dir !== "auto") params.set("dir", dir);
+
+          const queryString = params.toString();
+          return queryString ? `?${queryString}` : "";
         }}
         showDownloadFile
         showUploadFile

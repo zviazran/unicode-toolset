@@ -108,12 +108,28 @@ export default function CounterBar({
     }
   };
 
+  // On mount: determine initial direction from URL or textarea, and set state
   useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const query = new URLSearchParams(location.search);
+    const urlDir = query.get("dir");
+
+    const fallbackDir = (textarea.getAttribute("dir") ?? "auto") as "auto" | "ltr" | "rtl";
+    const initialDir: "auto" | "ltr" | "rtl" =
+      urlDir === "rtl" || urlDir === "ltr" ? urlDir : fallbackDir;
+
+    setDirection(initialDir);
     updateCounts();
+  }, []);
+
+  // Whenever direction state changes, apply it to the DOM
+  useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.dir = direction;
     }
-  });
+  }, [direction]);
 
   return (
     <div className={styles.counterBar}>
