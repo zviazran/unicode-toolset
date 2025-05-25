@@ -51,6 +51,7 @@ const CodepointEditor: React.FC = () => {
   const location = useLocation();
   const [lastSelection, setLastSelection] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
   const typingPanelRef = useRef<{ stopTyping: () => void }>(null);
+  const [playInitialDemo, setPlayInitialDemo] = useState(false);
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -66,6 +67,12 @@ const CodepointEditor: React.FC = () => {
 
     if (urlText) {
       setText(urlText);
+    } else {
+      const hasSeenDemo = sessionStorage.getItem("hasSeenInitialDemo");
+      if (!hasSeenDemo) {
+        sessionStorage.setItem("hasSeenInitialDemo", "true");
+        setPlayInitialDemo(true);
+      }
     }
 
     const onSelect = () => {
@@ -239,7 +246,7 @@ const CodepointEditor: React.FC = () => {
         <TypingSequencePanel
           setText={setText}
           getCurrentText={() => normalText}
-          playInitialDemo={!normalText}
+          playInitialDemo={playInitialDemo}
           ref={typingPanelRef}
         />
       </CollapsiblePanel>

@@ -259,7 +259,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
         </div>
       </label>
 
-      <div className={styles.playButtonContainer}>
+      <div className={styles.toggleButtonContainer}>
         <button
           className={styles.toggleButton}
           onClick={toggleTyping}
