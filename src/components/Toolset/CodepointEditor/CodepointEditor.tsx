@@ -5,13 +5,13 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
-import { TypingController, TypingSequenceController } from "./TypingSequenceAnimation";
+import { TypingSequencePanel } from "./TypingSequenceAnimation";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
 
 const computeValidRanges = (): [number, number][] => {
-  const RandomInvisiblesExcludedRanges = [  
+  const RandomInvisiblesExcludedRanges = [
     [0x200c, 0x200c],
     [0x202a, 0x202e],
     [0x1d173, 0x1d17a],
@@ -22,7 +22,7 @@ const computeValidRanges = (): [number, number][] => {
 
   for (const [start, end] of invisibleCharRanges) {
     let currentStart = start;
-    
+
     for (const [exStart, exEnd] of RandomInvisiblesExcludedRanges) {
       if (exEnd < currentStart) continue; // Skip exclusions that are before our range
       if (exStart > end) break; // No more exclusions affect this range
@@ -50,75 +50,52 @@ const CodepointEditor: React.FC = () => {
   const validRanges: [number, number][] = computeValidRanges();
   const location = useLocation();
   const [lastSelection, setLastSelection] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
+  const typingPanelRef = useRef<{ stopTyping: () => void }>(null);
 
   const setText = (text: string) => {
     setNormalText(text);
     setProcessedText(text);
   };
-  
-useEffect(() => {
-  const textarea = textareaRef.current;
-  if (!textarea) return;
 
-  const query = new URLSearchParams(location.search);
-  const urlText = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
-  let controller: TypingController | null = null;
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
 
-  if (urlText) {
-    setText(urlText);
-  } else if (!normalText) {
-    const samples = [
-      //"🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦", 
-      //"😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿", 
-      "This text is 󠁩󠁮visible󠀠󠁢󠁹󠀠󠁵󠁳󠁩󠁮󠁧󠀠󠁴󠁡󠁧󠁳!", 
-      "Only this character ‮.kcatta edirrevo idib siht seod",
-      "זה feature זה לא bug",
-      "\<div title=\"ل\"\>ع\<\/div\>",
-      //"Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
-    ];
-    controller = TypingSequenceController(
-      [samples[Math.floor(Math.random() * samples.length)]],
-      setText,
-      () => normalText,
-      {
-        pauseBeforeDelete: 3000,
-        pauseBetweenItems: 500,
-        onComplete: () => setText(""),
-      }
-    );
-  }
+    const query = new URLSearchParams(location.search);
+    const urlText = query.get("text") ? decodeURIComponent(query.get("text")!) : "";
 
-  const onSelect = () => {
-    const active = document.activeElement;
-    if (active === textarea) {
-      setLastSelection({
-        start: textarea.selectionStart ?? -1,
-        end: textarea.selectionEnd ?? -1,
-      });
-      if (controller && !controller.isCancelled()) {
-        controller.cancel();
-        setText("");
-      }
-    } else if (active?.tagName !== "BUTTON") {
-      setLastSelection({ start: -1, end: -1 });
+    if (urlText) {
+      setText(urlText);
     }
-  };
 
-  document.addEventListener("selectionchange", onSelect);
-  return () => {
-    controller?.cancel();
-    document.removeEventListener("selectionchange", onSelect);
-  };
-}, []);
+    const onSelect = () => {
+      const active = document.activeElement;
+      if (active === textarea) {
+        setLastSelection({
+          start: textarea.selectionStart ?? -1,
+          end: textarea.selectionEnd ?? -1,
+        });
+        typingPanelRef.current?.stopTyping();
+      } else if (active?.tagName !== "BUTTON") {
+        setLastSelection({ start: -1, end: -1 });
+      }
+    };
+
+    document.addEventListener("selectionchange", onSelect);
+    return () => {
+      document.removeEventListener("selectionchange", onSelect);
+    };
+  }, []);
+
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     const cursorPosition = e.target.selectionStart;
     const diff = newValue.length - normalText.length;
-  
+
     if (isTagTyping && diff > 0) {
       const insertedText = newValue.slice(cursorPosition - diff, cursorPosition);
-  
+
       // Convert each character to its invisible tag version
       const invisibleText = Array.from(insertedText)
         .filter((char) => /^[a-zA-Z0-9 !@#$%^&*()]$/.test(char))
@@ -129,7 +106,7 @@ useEffect(() => {
         newValue.slice(0, cursorPosition - diff) +
         invisibleText +
         newValue.slice(cursorPosition);
-  
+
       // Update state with the new value
       setText(updatedValue);
 
@@ -146,28 +123,28 @@ useEffect(() => {
   const getRandomInvisibleChar = (): string => {
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
     const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
-    
+
     return String.fromCodePoint(codePoint);
   };
-  
+
   function getRandomCharFromRegex(regex: RegExp): string {
     const cps = new Set<number>();
     const rx = regex.source;
-  
+
     rx.replace(/\\u\{([0-9a-fA-F]+)\}|\\u([0-9a-fA-F]{4})/g, (_, braced, short) => {
       cps.add(parseInt(braced || short, 16));
       return "";
     });
-  
+
     rx.replace(/\\u(?:\{)?([0-9a-fA-F]+)(?:\})?-\\u(?:\{)?([0-9a-fA-F]+)(?:\})?/g, (_, a, b) => {
       for (let i = parseInt(a, 16); i <= parseInt(b, 16); i++) cps.add(i);
       return "";
     });
-  
+
     const list = [...cps];
     const cp = list[Math.floor(Math.random() * list.length)];
     return cp !== undefined ? String.fromCodePoint(cp) : "";
-  }  
+  }
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
     let randomChar = "";
@@ -216,7 +193,7 @@ useEffect(() => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees</h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection}/>
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} />
         </div>
       </div>
       <CounterBar
@@ -239,7 +216,7 @@ useEffect(() => {
       />
       <CollapsiblePanel title="Add Unseen Characters">
         <div className={styles.buttonColumn}>
-            <label className={styles.tagToggle}>
+          <label className={styles.tagToggle}>
             <input
               type="checkbox"
               checked={isTagTyping}
@@ -256,7 +233,15 @@ useEffect(() => {
           <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
             Add Random No-Break Space
           </button>
-        </div>      
+        </div>
+      </CollapsiblePanel>
+      <CollapsiblePanel title="Typing Animation">
+        <TypingSequencePanel
+          setText={setText}
+          getCurrentText={() => normalText}
+          playInitialDemo={!normalText}
+          ref={typingPanelRef}
+        />
       </CollapsiblePanel>
     </div>
   );

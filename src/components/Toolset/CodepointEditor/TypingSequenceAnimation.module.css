@@ -1,0 +1,83 @@
+.typingPanel {
+  display: grid;
+  gap: 0.5rem; 
+  padding: 1rem 0;
+}
+
+.typingControls {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+.toggleButton {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.toggleButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.slider {
+  background: none;
+  height: 4px;
+  background-color: transparent;
+}
+
+/* Remove blue fill - Chrome */
+.slider::-webkit-slider-runnable-track {
+  background: #ccc; /* neutral color */
+  height: 7px;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  margin-top: -4px;
+}
+.slider::-webkit-slider-thumb:active {
+  background: #000;
+}
+
+/* Remove blue fill - Firefox */
+.slider::-moz-range-track {
+  background: #ccc;
+  height: 4px;
+}
+.slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border: none;
+  border-radius: 50%;
+}
+
+/* Remove blue fill - Edge/IE */
+.slider::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+  height: 7px;
+}
+.slider::-ms-fill-lower {
+  background: #ccc;
+}
+.slider::-ms-fill-upper {
+  background: #ccc;
+}
+.slider::-ms-thumb {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border: none;
+  border-radius: 50%;
+}

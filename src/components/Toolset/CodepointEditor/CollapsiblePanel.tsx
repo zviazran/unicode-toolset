@@ -16,10 +16,18 @@ export default function CollapsiblePanel({
 
   return (
     <div className={styles.panel}>
-      <button className={styles.header} onClick={() => setIsOpen((prev) => !prev)}>
+      <button
+        className={styles.header}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         {title} <span className={styles.icon}>{isOpen ? "▲" : "▼"}</span>
       </button>
-      {isOpen && <div className={styles.content}>{children}</div>}
+      <div
+        className={styles.content}
+        style={{ display: isOpen ? "block" : "none" }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
