@@ -30,3 +30,5 @@ export const bidiCharacters = new Map<string, number>([
 // about 25 options total 
 export const WordBreakWSegSpaceNewlineRegex = /[\u0020\u000C\u2000-\u2006\u2008-\u200A\u2028\u2029\u205F\u3000]/;
 export const DecompositionTypeNoBreakRegex = /[\u00A0\u2007\u202F]/;
+
+export const AIIndicatorRegex  = /[\u2000-\u206F\u2190-\u21FF\u2794\u27A1\u27A4\u05BE\u060C\u061B\u061F\u00AB\u00BB\u3001\u3002\u30FB\uFF01-\uFF0F\uFF1A-\uFF1F]/;

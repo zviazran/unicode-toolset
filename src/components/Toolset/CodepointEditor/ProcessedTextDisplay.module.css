@@ -49,6 +49,10 @@
   background-color: rgba(144, 238, 144, 0.2);
 }
 
+.aiIndicator {
+  background-color: rgba(255, 10, 10, 0.5);
+}
+
 .visibleChar {
   padding: 0;
   border-radius: 0;

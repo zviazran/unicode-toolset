@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
-import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
+import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../CodePointsConsts";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -28,15 +28,17 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
       const isWordBreakChar = WordBreakWSegSpaceNewlineRegex.test(char);
       const isNoBreakChar = DecompositionTypeNoBreakRegex.test(char);
+      const isAIIndicator = AIIndicatorRegex.test(char);
 
       const isSelected = i >= selectionRange.start && i < selectionRange.end;
       const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;
 
-      const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) =>
+      const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean, isAIIndicator: boolean) =>
         `${styles.styledChar} ${
           isWordBreakChar ? styles.wordBreakChar
           : isNoBreakChar ? styles.noBreakChar
           : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
+          : isAIIndicator ? styles.aiIndicator
           : styles.visibleChar
         }`;
 
@@ -58,7 +60,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         result.push(
           <span
             key={`${startIndex}-${codePoint}`}
-            className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
+            className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar, isAIIndicator)}
             contentEditable={false}
             suppressContentEditableWarning
             data-original={char}
