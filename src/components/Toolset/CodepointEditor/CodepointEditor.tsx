@@ -6,6 +6,7 @@ import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeN
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
+import LegendDialog from "./LegendDialog";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
@@ -199,7 +200,7 @@ const CodepointEditor: React.FC = () => {
           />
         </div>
         <div className={styles.textBox}>
-          <h2>What the computer sees</h2>
+          <h2>What the computer sees<LegendDialog/></h2>
           <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} />
         </div>
       </div>

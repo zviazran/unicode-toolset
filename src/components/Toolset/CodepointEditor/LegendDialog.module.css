@@ -1,0 +1,75 @@
+.trigger {
+  background: none;
+  border: none;
+  color: #888;
+}
+
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 1.6em 1.2em;
+  max-width: 90vw;
+  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+}
+
+.title {
+  font-size: 1.3em;
+  font-weight: 600;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.legendList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legendList li {
+  margin: 0.6em 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.legendList span {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 4px;
+  margin-right: 0.8em;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.close {
+  position: absolute;
+  top: 0.2em;
+  right: 0.4em;
+  font-size: 1.4em;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #666;
+}
+
