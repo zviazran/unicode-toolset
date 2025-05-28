@@ -128,6 +128,8 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
     "🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦",
     "😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿",
     "\<div title=\"ل\"\>ع\<\/div\>",
+    "Tab–space debates — never end ‒ one side is very wrong.",
+    "I don’t usually write reviews, but this app deserves it — so good.",
     "Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
   ];
 
