@@ -31,4 +31,4 @@ export const bidiCharacters = new Map<string, number>([
 export const WordBreakWSegSpaceNewlineRegex = /[\u0020\u000C\u2000-\u2006\u2008-\u200A\u2028\u2029\u205F\u3000]/;
 export const DecompositionTypeNoBreakRegex = /[\u00A0\u2007\u202F]/;
 
-export const AIIndicatorRegex  = /[\u00AB\u00BB\u02D7\u2000-\u206F\u2190-\u21FF\u2212\u2794\u27A1\u27A4\u2CBA\u05BE\u060C\u061B\u06D4\u061F\u3001\u3002\u30FB\uFE58\uFF01-\uFF0F\uFF1A-\uFF1F]/;
+export const AIIndicatorRegex  = /[\u00AB\u00BB\u02D7\u2000-\u206F\u2190-\u21FF\u2212\u2794\u27A4\u2CBA\u05BE\u060C\u061B\u06D4\u061F\u3001\u3002\u30FB\uFE58\uFF01-\uFF0F\uFF1A-\uFF1F]/;

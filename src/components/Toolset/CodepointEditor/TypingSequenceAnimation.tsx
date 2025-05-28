@@ -10,11 +10,9 @@ export type TypingController = {
 function TypingSequenceController(
   texts: string[],
   setText: (t: string) => void,
-  getCurrentText: () => string,
   runId: number,
   currentRunIdRef: React.MutableRefObject<number>,
   options?: {
-    pauseBeforeDelete?: number;
     pauseBetweenItems?: number;
     onComplete?: () => void;
     speed?: number;
@@ -25,6 +23,7 @@ function TypingSequenceController(
   const controller: TypingController = {
     cancel: () => {
       cancelled = true;
+      options?.onComplete?.();
     },
     isCancelled: () => cancelled,
   };
@@ -35,7 +34,6 @@ function TypingSequenceController(
     }
   }
 
-  const pauseBeforeDelete = options?.pauseBeforeDelete ?? 800;
   const pauseBetweenItems = options?.pauseBetweenItems ?? 600;
   const speed = options?.speed ?? 150;
 
@@ -66,9 +64,7 @@ function TypingSequenceController(
       if (controller.isCancelled() || runId !== currentRunIdRef.current) return;
 
       if (i >= codePoints.length) {
-        setTimeout(() => {
-          if (!controller.isCancelled() && runId === currentRunIdRef.current) deleteNext();
-        }, pauseBeforeDelete);
+        onDone();
         return;
       }
 
@@ -83,26 +79,6 @@ function TypingSequenceController(
       setTimeout(() => {
         if (!controller.isCancelled() && runId === currentRunIdRef.current) {
           typeNext();
-        }
-      }, delay);
-    }
-
-    function deleteNext() {
-      if (controller.isCancelled() || runId !== currentRunIdRef.current) return;
-
-      const current = Array.from(getCurrentText());
-      if (current.length === 0) {
-        onDone();
-        return;
-      }
-
-      current.pop();
-      safeSetText(current.join(""));
-
-      const delay = 25 + Math.random() * 15;
-      setTimeout(() => {
-        if (!controller.isCancelled() && runId === currentRunIdRef.current) {
-          deleteNext();
         }
       }, delay);
     }
@@ -164,15 +140,15 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
     const initial = TypingSequenceController(
       [random],
       setText,
-      getCurrentText,
       0,
       activeRunId,
       {
-        pauseBeforeDelete: 2000,
         pauseBetweenItems: 500,
         onComplete: () => {
           if (activeRunId.current === 0) {
-            setText(""); // ✅ Only reset if still the current run
+            setTimeout(() => {
+              setText("");
+            }, 2000);
             hasPlayedInitialDemo.current = true;
           }
         }
@@ -197,11 +173,9 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
     const newController = TypingSequenceController(
       [text],
       setText,
-      getCurrentText,
       runId,
       activeRunId,
       {
-        pauseBeforeDelete: 1000,
         pauseBetweenItems: 500,
         speed,
         onComplete: () => {
@@ -218,7 +192,9 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
     if (isTyping) {
       pauseTypingAnimation();
     } else {
-      runTypingAnimation(typingText, typingSpeed);
+      const textToAnimate = typingText || getCurrentText();
+      setTypingText(textToAnimate);
+      runTypingAnimation(textToAnimate, typingSpeed);
     }
   };
 
@@ -233,7 +209,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
               runTypingAnimation(value, typingSpeed);
             }
           }}>
-          <option value="">-- Select Example --</option>
+          <option value="">-- Animate Current Text --</option>
           {[...initialAnimations, ...exampleAnimations].map((text, i) => (
             <option key={i} value={text}>
               {text.length > 26 ? text.slice(0, 23).replace(/\n/g, "") + "..." : text.replace(/\n/g, "")}
@@ -263,7 +239,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
         <button
           className={styles.toggleButton}
           onClick={toggleTyping}
-          disabled={!typingText}
+          disabled={!typingText && !getCurrentText()}
         >
           <Icon icon={isTyping ? "mdi:pause" : "mdi:play"} width="24" />
         </button>
