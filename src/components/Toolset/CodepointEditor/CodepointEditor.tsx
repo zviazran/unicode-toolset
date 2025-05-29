@@ -6,6 +6,7 @@ import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeN
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
+import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
 
 // Todo: add an button for sending the text in a link
@@ -200,7 +201,7 @@ const CodepointEditor: React.FC = () => {
           />
         </div>
         <div className={styles.textBox}>
-          <h2>What the computer sees<LegendDialog/></h2>
+          <h2>What the computer sees<LegendDialog /></h2>
           <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} />
         </div>
       </div>
@@ -249,6 +250,12 @@ const CodepointEditor: React.FC = () => {
           getCurrentText={() => normalText}
           playInitialDemo={playInitialDemo}
           ref={typingPanelRef}
+        />
+      </CollapsiblePanel>
+      <CollapsiblePanel title="Normalization">
+        <NormalizationPanel
+          text={normalText}
+          setText={setText}
         />
       </CollapsiblePanel>
     </div>
