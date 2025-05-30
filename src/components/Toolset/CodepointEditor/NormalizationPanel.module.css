@@ -1,0 +1,57 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: center; /* Center everything horizontally */
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.normalButton,
+.selectedButton {
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-family: inherit;
+  font-size: 0.95rem;
+  min-width: 110px;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.normalButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.selectedButton {
+  background-color: #0066cc;
+  color: white;
+  border: 1px solid #005bb5;
+}
+
+.normalButton:hover:not(:disabled),
+.selectedButton:hover:not(:disabled) {
+  background-color: #005bb5;
+  color: white;
+}
+
+.normalButton:disabled,
+.selectedButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.description {
+  font-size: 0.9em;
+  color: #444;
+  min-height: 1.2em;
+  margin-top: 0.25rem;
+  text-align: center;
+}
