@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./NormalizationPanel.module.css";
 
 type NormalizationForm = "NFC" | "NFD" | "NFKC" | "NFKD";
@@ -20,25 +20,37 @@ export default function NormalizationPanel({ text, setText }: Props) {
   const [selectedForm, setSelectedForm] = useState("Original");
   const [originalFrozen, setOriginalFrozen] = useState<string | null>(null);
   const [hoveredForm, setHoveredForm] = useState<string | null>(null);
+  const fromNormalizationRef = useRef(false);
+  const lastAppliedTextRef = useRef(text);
 
   const getDisplayedDescription = () => {
     return descriptions[hoveredForm ?? selectedForm];
   };
 
   useEffect(() => {
-    if (selectedForm === "Original" && originalFrozen && text !== originalFrozen) {
-      setOriginalFrozen(null); // user typed — clear frozen
+    if (fromNormalizationRef.current) {
+      fromNormalizationRef.current = false;
+      return;
+    }
+
+    // Text changed and it's different from the last normalized value
+    if (text !== lastAppliedTextRef.current) {
+      setSelectedForm("Original");
+      setOriginalFrozen(null);
+      lastAppliedTextRef.current = text; // treat as new "original"
     }
   }, [text]);
 
   const handleSelect = (form: string) => {
     if (form !== "Original" && !originalFrozen) {
-      setOriginalFrozen(text); // first time selecting a normalization
+      setOriginalFrozen(text);
     }
 
     const base = originalFrozen ?? text;
-    const next =
-      form === "Original" ? (originalFrozen ?? text) : base.normalize(form as NormalizationForm);
+    const next = form === "Original" ? (originalFrozen ?? text) : base.normalize(form as NormalizationForm);
+
+    fromNormalizationRef.current = true;
+    lastAppliedTextRef.current = next;
 
     setSelectedForm(form);
     setText(next);
