@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import logo from "../Assets/logo_and_text.png";
 
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
@@ -31,10 +32,15 @@ function NavBar() {
           as={Link}
           to="/home"
           onClick={() => updateExpanded(false)}
-          className="navbar-text-container"
+          className="navbar-logo-container"
         >
-          zvi.azran
+          <img
+            src={logo}
+            alt="Unicode Security Toolset"
+            className="navbar-logo-img"
+          />
         </Nav.Link>
+
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
           onClick={() => {
@@ -64,26 +70,6 @@ function NavBar() {
                 onClick={() => updateExpanded(false)}
               >
                 <Icon icon="ant-design:user-outlined" style={{ marginBottom: "3px" }} /> About
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/toolset"
-                onClick={() => updateExpanded(false)}
-              >
-                <Icon icon="mdi:shield-search" style={{ marginBottom: "3px" }} /> Unicode Security Toolset
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/resume"
-                onClick={() => updateExpanded(false)}
-              >
-                <Icon icon="mdi:file-account-outline" style={{ marginBottom: "3px" }} /> Resume
               </Nav.Link>
             </Nav.Item>
           </Nav>

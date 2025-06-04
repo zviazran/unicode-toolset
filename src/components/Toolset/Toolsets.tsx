@@ -15,9 +15,9 @@ const Toolsets: React.FC = () => {
   return (
     <Container fluid className="toolset-section">
       <Container>
-        <h1 className="toolset-heading">
+        <h2 className="toolset-heading">
           Unicode Security Toolset
-        </h1>
+        </h2>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           {TOOLSETS.map((project: Project, index: number) => (
             <Col md={4} className="toolset-card" key={index}>
@@ -33,9 +33,9 @@ const Toolsets: React.FC = () => {
         </Row>
       </Container>
       <Container>
-        <h1 className="toolset-heading">
+        <h2 className="toolset-heading">
           Other Recommendations
-        </h1>
+        </h2>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           {RECOMMENDATIONS.map((project: Project, index: number) => (
             <Col md={4} className="toolset-card" key={index}>

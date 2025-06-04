@@ -1,54 +1,69 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import Skillset from "./Skillset";
-import Aboutcard from "./AboutCard";
-import developer from "../../Assets/about.jpg";
-import {  JS_SKILLS, JS_TOOLS, CSHARP_SKILLS, CSHARP_TOOLS, CPP_SKILLS, CPP_TOOLS } from "../../Constants";
+import { Icon } from "@iconify/react";
+import myImg from "../../Assets/zvi_azran_img.jpg";
+import pdf from "../../Assets/zvi_azran_cv.pdf";
+import SocialMedia from "../SocialMedia";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import "../../App.css";
 
 const About: React.FC = () => {
   return (
-    <Container fluid className="about-section">
-      <Container>
-        <Row style={{ justifyContent: "center", padding: "10px" }}>
-          <Col
-            md={7}
-            style={{
-              justifyContent: "center",
-              paddingTop: "30px",
-              paddingBottom: "50px",
-            }}
+    <div className="about-resume">
+      <section>
+        <Container fluid className="home-section" id="home">
+          <Container className="home-content">
+            <Row>
+              <Col md={6} className="home-header">
+                <h1 style={{ paddingBottom: 15 }} className="heading">
+                  Hi There!{" "}
+                  <span className="wave" role="img" aria-labelledby="wave">
+                    👋🏻
+                  </span>
+                </h1>
+
+                <h1 className="heading-name">
+                  I'm
+                  <strong className="main-name"> Zvi Azran</strong>
+                </h1>
+
+                <p className="heading-description blockquote">
+                  I'm a software engineer with a decade of experience in C#, C++, JavaScript, and more. Experienced in developing for cybersecurity solutions, optimizing performance, and maintaining complex codebases. Also an unapologetic Unicode enthusiast.
+                </p>
+              </Col>
+
+              <Col md={5}>
+                <img src={myImg} className="profile-pic" alt="avatar" />
+              </Col>
+            </Row>
+          </Container>
+        </Container>
+
+        <Container>
+          <Row>
+            <Col md={12} className="home-about-social">
+              <h1>Get in Touch</h1>
+              <p>
+                If you're in search of a developer to enhance your team or collaborate on a project
+                <br />
+                <strong>Feel free to connect with me</strong>
+              </p>
+              <SocialMedia />
+            </Col>
+          </Row>
+
+          <Button
+            variant="primary"
+            href={pdf}
+            target="_blank"
+            className="download-button"
           >
-            <h1 style={{ fontSize: "2.1em", paddingBottom: "20px" }}>
-              <strong className="purple">About Me</strong>
-            </h1>
-            <Aboutcard />
-          </Col>
-          <Col md={5} style={{ paddingBottom: "50px" }} className="about-img">
-            <img src={developer} alt="about" className="image-style" />
-          </Col>
-        </Row>
-        <Row className="skill-tools-wrapper">
-          <Col xs={2} className="skill-wrapper">
-            <h5>
-              Langs
-            </h5>
-          </Col>
-          <Col xs={6} className="skill-wrapper">
-            <h5>
-              Skillset
-            </h5>
-          </Col>
-          <Col xs={4} className="skill-wrapper">
-            <h5>
-              Tools I use
-            </h5>
-          </Col>
-        </Row>
-        <Skillset title="JS" skills={JS_SKILLS} tools={JS_TOOLS} />
-        <Skillset title="C#" skills={CSHARP_SKILLS} tools={CSHARP_TOOLS} />
-        <Skillset title="C++" skills={CPP_SKILLS} tools={CPP_TOOLS} />
-      </Container>
-    </Container>
+            <Icon icon="mdi:download" style={{ marginBottom: "2px" }} />
+            &nbsp;Download CV
+          </Button>
+          
+        </Container>
+      </section>
+    </div>
   );
 };
 
