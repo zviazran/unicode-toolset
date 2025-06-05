@@ -10,24 +10,24 @@ const About: React.FC = () => {
   return (
     <div className="about-resume">
       <section>
-        <Container fluid className="home-section" id="home">
-          <Container className="home-content">
+        <Container fluid className="about-section">
+          <Container className="about-content">
             <Row>
-              <Col md={6} className="home-header">
-                <h1 style={{ paddingBottom: 15 }} className="heading">
+              <Col md={6} className="about-header">
+                <h1 className="heading">
                   Hello There!{" "}
                   <span className="wave" role="img" aria-labelledby="wave">
                     👋🏻
                   </span>
                 </h1>
 
-                <h1 className="heading-name">
+                <h2 className="heading-name">
                   I'm
                   <strong className="main-name"> Zvi Azran</strong>
-                </h1>
+                </h2>
 
                 <p className="heading-description blockquote">
-                  I'm a software engineer with a decade of experience in C#, C++, JavaScript, and more. Experienced in developing for cybersecurity solutions, optimizing performance, and maintaining complex codebases. Also an unapologetic Unicode enthusiast.<br/>This project is both a showcase of my capabilities and a love letter to the plain old text that everyone unfairly takes for granted.<br/>It's free and publicly available for all.
+                  I'm a software engineer with a decade of experience in C#, C++, JavaScript, and more. Experienced in developing for cybersecurity solutions, optimizing performance, and maintaining complex codebases. Also an unapologetic Unicode enthusiast.<br/><br/>This project is both a showcase of my capabilities, thoroughness and dedication and a love letter to the plain old text that everyone unfairly takes for granted.<br/>It's free and publicly available for all.
                 </p>
               </Col>
 
@@ -40,12 +40,12 @@ const About: React.FC = () => {
 
         <Container>
           <Row>
-            <Col md={12} className="home-about-social">
+            <Col md={12} className="about-social">
               <h1>Get in Touch</h1>
-              <p>
+              <p style={{ fontSize: 20 }} >
                 If you're in search of a developer to enhance your team or collaborate on a project
                 <br />
-                <strong>Feel free to connect with me</strong>
+                <strong>Feel free to connect</strong>
               </p>
               <SocialMedia />
             </Col>

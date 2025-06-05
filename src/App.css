@@ -199,11 +199,11 @@ html {
   }
 }
 
-.home-header {
-  padding-top: 80px !important;
+.about-header {
+  padding-top: 2rem !important;
 }
 
-.home-section {
+.about-section {
   position: relative;
   z-index: -1;
   background-position: top center;
@@ -212,14 +212,14 @@ html {
   padding-top: 30px !important;
 }
 
-.home-content {
+.about-content {
   padding: 3rem 0 0rem !important;
   color: #414141;
   text-align: left;
 }
 
 .heading-description {
-  margin-left: 20px !important;
+  margin-left: 22px !important;
 }
 
 .heading {
@@ -232,20 +232,20 @@ html {
   padding-left: 20px !important;
 }
 
-.home-about-social {
+.about-social {
   text-align: center !important;
   padding-top: 25px;
   color: #414141 !important;
 }
 
-.home-about-social-links {
+.about-social-links {
   justify-content: center !important;
   display: inline-flex !important;
   position: relative !important;
   padding-inline-start: 0 !important;
 }
 
-.home-social-icons {
+.about-social-icons {
   position: relative !important;
   display: inline-block !important;
   width: 60px !important;
@@ -259,7 +259,7 @@ html {
   border: 1px solid #343e47;
 }
 
-.home-social-icons::before {
+.about-social-icons::before {
   content: "";
   position: absolute;
   top: 0;
@@ -273,12 +273,12 @@ html {
   z-index: -1;
 }
 
-.home-social-icons:hover::before {
+.about-social-icons:hover::before {
   transform: scale(1.1);
   box-shadow: 0 0 15px #414141;
 }
 
-.home-social-icons:hover {
+.about-social-icons:hover {
   color: #414141;
   box-shadow: 0 0 5px #414141;
   text-shadow: 0 0 2px #414141;
