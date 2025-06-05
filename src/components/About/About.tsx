@@ -15,7 +15,7 @@ const About: React.FC = () => {
             <Row>
               <Col md={6} className="home-header">
                 <h1 style={{ paddingBottom: 15 }} className="heading">
-                  Hi There!{" "}
+                  Hello There!{" "}
                   <span className="wave" role="img" aria-labelledby="wave">
                     👋🏻
                   </span>
