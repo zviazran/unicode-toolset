@@ -20,5 +20,9 @@ declare module "string-twister" {
       static hostAfterExampleURL(url: string, useIP?: boolean, useFragment?: boolean): string;
       static addRandomFillerToDomain(url: string): string;
     }
+
+    export class IndicatorsCleaner {
+      static deepClean(text: string): string;
+    }
   }
   

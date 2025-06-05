@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from './CodepointEditor.module.css';
+import innerStyles from './ProcessedTextDisplay.module.css';
 import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
@@ -8,6 +9,7 @@ import CollapsiblePanel from "./CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
+import { IndicatorsCleaner } from "string-twister";
 
 // Todo: add an button for sending the text in a link
 // Todo: add legend indexing
@@ -223,41 +225,50 @@ const CodepointEditor: React.FC = () => {
         showDirectionToggle
         onSetText={setText}
       />
-      <CollapsiblePanel title="Add Unseen Characters">
-        <div className={styles.buttonColumn}>
-          <label className={styles.tagToggle}>
-            <input
-              type="checkbox"
-              checked={isTagTyping}
-              onChange={() => setIsAddTagsMode((prev) => !prev)}
-            />
-            <span>Tag Typing</span>
-          </label>
-          <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${styles.invisibleChar}`}>
-            Add Random Invisible Character
-          </button>
-          <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${styles.wordBreakChar}`}>
-            Add Random Word-Break Space
-          </button>
-          <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${styles.noBreakChar}`}>
-            Add Random No-Break Space
-          </button>
-        </div>
-      </CollapsiblePanel>
-      <CollapsiblePanel title="Typing Animation">
-        <TypingSequencePanel
-          setText={setText}
-          getCurrentText={() => normalText}
-          playInitialDemo={playInitialDemo}
-          ref={typingPanelRef}
-        />
-      </CollapsiblePanel>
-      <CollapsiblePanel title="Normalization">
-        <NormalizationPanel
-          text={normalText}
-          setText={setText}
-        />
-      </CollapsiblePanel>
+      <div className={styles.panelGrid}>
+        <CollapsiblePanel title="Text Indicators">
+          <div className={styles.buttonColumn}>
+            <button onClick={() => setText(IndicatorsCleaner.deepClean(normalText))} className={`${styles.charButton} ${innerStyles.aiIndicator}`}>
+              Deep Clean
+            </button>
+          </div>
+        </CollapsiblePanel>
+        <CollapsiblePanel title="Add Unseen Characters">
+          <div className={styles.buttonColumn}>
+            <label className={styles.tagToggle}>
+              <input
+                type="checkbox"
+                checked={isTagTyping}
+                onChange={() => setIsAddTagsMode((prev) => !prev)}
+              />
+              <span>Tag Typing</span>
+            </label>
+            <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${innerStyles.invisibleChar}`}>
+              Add Random Invisible Character
+            </button>
+            <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${innerStyles.wordBreakChar}`}>
+              Add Random Word-Break Space
+            </button>
+            <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${innerStyles.noBreakChar}`}>
+              Add Random No-Break Space
+            </button>
+          </div>
+        </CollapsiblePanel>
+        <CollapsiblePanel title="Typing Animation">
+          <TypingSequencePanel
+            setText={setText}
+            getCurrentText={() => normalText}
+            playInitialDemo={playInitialDemo}
+            ref={typingPanelRef}
+          />
+        </CollapsiblePanel>
+        <CollapsiblePanel title="Normalization">
+          <NormalizationPanel
+            text={normalText}
+            setText={setText}
+          />
+        </CollapsiblePanel>
+      </div>
     </div>
   );
 };
