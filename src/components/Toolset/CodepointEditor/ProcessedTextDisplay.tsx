@@ -22,7 +22,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     const result: (string | JSX.Element)[] = [];
     let hasFindings = false;
 
-    for (let i = 0; i < text.length; ) {
+    for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
       const char = String.fromCodePoint(codePoint);
       const startIndex = i;
@@ -36,12 +36,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;
 
       const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean, isAIIndicator: boolean) =>
-        `${styles.styledChar} ${
-          isWordBreakChar ? styles.wordBreakChar
+        `${styles.styledChar} ${isWordBreakChar ? styles.wordBreakChar
           : isNoBreakChar ? styles.noBreakChar
-          : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
-          : isAIIndicator ? styles.aiIndicator
-          : styles.visibleChar
+            : isInvisible ? (isTagChar ? styles.tagChar : styles.invisibleChar)
+              : isAIIndicator ? styles.aiIndicator
+                : styles.visibleChar
         }`;
 
       const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => {
@@ -51,16 +50,22 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       }
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
+        let title = "";
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
-          i++; 
+          title = "CRLF (\\r\\n)";
+          i++; // skip \n part of CRLF
+        } else if (codePoint === 0x0D) {
+          title = "CR (\\r)";
+        } else {
+          title = "LF (\\n)";
         }
         result.push(
-            <span key={`${startIndex}-${codePoint}`} className={`${styles.styledChar} ${styles.newlineVisual}`}>
-              {isSelected && <span className={styles.selectionOverlay} />}
-              {isCursorHere && <span className={styles.cursorBar} />}
-              ↵
-            </span>);
-          result.push(<br key={`${startIndex}-br`} />);
+          <span key={`${startIndex}-${codePoint}`} className={`${styles.styledChar} ${styles.newlineVisual}`} title={title}>
+            {isSelected && <span className={styles.selectionOverlay} />}
+            {isCursorHere && <span className={styles.cursorBar} />}
+            ↵
+          </span>);
+        result.push(<br key={`${startIndex}-br`} />);
       } else {
         result.push(
           <span
@@ -79,8 +84,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               longPressTimeout.current = setTimeout(() =>
                 window.open(`https://util.unicode.org/UnicodeJsps/character.jsp?a=${codePoint.toString(16).toLowerCase()}`, "_blank"), 1500);
             }}
-            onPointerUp={() => {clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!);}}
-            onPointerLeave={() => {clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!);}}
+            onPointerUp={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
+            onPointerLeave={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
             onClick={(e) => {
               if (longPressTimeout.current) {
                 clearTimeout(longPressTimeout.current);
@@ -91,11 +96,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
               target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
               target.className = `${styles.styledChar} ${styles.editableChar}`;
 
-              if (!target.contentEditable){
+              if (!target.contentEditable) {
                 const range = document.createRange();
                 range.selectNodeContents(target);
                 range.collapse(false); // false = move to end
-  
+
                 const sel = window.getSelection();
                 sel?.removeAllRanges();
                 sel?.addRange(range);
@@ -118,7 +123,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           </span>
         );
       }
-  
+
       i += char.length;
     }
 
@@ -133,8 +138,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
     onAnalysisChange?.(hasFindings);
     return result;
   };
-  
-  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {  
+
+  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {
     if (!textareaRef.current) return;
     const currentText = textareaRef.current.value;
     let newContent = "";
@@ -144,19 +149,19 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
         newContent = String.fromCodePoint(codePoint);
         if (!isInvisible && originalValue === newContent) return;
       }
-      if (isInvisible && newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {  
+      if (isInvisible && newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {
         newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
       }
-    } catch {}
-  
+    } catch { }
+
     if (!newContent && newValue === originalValue)
       newContent = newValue;
-  
+
     const beforeChange = currentText.slice(0, position);
     const afterChange = currentText.slice(position + originalValue.length);
-  
+
     const updatedText = beforeChange + newContent + afterChange;
-  
+
     setText(updatedText);
   };
 
