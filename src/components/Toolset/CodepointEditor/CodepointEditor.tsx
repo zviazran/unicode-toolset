@@ -56,6 +56,7 @@ const CodepointEditor: React.FC = () => {
   const [lastSelection, setLastSelection] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
   const typingPanelRef = useRef<{ stopTyping: () => void }>(null);
   const [playInitialDemo, setPlayInitialDemo] = useState(false);
+  const [hasTextIndicators, setHasTextIndicators] = useState(false);
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -186,6 +187,12 @@ const CodepointEditor: React.FC = () => {
     setText(updatedText);
   };
 
+  function describeOSIndicators(osList: string[]): string {
+    if (osList.length === 0) return "No OS indicators.";
+    if (osList.length === 1) return `OS indicator: ${osList[0]}`;
+    return `OS indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
+  }
+
   return (
     <div className={styles.codepointEditor}>
       <h1>The Unseen Side Of Text</h1>
@@ -204,7 +211,7 @@ const CodepointEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees<LegendDialog /></h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} />
+          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)} />
         </div>
       </div>
       <CounterBar
@@ -228,7 +235,15 @@ const CodepointEditor: React.FC = () => {
       <div className={styles.panelGrid}>
         <CollapsiblePanel title="Text Indicators">
           <div className={styles.buttonColumn}>
-            <button onClick={() => setText(IndicatorsCleaner.deepClean(normalText))} className={`${styles.charButton} ${innerStyles.aiIndicator}`}>
+            <div className={styles.description}>
+              {describeOSIndicators(IndicatorsCleaner.findOSIndicators(normalText))}
+            </div>
+            <button
+              disabled={!hasTextIndicators}
+              onClick={() => setText(IndicatorsCleaner.deepClean(normalText))}
+              className={`${styles.charButton} ${innerStyles.aiIndicator}`}
+              title={!hasTextIndicators ? "No AI indicators found" : undefined}
+            >
               Deep Clean
             </button>
           </div>

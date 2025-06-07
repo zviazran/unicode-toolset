@@ -7,9 +7,10 @@ type ProcessedTextDisplayProps = {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   setText: (text: string) => void;
   selectionRange: { start: number; end: number };
+  onAnalysisChange?: (hasFindings: boolean) => void;
 };
 
-const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText, selectionRange }) => {
+const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText, selectionRange, onAnalysisChange }) => {
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
 
@@ -19,7 +20,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
 
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
-  
+    let hasFindings = false;
+
     for (let i = 0; i < text.length; ) {
       const codePoint = text.codePointAt(i)!;
       const char = String.fromCodePoint(codePoint);
@@ -42,8 +44,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
           : styles.visibleChar
         }`;
 
-      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => 
-        isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
+      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => {
+        const displayedChar = isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
+        hasFindings = hasFindings || (displayedChar != char) || isAIIndicator;
+        return displayedChar;
+      }
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
         if (codePoint === 0x0D && i + 1 < text.length && text.codePointAt(i + 1) === 0x0A) {
@@ -125,6 +130,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       );
     }
 
+    onAnalysisChange?.(hasFindings);
     return result;
   };
   

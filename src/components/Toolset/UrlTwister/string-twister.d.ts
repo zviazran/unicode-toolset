@@ -23,6 +23,7 @@ declare module "string-twister" {
 
     export class IndicatorsCleaner {
       static deepClean(text: string): string;
+      static findOSIndicators(text: string): string[] 
     }
   }
   
