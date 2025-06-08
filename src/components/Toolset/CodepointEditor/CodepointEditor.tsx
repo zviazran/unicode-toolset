@@ -187,10 +187,11 @@ const CodepointEditor: React.FC = () => {
     setText(updatedText);
   };
 
-  function describeOSIndicators(osList: string[]): string {
-    if (osList.length === 0) return "No OS indicators.";
+  function describeTextIndicators(text: string): string {
+    const osList  = IndicatorsCleaner.findOSIndicators(text);
+    if (osList.length === 0) return "No Text indicators.";
     if (osList.length === 1) return `OS indicator: ${osList[0]}`;
-    return `OS indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
+    return `Text indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
   }
 
   return (
@@ -236,7 +237,7 @@ const CodepointEditor: React.FC = () => {
         <CollapsiblePanel title="Text Indicators">
           <div className={styles.buttonColumn}>
             <div className={styles.description}>
-              {describeOSIndicators(IndicatorsCleaner.findOSIndicators(normalText))}
+              {describeTextIndicators(normalText)}
             </div>
             <button
               disabled={!hasTextIndicators}
