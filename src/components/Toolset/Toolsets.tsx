@@ -15,9 +15,9 @@ const Toolsets: React.FC = () => {
   return (
     <Container fluid className="toolset-section">
       <Container>
-        <h2 className="toolset-heading">
-          Unicode Security Toolset
-        </h2>
+        <h1 className="toolset-heading">
+          Սոі𐐽օ𝖽⁤е ‮ytiruceS‬ Тօօlꮪet
+        </h1>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           {TOOLSETS.map((project: Project, index: number) => (
             <Col md={4} className="toolset-card" key={index}>
