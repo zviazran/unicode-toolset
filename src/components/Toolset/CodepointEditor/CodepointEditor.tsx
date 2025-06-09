@@ -189,7 +189,7 @@ const CodepointEditor: React.FC = () => {
 
   function describeTextIndicators(text: string): string {
     const osList  = IndicatorsCleaner.findOSIndicators(text);
-    if (osList.length === 0) return "No Text indicators.";
+    if (osList.length === 0) return "Looks normal.";
     if (osList.length === 1) return `OS indicator: ${osList[0]}`;
     return `Text indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
   }
@@ -243,7 +243,7 @@ const CodepointEditor: React.FC = () => {
               disabled={!hasTextIndicators}
               onClick={() => setText(IndicatorsCleaner.deepClean(normalText))}
               className={`${styles.charButton} ${innerStyles.aiIndicator}`}
-              title={!hasTextIndicators ? "No AI indicators found" : undefined}
+              title={!hasTextIndicators ? "No indicators found" : undefined}
             >
               Deep Clean
             </button>
