@@ -15,22 +15,15 @@ export const TOOLSETS = [
     image: CODEPOINT_EDITOR,
     name: "The Unseen Side of Text",
     joke: "It's not a bug, it's an invisible character 👻",
-    description: "Inspect and edit text at the codepoint level — including invisible characters, breaks and AI indicators. What you see isn’t always what your computer sees.",
+    description: "Inspect and edit text at the codepoint level including invisible characters, breaks and AI indicators. What you see isn’t always what your computer sees.",
     link: "char-editor",
   },
   {
     image: CRASH_CHAR_SEQUENCE_GENERATOR,
     name: "Crash Char Sequence Generator",
     joke: "Unicode. SMASH!!! 😱",
-    description: "Generate a crash making character combination. Try this at your own risk.",
+    description: "Generate crash making invisable character combination. Try this at your own risk.",
     link: "crash-char-sequence-generator",
-  },
-  {
-    image: URL_TWISTER,
-    name: "URL Twister",
-    joke: "Let's twist again, like we got tricked last summer 🌀",
-    description: "Enter a URL to generate random tricky spoofing versions. Would you be fooled?",
-    link: "url-twister",
   },
   {
     image: WAS_THIS_YOUR_TEXT,
@@ -38,6 +31,13 @@ export const TOOLSETS = [
     joke: "Having text problems? �� ��� ����!",
     description: "Enter your corrupted text and maybe we can find how it happened. Is one of them your original?",
     link: "was-this-your-text",
+  },
+  {
+    image: URL_TWISTER,
+    name: "URL Twister",
+    joke: "Let's twist again, like we got tricked last summer 🌀",
+    description: "Enter a URL to generate random tricky spoofing versions. Would you be fooled?",
+    link: "url-twister",
   },
   {
     image: DR_UNICODE,
@@ -50,7 +50,7 @@ export const TOOLSETS = [
     image: ENCODED_PROMPT_INJECTION_GENERATOR,
     name: "Encoded Prompt Injection Generator",
     joke: "Humanity's last chance to stop Skynet 🌐",
-    description: "Explore how encoded inputs can trick AI systems.",
+    description: "Explore how encoded inputs can trick AI systems. This would only work today on older models of AIs but worth tring.",
     link: "encoded-prompt-injection-generator",
   },
 ];

@@ -104,7 +104,7 @@ html {
   opacity: 0.9 !important;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 48rem) {
   .navbar {
     font-size: 1.4rem !important;
     background-color: #343e47 !important;
@@ -320,7 +320,7 @@ html {
   margin-left: 4rem;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 48rem) {
   .profile-pic {
     border-radius: 50%;
     height: 80%;
@@ -391,7 +391,7 @@ html {
   text-align: center !important;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 48rem) {
   .footer-copywright {
     text-align: center !important;
   }

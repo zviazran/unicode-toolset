@@ -16,7 +16,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   flex: 1;
-  max-width: 30rem;
+  max-width: 35rem;
   min-width: 15rem;
   min-height: 15rem;
   padding: 0.5rem 0.5rem 0 0.5rem;
