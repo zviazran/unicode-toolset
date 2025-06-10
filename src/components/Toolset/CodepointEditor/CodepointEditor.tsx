@@ -234,7 +234,7 @@ const CodepointEditor: React.FC = () => {
         onSetText={setText}
       />
       <div className={styles.panelGrid}>
-        <CollapsiblePanel title="Text Indicators">
+        <CollapsiblePanel title="Text Indicators"  queryKey="indicators">
           <div className={styles.buttonColumn}>
             <div className={styles.description}>
               {describeTextIndicators(normalText)}
@@ -249,7 +249,7 @@ const CodepointEditor: React.FC = () => {
             </button>
           </div>
         </CollapsiblePanel>
-        <CollapsiblePanel title="Add Unseen Characters">
+        <CollapsiblePanel title="Add Unseen Characters" queryKey="unseen">
           <div className={styles.buttonColumn}>
             <label className={styles.tagToggle}>
               <input
@@ -270,7 +270,7 @@ const CodepointEditor: React.FC = () => {
             </button>
           </div>
         </CollapsiblePanel>
-        <CollapsiblePanel title="Typing Animation">
+        <CollapsiblePanel title="Typing Animation" queryKey="typing">
           <TypingSequencePanel
             setText={setText}
             getCurrentText={() => normalText}
@@ -278,7 +278,7 @@ const CodepointEditor: React.FC = () => {
             ref={typingPanelRef}
           />
         </CollapsiblePanel>
-        <CollapsiblePanel title="Normalization">
+        <CollapsiblePanel title="Normalization" queryKey="normalization">
           <NormalizationPanel
             text={normalText}
             setText={setText}
