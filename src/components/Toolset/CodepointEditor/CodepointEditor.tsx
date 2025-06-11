@@ -11,9 +11,6 @@ import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
 
-// Todo: add an button for sending the text in a link
-// Todo: add legend indexing
-
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [
     [0x200c, 0x200c],
@@ -57,6 +54,7 @@ const CodepointEditor: React.FC = () => {
   const typingPanelRef = useRef<{ stopTyping: () => void }>(null);
   const [playInitialDemo, setPlayInitialDemo] = useState(false);
   const [hasTextIndicators, setHasTextIndicators] = useState(false);
+  const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -187,8 +185,12 @@ const CodepointEditor: React.FC = () => {
     setText(updatedText);
   };
 
+  const handlePanelToggle = (key: string, isOpen: boolean) => {
+    setOpenPanels((prev) => ({ ...prev, [key]: isOpen }));
+  };
+
   function describeTextIndicators(text: string): string {
-    const osList  = IndicatorsCleaner.findOSIndicators(text);
+    const osList = IndicatorsCleaner.findOSIndicators(text);
     if (osList.length === 0) return "Looks normal.";
     if (osList.length === 1) return `OS indicator: ${osList[0]}`;
     return `Text indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
@@ -218,12 +220,16 @@ const CodepointEditor: React.FC = () => {
       <CounterBar
         textareaRef={textareaRef}
         generateQueryString={() => {
+          const params = new URLSearchParams();
           const text = textareaRef.current?.value || "";
           const dir = textareaRef.current?.dir || "auto";
 
-          const params = new URLSearchParams();
           if (text) params.set("text", text);
           if (dir !== "auto") params.set("dir", dir);
+
+          Object.entries(openPanels).forEach(([key, open]) => {
+            if (open) params.set(key, "1");
+          });
 
           const queryString = params.toString();
           return queryString ? `?${queryString}` : "";
@@ -234,7 +240,7 @@ const CodepointEditor: React.FC = () => {
         onSetText={setText}
       />
       <div className={styles.panelGrid}>
-        <CollapsiblePanel title="Text Indicators"  queryKey="indicators">
+        <CollapsiblePanel title="Text Indicators" queryKey="indicators" onToggle={handlePanelToggle}>
           <div className={styles.buttonColumn}>
             <div className={styles.description}>
               {describeTextIndicators(normalText)}
@@ -249,7 +255,7 @@ const CodepointEditor: React.FC = () => {
             </button>
           </div>
         </CollapsiblePanel>
-        <CollapsiblePanel title="Add Unseen Characters" queryKey="unseen">
+        <CollapsiblePanel title="Add Unseen Characters" queryKey="unseen" onToggle={handlePanelToggle}>
           <div className={styles.buttonColumn}>
             <label className={styles.tagToggle}>
               <input
@@ -270,7 +276,7 @@ const CodepointEditor: React.FC = () => {
             </button>
           </div>
         </CollapsiblePanel>
-        <CollapsiblePanel title="Typing Animation" queryKey="typing">
+        <CollapsiblePanel title="Typing Animation" queryKey="typing" onToggle={handlePanelToggle}>
           <TypingSequencePanel
             setText={setText}
             getCurrentText={() => normalText}
@@ -278,7 +284,7 @@ const CodepointEditor: React.FC = () => {
             ref={typingPanelRef}
           />
         </CollapsiblePanel>
-        <CollapsiblePanel title="Normalization" queryKey="normalization">
+        <CollapsiblePanel title="Normalization" queryKey="normalization" onToggle={handlePanelToggle}>
           <NormalizationPanel
             text={normalText}
             setText={setText}

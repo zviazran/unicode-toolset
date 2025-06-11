@@ -6,27 +6,37 @@ interface CollapsiblePanelProps {
   title: string;
   children: React.ReactNode;
   queryKey: string;
+  onToggle?: (key: string, open: boolean) => void;
 }
 
-export default function CollapsiblePanel({ title, children, queryKey }: CollapsiblePanelProps) {
+export default function CollapsiblePanel({
+  title,
+  children,
+  queryKey,
+  onToggle,
+}: CollapsiblePanelProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    setIsOpen(params.get(queryKey) === "1");
+    const open = params.get(queryKey) === "1";
+    setIsOpen(open);
+    onToggle?.(queryKey, open);
   }, [location.search, queryKey]);
 
   const togglePanel = () => {
-    const params = new URLSearchParams(location.search);
     const nowOpen = !isOpen;
+    const params = new URLSearchParams(location.search);
     if (nowOpen) {
       params.set(queryKey, "1");
     } else {
       params.delete(queryKey);
     }
     navigate({ search: params.toString() }, { replace: true });
+    setIsOpen(nowOpen);
+    onToggle?.(queryKey, nowOpen); 
   };
 
   return (
@@ -40,3 +50,4 @@ export default function CollapsiblePanel({ title, children, queryKey }: Collapsi
     </div>
   );
 }
+
