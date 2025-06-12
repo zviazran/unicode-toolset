@@ -2,7 +2,6 @@
 import BaseDialog from './BaseDialog';
 import styles from './BaseDialog.module.css';
 import stylesColors from './ProcessedTextDisplay.module.css';
-import { Icon } from '@iconify/react';
 
 export default function LegendDialog() {
   return (
