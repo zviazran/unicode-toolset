@@ -214,7 +214,7 @@ const CodepointEditor: React.FC = () => {
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees<LegendDialog /></h2>
-          <ProcessedTextDisplay text={processedText} textareaRef={textareaRef} setText={setText} selectionRange={lastSelection} onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)} />
+          <ProcessedTextDisplay text={processedText} setText={setText} selectionRange={lastSelection} onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)} />
         </div>
       </div>
       <CounterBar

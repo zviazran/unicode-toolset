@@ -1,26 +1,29 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useEffect, useRef, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
+import CodepointDialog from "./CodepointDialog";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../CodePointsConsts";
 
 type ProcessedTextDisplayProps = {
   text: string;
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
   setText: (text: string) => void;
   selectionRange: { start: number; end: number };
   onAnalysisChange?: (hasFindings: boolean) => void;
 };
 
-const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, textareaRef, setText, selectionRange, onAnalysisChange }) => {
+const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange }) => {
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
-
+  const [dialogData, setDialogData] = useState<{
+    codePoint: number;
+    position: number;
+    originalChar: string;
+  } | null>(null);
   const isInvisibleCodePoint = (code: number): boolean => {
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
-  const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }): (string | JSX.Element)[] => {
+  const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
-    let hasFindings = false;
 
     for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
@@ -45,7 +48,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
 
       const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => {
         const displayedChar = isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
-        hasFindings = hasFindings || (displayedChar != char) || isAIIndicator;
+        const finding = displayedChar !== char || isAIIndicator;
+        if (finding) flagCallback?.(true);
         return displayedChar;
       }
 
@@ -75,46 +79,15 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
             suppressContentEditableWarning
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()}`}
-            onPointerDown={(e) => {
-              const span = e.currentTarget;
-              longPressVisualTimeout.current = setTimeout(() => {
-                span.classList.add(styles.holdHint);
-                setTimeout(() => span.classList.remove(styles.holdHint), 1000);
-              }, 500);
-              longPressTimeout.current = setTimeout(() =>
-                window.open(`https://util.unicode.org/UnicodeJsps/character.jsp?a=${codePoint.toString(16).toLowerCase()}`, "_blank"), 1500);
-            }}
             onPointerUp={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
             onPointerLeave={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
-            onClick={(e) => {
-              if (longPressTimeout.current) {
-                clearTimeout(longPressTimeout.current);
-                longPressTimeout.current = null;
-              }
-
-              const target = e.currentTarget;
-              target.textContent = `U+${codePoint.toString(16).toUpperCase()}`;
-              target.className = `${styles.styledChar} ${styles.editableChar}`;
-
-              if (!target.contentEditable) {
-                const range = document.createRange();
-                range.selectNodeContents(target);
-                range.collapse(false); // false = move to end
-
-                const sel = window.getSelection();
-                sel?.removeAllRanges();
-                sel?.addRange(range);
-              }
-              target.contentEditable = "true";
-            }}
-            onBlur={(e) => {
-              handleContentChange(isInvisible, e.target.innerText, startIndex, e.target.dataset.original ?? "");
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                e.currentTarget.blur();
-              }
+            onClick={() => {
+              clearTimeout(longPressTimeout.current!);
+              setDialogData({
+                codePoint,
+                position: startIndex,
+                originalChar: char,
+              });
             }}
           >
             {isSelected && <span className={styles.selectionOverlay} />}
@@ -135,41 +108,42 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, texta
       );
     }
 
-    onAnalysisChange?.(hasFindings);
     return result;
   };
 
-  const handleContentChange = (isInvisible: boolean, newValue: string, position: number, originalValue: string) => {
-    if (!textareaRef.current) return;
-    const currentText = textareaRef.current.value;
-    let newContent = "";
-    try {
-      if (newValue.startsWith("U+")) {
-        const codePoint = parseInt(newValue.slice(2), 16);
-        newContent = String.fromCodePoint(codePoint);
-        if (!isInvisible && originalValue === newContent) return;
-      }
-      if (isInvisible && newValue.length === 1 && newValue.charCodeAt(0) >= 0x20 && newValue.charCodeAt(0) <= 0x7F) {
-        newContent = String.fromCodePoint(newValue.charCodeAt(0) + 0xe0000);
-      }
-    } catch { }
+  const analysisResult = useMemo(() => {
+    let findings = false;
+    const result = replaceUnseenChars(text, selectionRange, (flag) => {
+      findings ||= flag;
+    });
+    return { result, findings };
+  }, [text, selectionRange]);
 
-    if (!newContent && newValue === originalValue)
-      newContent = newValue;
+  useEffect(() => {
+    onAnalysisChange?.(analysisResult.findings);
+  }, [analysisResult.findings, onAnalysisChange]);
 
-    const beforeChange = currentText.slice(0, position);
-    const afterChange = currentText.slice(position + originalValue.length);
+  const processedText = analysisResult.result;
 
-    const updatedText = beforeChange + newContent + afterChange;
-
-    setText(updatedText);
-  };
-
-  const processedText = useMemo(() => replaceUnseenChars(text, selectionRange), [text, selectionRange]);
 
   return (
     <div className={styles.processedText}>
       {processedText}
+      {dialogData && (
+        <CodepointDialog
+          data={dialogData}
+          onClose={(newChar) => {
+            if (typeof newChar !== 'undefined') {
+              const { position, originalChar } = dialogData;
+              const before = text.slice(0, position);
+              const after = text.slice(position + originalChar.length);
+              setText(before + newChar + after);
+            }
+            setDialogData(null);
+          }}
+        />
+      )}
+
     </div>
   );
 };
