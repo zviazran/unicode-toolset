@@ -6,16 +6,18 @@ import styles from "./CounterBar.module.css";
 interface CounterBarProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
   generateQueryString?: () => string;
+  showShareLink?: boolean;
   showDownloadFile?: boolean;
   showUploadFile?: boolean;
   showClear?: boolean;
   showDirectionToggle?: boolean;
-  onSetText?: (text : string) => void;
+  onSetText?: (text: string) => void;
 }
 
 export default function CounterBar({
   textareaRef,
   generateQueryString,
+  showShareLink,
   showUploadFile,
   showDownloadFile,
   showClear,
@@ -48,6 +50,26 @@ export default function CounterBar({
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000);
       });
+    }
+  };
+
+  const handleShare = async () => {
+    if (!navigator.share || !generateQueryString) {
+      handleCopyLink(); // fallback to copy link
+      return;
+    }
+
+    const queryString = generateQueryString();
+    const url = `${window.location.origin}${window.location.pathname}${queryString}`;
+
+    try {
+      await navigator.share({
+        text: "Check this out:",
+        url,
+      });
+    } catch (err) {
+      console.warn("Share cancelled or failed:", err);
+      handleCopyLink(); // fallback to copy link
     }
   };
 
@@ -144,7 +166,7 @@ export default function CounterBar({
         />
       </button>
 
-      {generateQueryString && (
+      {generateQueryString && !showShareLink && (
         <button
           onClick={handleCopyLink}
           className={styles.barButton}
@@ -154,6 +176,16 @@ export default function CounterBar({
             icon={linkCopied ? "mdi:check" : "mdi:link-variant"}
             className={`${styles.icon} ${linkCopied ? styles.iconCheck : styles.iconCopy}`}
           />
+        </button>
+      )}
+
+      {generateQueryString && showShareLink && (
+        <button
+          onClick={handleShare}
+          className={styles.barButton}
+          title="Share this"
+        >
+          <Icon icon="tabler:share-3" className={styles.icon} />
         </button>
       )}
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from './CodepointEditor.module.css';
 import innerStyles from './ProcessedTextDisplay.module.css';
 import CounterBar from '../CounterBar';
@@ -50,6 +50,7 @@ const CodepointEditor: React.FC = () => {
   const [isTagTyping, setIsAddTagsMode] = useState(false);
   const validRanges: [number, number][] = computeValidRanges();
   const location = useLocation();
+  const navigate = useNavigate();
   const [lastSelection, setLastSelection] = useState<{ start: number; end: number }>({ start: -1, end: -1 });
   const typingPanelRef = useRef<{ stopTyping: () => void }>(null);
   const [playInitialDemo, setPlayInitialDemo] = useState(false);
@@ -219,26 +220,27 @@ const CodepointEditor: React.FC = () => {
       </div>
       <CounterBar
         textareaRef={textareaRef}
- generateQueryString={() => {
-  const params = new URLSearchParams();
-  const text = textareaRef.current?.value || "";
-  const dir = textareaRef.current?.dir || "auto";
+        generateQueryString={() => {
+          const params = new URLSearchParams();
+          const text = textareaRef.current?.value || "";
+          const dir = textareaRef.current?.dir || "auto";
 
-  if (text) params.set("text", text);
-  if (dir !== "auto") params.set("dir", dir);
+          if (text) params.set("text", text);
+          if (dir !== "auto") params.set("dir", dir);
 
-  Object.entries(openPanels).forEach(([key, open]) => {
-    if (open) params.set(key, "1");
-  });
+          Object.entries(openPanels).forEach(([key, open]) => {
+            if (open) params.set(key, "1");
+          });
 
-  const queryString = params.toString();
-  const fullQuery = queryString ? `?${queryString}` : "";
+          const queryString = params.toString();
+          navigate(
+            { pathname: location.pathname, search: queryString },
+            { replace: true }
+          );
 
-  // Update the URL immediately
-  window.history.replaceState(null, "", `${window.location.pathname}${fullQuery}`);
-
-  return fullQuery;
-}}
+          return queryString ? `?${queryString}` : "";
+        }}
+        showShareLink
         showDownloadFile
         showUploadFile
         showDirectionToggle
