@@ -219,21 +219,26 @@ const CodepointEditor: React.FC = () => {
       </div>
       <CounterBar
         textareaRef={textareaRef}
-        generateQueryString={() => {
-          const params = new URLSearchParams();
-          const text = textareaRef.current?.value || "";
-          const dir = textareaRef.current?.dir || "auto";
+ generateQueryString={() => {
+  const params = new URLSearchParams();
+  const text = textareaRef.current?.value || "";
+  const dir = textareaRef.current?.dir || "auto";
 
-          if (text) params.set("text", text);
-          if (dir !== "auto") params.set("dir", dir);
+  if (text) params.set("text", text);
+  if (dir !== "auto") params.set("dir", dir);
 
-          Object.entries(openPanels).forEach(([key, open]) => {
-            if (open) params.set(key, "1");
-          });
+  Object.entries(openPanels).forEach(([key, open]) => {
+    if (open) params.set(key, "1");
+  });
 
-          const queryString = params.toString();
-          return queryString ? `?${queryString}` : "";
-        }}
+  const queryString = params.toString();
+  const fullQuery = queryString ? `?${queryString}` : "";
+
+  // Update the URL immediately
+  window.history.replaceState(null, "", `${window.location.pathname}${fullQuery}`);
+
+  return fullQuery;
+}}
         showDownloadFile
         showUploadFile
         showDirectionToggle
