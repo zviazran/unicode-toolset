@@ -29,7 +29,7 @@ const App: React.FC = () => {
           <Route path="/url-twister" element={<UrlTwisterComponent />} />
           <Route path="/encoded-prompt-injection-generator" element={<EncodedPromptInjectionGenerator />} />
           <Route path="/was-this-your-text" element={<WasThisYourText />} />
-          <Route path="/*" element={<Navigate to={location.search.startsWith('?/') ? location.search.split('?')[1].replace("&", "?")  : "/home"} />} />
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
         <Footer />
       </div>
