@@ -64,7 +64,6 @@ export default function CounterBar({
 
     try {
       await navigator.share({
-        text: "Check this out:",
         url,
       });
     } catch (err) {
