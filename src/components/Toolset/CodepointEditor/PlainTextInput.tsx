@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import styles from "./PlainTextInput.module.css";
 import CollapsibleToolbar from "./CollapsibleToolbar";
 import { Icon } from "@iconify/react";
@@ -19,12 +19,26 @@ export default function PlainTextInput({
   onSelectionChange,
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const undoStack = useRef<string[]>([]);
+  const redoStack = useRef<string[]>([]);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+
+  const applyText = (newText: string, pushToUndo = true) => {
+    if (pushToUndo) {
+      undoStack.current.push(value);
+      redoStack.current = []; // Clear redo on new input
+    }
+    setCanUndo(undoStack.current.length > 0);
+    setCanRedo(redoStack.current.length > 0);
+    onChange(newText);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
 
     if (!isTagTyping) {
-      onChange(newValue);
+      applyText(newValue);
       return;
     }
 
@@ -33,7 +47,7 @@ export default function PlainTextInput({
     const cursorPosition = e.target.selectionStart;
 
     if (diff <= 0) {
-      onChange(newValue);
+      applyText(newValue);
       return;
     }
 
@@ -49,7 +63,7 @@ export default function PlainTextInput({
       tagVersion +
       newValue.slice(cursorPosition);
 
-    onChange(updated);
+    applyText(updated);
 
     setTimeout(() => {
       const node = textareaRef.current;
@@ -58,6 +72,24 @@ export default function PlainTextInput({
         node.selectionStart = node.selectionEnd = pos;
       }
     }, 0);
+  };
+
+  const handleUndo = () => {
+    if (undoStack.current.length === 0) return;
+    const prev = undoStack.current.pop()!;
+    redoStack.current.push(value);
+    onChange(prev);
+    setCanUndo(undoStack.current.length > 0);
+    setCanRedo(true);
+  };
+
+  const handleRedo = () => {
+    if (redoStack.current.length === 0) return;
+    const next = redoStack.current.pop()!;
+    undoStack.current.push(value);
+    onChange(next);
+    setCanUndo(true);
+    setCanRedo(redoStack.current.length > 0);
   };
 
   useEffect(() => {
@@ -79,7 +111,27 @@ export default function PlainTextInput({
   return (
     <div className={styles.wrapper}>
       <CollapsibleToolbar>
-        <button onClick={() => onChange("")} className={styles.toolbarButton} title="Clear text">
+        <button
+          onClick={handleUndo}
+          disabled={!canUndo}
+          className={styles.toolbarButton}
+          title="Undo"
+        >
+          <Icon icon="tabler:arrow-back-up" className={styles.toolbarIcon} />
+        </button>
+        <button
+          onClick={handleRedo}
+          disabled={!canRedo}
+          className={styles.toolbarButton}
+          title="Redo"
+        >
+          <Icon icon="tabler:arrow-forward-up" className={styles.toolbarIcon} />
+        </button>
+        <button
+          onClick={() => applyText("")}
+          className={styles.toolbarButton}
+          title="Clear"
+        >
           <Icon icon="mdi:delete-outline" className={styles.toolbarIcon} />
         </button>
       </CollapsibleToolbar>

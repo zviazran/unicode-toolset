@@ -163,7 +163,8 @@ const CodepointEditor: React.FC = () => {
             isTagTyping={isTagTyping}
             onSelectionChange={(start, end) => {
               setLastSelection({ start, end });
-              typingPanelRef.current?.stopTyping();
+              if (start < normalText.length)
+                typingPanelRef.current?.stopTyping();
             }}
           />
         </div>
