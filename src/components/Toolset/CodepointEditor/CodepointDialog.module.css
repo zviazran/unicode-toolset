@@ -49,6 +49,11 @@
   color: black;
 }
 
+.iconButton:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .inputField {
   width: 100%;
   max-width: 300px;

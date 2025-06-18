@@ -6,10 +6,12 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
+import CollapsibleToolbar from "./CollapsibleToolbar";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
+import { Icon } from "@iconify/react";
 
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [
@@ -206,6 +208,12 @@ const CodepointEditor: React.FC = () => {
       <div className={styles.editor}>
         <div className={styles.textBox}>
           <h2>What we see</h2>
+          <CollapsibleToolbar>
+            <button onClick={()=>setText("")} className={styles.toolbarButton} title="Clear text">
+              <Icon icon="mdi:delete-outline" className={styles.toolbarIcon} />
+            </button>
+          </CollapsibleToolbar>
+
           <textarea className={styles.normalText}
             ref={textareaRef}
             value={normalText}
