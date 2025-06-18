@@ -35,31 +35,6 @@
   font-size: 1.2rem;
 }
 
-.toolbarButton {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s;
-  padding: 0rem 0.3rem 0rem 0.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toolbarButton:hover {
-  color: #007bff;
-}
-
-.toolbarIcon {
-  font-size: 25px;
-  transition: transform 0.2s ease-in-out;
-  color: #4a4a4a;
-}
-
-.toolbarIcon:hover {
-  transform: scale(1.1);
-}
-
 .normalText {
   width: 100%;
   height: auto;

@@ -6,12 +6,11 @@ import CounterBar from '../CounterBar';
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex } from "../CodePointsConsts";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "./CollapsiblePanel";
-import CollapsibleToolbar from "./CollapsibleToolbar";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
-import { Icon } from "@iconify/react";
+import PlainTextInput from "./PlainTextInput";
 
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [
@@ -80,58 +79,7 @@ const CodepointEditor: React.FC = () => {
         setPlayInitialDemo(true);
       }
     }
-
-    const onSelect = () => {
-      const active = document.activeElement;
-      if (active === textarea) {
-        setLastSelection({
-          start: textarea.selectionStart ?? -1,
-          end: textarea.selectionEnd ?? -1,
-        });
-        typingPanelRef.current?.stopTyping();
-      } else if (active?.tagName !== "BUTTON") {
-        setLastSelection({ start: -1, end: -1 });
-      }
-    };
-
-    document.addEventListener("selectionchange", onSelect);
-    return () => {
-      document.removeEventListener("selectionchange", onSelect);
-    };
   }, []);
-
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    const cursorPosition = e.target.selectionStart;
-    const diff = newValue.length - normalText.length;
-
-    if (isTagTyping && diff > 0) {
-      const insertedText = newValue.slice(cursorPosition - diff, cursorPosition);
-
-      // Convert each character to its invisible tag version
-      const invisibleText = Array.from(insertedText)
-        .filter((char) => /^[a-zA-Z0-9 !@#$%^&*()]$/.test(char))
-        .map((char) => String.fromCodePoint(0xe0000 + char.charCodeAt(0)))
-        .join("");
-      // Reinsert the processed text at the correct position
-      const updatedValue =
-        newValue.slice(0, cursorPosition - diff) +
-        invisibleText +
-        newValue.slice(cursorPosition);
-
-      // Update state with the new value
-      setText(updatedValue);
-
-      // Adjust cursor position to after the processed text
-      setTimeout(() => {
-        e.target.selectionStart = e.target.selectionEnd = cursorPosition - diff + invisibleText.length;
-      }, 0);
-    } else {
-      // Handle deletions or no changes
-      setText(newValue);
-    }
-  };
 
   const getRandomInvisibleChar = (): string => {
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
@@ -208,17 +156,15 @@ const CodepointEditor: React.FC = () => {
       <div className={styles.editor}>
         <div className={styles.textBox}>
           <h2>What we see</h2>
-          <CollapsibleToolbar>
-            <button onClick={()=>setText("")} className={styles.toolbarButton} title="Clear text">
-              <Icon icon="mdi:delete-outline" className={styles.toolbarIcon} />
-            </button>
-          </CollapsibleToolbar>
-
-          <textarea className={styles.normalText}
-            ref={textareaRef}
+          <PlainTextInput
             value={normalText}
-            onChange={handleTextChange}
+            onChange={setText}
             placeholder="Type your text here..."
+            isTagTyping={isTagTyping}
+            onSelectionChange={(start, end) => {
+              setLastSelection({ start, end });
+              typingPanelRef.current?.stopTyping();
+            }}
           />
         </div>
         <div className={styles.textBox}>

@@ -1,0 +1,47 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.toolbarButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+.toolbarButton:hover {
+  opacity: 1;
+  color: #007bff;
+}
+
+.toolbarIcon {
+  font-size: 25px;
+  transition: transform 0.2s ease-in-out;
+  color: #4a4a4a;
+}
+
+.toolbarIcon:hover {
+  transform: scale(1.1);
+}
+
+.textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 8rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0px 0px 4px 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: none;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
