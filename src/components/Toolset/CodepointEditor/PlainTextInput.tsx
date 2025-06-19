@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import styles from "./PlainTextInput.module.css";
 import CollapsibleToolbar from "./CollapsibleToolbar";
+import DirectionIcon from "../../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
 
 interface Props {
@@ -23,6 +24,7 @@ export default function PlainTextInput({
   const redoStack = useRef<string[]>([]);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const [direction, setDirection] = useState<"auto" | "ltr" | "rtl">("auto");
 
   const applyText = (newText: string, pushToUndo = true) => {
     if (pushToUndo) {
@@ -108,6 +110,28 @@ export default function PlainTextInput({
     };
   }, [onSelectionChange]);
 
+  // On mount: determine initial direction from URL or textarea, and set state
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const query = new URLSearchParams(location.search);
+    const urlDir = query.get("dir");
+
+    const fallbackDir = (textarea.getAttribute("dir") ?? "auto") as "auto" | "ltr" | "rtl";
+    const initialDir: "auto" | "ltr" | "rtl" =
+      urlDir === "rtl" || urlDir === "ltr" ? urlDir : fallbackDir;
+
+    setDirection(initialDir);
+  }, []);
+
+  // Whenever direction state changes, apply it to the DOM
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.dir = direction;
+    }
+  }, [direction]);
+
   return (
     <div className={styles.wrapper}>
       <CollapsibleToolbar>
@@ -133,6 +157,18 @@ export default function PlainTextInput({
           title="Clear"
         >
           <Icon icon="mdi:delete-outline" className={styles.toolbarIcon} />
+        </button>
+
+        <button
+          onClick={() =>
+            setDirection((prev) =>
+              prev === "auto" ? "ltr" : prev === "ltr" ? "rtl" : "auto"
+            )
+          }
+          className={styles.toolbarButton}
+          title={`Direction: ${direction.toUpperCase()} (click to change)`}
+        >
+          <DirectionIcon direction={direction} className={styles.toolbarIcon} />
         </button>
       </CollapsibleToolbar>
 
