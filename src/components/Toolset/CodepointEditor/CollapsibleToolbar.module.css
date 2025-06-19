@@ -1,27 +1,35 @@
 .toolbar {
   overflow: hidden;
-  border: 1px solid #eaeaea;
   align-self: start;
   width: 100%;
-  border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0px 0px;  
+  border: 1px solid #ccc;
+  border-bottom: none;
+  background-color: #f8f8f8;
 }
 
 .button {
   width: 100%;
-  height: 0.4rem;
-  padding: 0;
+  height: 0.5rem;
+  padding: 3px 0;
   margin: 0;
   border: none;
-  background: transparent;
-  cursor: pointer;
   opacity: 0.4;
-  display: block;
+  display: flex;
+  justify-content: center;
 }
 
 .button:hover {
   opacity: 1;
   background: rgba(0, 0, 0, 0.05);
   border-radius: 0;
+}
+
+.handle {
+  width: 20px;
+  height: 4px;
+  background-color: #bbb;
+  border-radius: 2px;
 }
 
 .content {

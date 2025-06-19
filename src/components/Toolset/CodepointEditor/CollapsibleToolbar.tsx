@@ -12,7 +12,9 @@ export default function CollapsibleToolbar({
 
   return (
     <div className={styles.toolbar}>
-      <button className={styles.button} onClick={() => setIsOpen((isOpen) => !isOpen)}/>
+      <button className={styles.button} onClick={() => setIsOpen((isOpen) => !isOpen)}>
+        <div className={styles.handle} />
+      </button>
       <div className={styles.content} style={{ display: isOpen ? "block" : "none" }}>
         {children}
       </div>

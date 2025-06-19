@@ -25,6 +25,7 @@ export default function PlainTextInput({
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [direction, setDirection] = useState<"auto" | "ltr" | "rtl">("auto");
+  const [fontSize, setFontSize] = useState(16);
 
   const applyText = (newText: string, pushToUndo = true) => {
     if (pushToUndo) {
@@ -170,11 +171,25 @@ export default function PlainTextInput({
         >
           <DirectionIcon direction={direction} className={styles.toolbarIcon} />
         </button>
+
+        <select
+          className={styles.toolbarButton}
+          value={fontSize}
+          onChange={(e) => setFontSize(Number(e.target.value))}
+          title="Font size"
+        >
+          {[10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72, 100].map((size) => (
+            <option key={size} value={size}>
+              {size}px
+            </option>
+          ))}
+        </select>
       </CollapsibleToolbar>
 
       <textarea
         ref={textareaRef}
         className={styles.textarea}
+        style={{ fontSize: `${fontSize}px` }}
         value={value}
         onChange={handleChange}
         placeholder={placeholder}

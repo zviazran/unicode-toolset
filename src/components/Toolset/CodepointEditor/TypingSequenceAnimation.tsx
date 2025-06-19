@@ -226,7 +226,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
           <input
             type="range"
             min={10}
-            max={500}
+            max={600}
             step={15}
             value={typingSpeed}
             onChange={(e) => setTypingSpeed(Number(e.target.value))}
