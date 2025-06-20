@@ -168,6 +168,7 @@ export default function PlainTextInput({
             )
           }
           className={styles.toolbarButton}
+          style={{ transform: "translateY(2px)" }}
           title={`Direction: ${direction.toUpperCase()} (click to change)`}
         >
           <DirectionIcon direction={direction} className={styles.toolbarIcon} />
@@ -175,6 +176,7 @@ export default function PlainTextInput({
 
         <select
           className={styles.toolbarButton}
+          style={{ transform: "translateY(2px)", padding: 0 }}
           value={fontSize}
           onChange={(e) => setFontSize(Number(e.target.value))}
           title="Font size"

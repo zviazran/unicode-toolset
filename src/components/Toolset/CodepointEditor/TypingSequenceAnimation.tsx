@@ -68,24 +68,21 @@ function TypingSequenceController(
 
     function typeNext() {
       if (controller.isCancelled() || runId !== currentRunIdRef.current) return;
-
       if (i >= codePoints.length) {
         onDone();
         return;
       }
 
       const char = codePoints[i];
-      currentText += char;
-      safeSetText(currentText);
-      i++;
-
       const isBreak = char === " " || char === "\n" || char === "\u200B";
-      const delay = isBreak ? speed * 1.5 : speed;
+      const delay = isBreak ? speed * 2 : speed;
 
       setTimeout(() => {
-        if (!controller.isCancelled() && runId === currentRunIdRef.current) {
-          typeNext();
-        }
+        if (controller.isCancelled() || runId !== currentRunIdRef.current) return;
+        currentText += char;
+        safeSetText(currentText);
+        i++;
+        typeNext();
       }, delay);
     }
 
