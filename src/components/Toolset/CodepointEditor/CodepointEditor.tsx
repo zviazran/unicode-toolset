@@ -157,6 +157,7 @@ const CodepointEditor: React.FC = () => {
         <div className={styles.textBox}>
           <h2>What we see</h2>
           <PlainTextInput
+            textareaRef={textareaRef}
             value={normalText}
             onChange={setText}
             placeholder="Type your text here..."
@@ -198,7 +199,6 @@ const CodepointEditor: React.FC = () => {
         showShareLink
         showDownloadFile
         showUploadFile
-        showDirectionToggle
         onSetText={setText}
       />
       <div className={styles.panelGrid}>
@@ -243,6 +243,7 @@ const CodepointEditor: React.FC = () => {
             setText={setText}
             getCurrentText={() => normalText}
             playInitialDemo={playInitialDemo}
+            scrollTargetRef={textareaRef}
             ref={typingPanelRef}
           />
         </CollapsiblePanel>

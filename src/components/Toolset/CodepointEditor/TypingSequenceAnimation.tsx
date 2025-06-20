@@ -16,6 +16,7 @@ function TypingSequenceController(
     pauseBetweenItems?: number;
     onComplete?: () => void;
     speed?: number;
+    scrollTargetRef?: React.RefObject<HTMLElement>;
   }
 ): TypingController {
   let cancelled = false;
@@ -31,6 +32,11 @@ function TypingSequenceController(
   function safeSetText(text: string) {
     if (runId === currentRunIdRef.current && !controller.isCancelled()) {
       setText(text);
+
+      if (options?.scrollTargetRef?.current) {
+        const el = options.scrollTargetRef!.current!;
+        el.scrollTop = el.scrollHeight;
+      }
     }
   }
 
@@ -90,16 +96,17 @@ function TypingSequenceController(
   return controller;
 }
 
-
 export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
   {
     setText,
     getCurrentText,
     playInitialDemo = false,
+    scrollTargetRef,
   }: {
     setText: (text: string) => void;
     getCurrentText: () => string;
     playInitialDemo?: boolean;
+    scrollTargetRef?: React.RefObject<HTMLElement>;
   },
   ref
 ) {
@@ -146,6 +153,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
       activeRunId,
       {
         pauseBetweenItems: 500,
+        scrollTargetRef,
         onComplete: () => {
           if (activeRunId.current === 0) {
             setTimeout(() => {
@@ -153,12 +161,11 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
             }, 2000);
             hasPlayedInitialDemo.current = true;
           }
-        }
+        },
       }
     );
     setController(initial);
   }, [playInitialDemo]);
-
 
   const pauseTypingAnimation = () => {
     if (controller && !controller.isCancelled()) {
@@ -180,6 +187,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
       {
         pauseBetweenItems: 500,
         speed,
+        scrollTargetRef,
         onComplete: () => {
           if (activeRunId.current === runId) setIsTyping(false);
         },

@@ -32,11 +32,11 @@ const ToolsetCards: React.FC<ToolsetCardsProps> = ({
       className="toolset-card-view"
       style={{ cursor: "pointer" }}
       onClick={handleCardClick}
+      title={joke}
     >
       <Card.Img variant="top" src={imgPath} alt="card-img" />
       <Card.Body>
         <Card.Title style={{ fontWeight: "bold" }}>{title}</Card.Title>
-        <Card.Text style={{ fontWeight: "bold" }}>{joke}</Card.Text>
         <Card.Text style={{ textAlign: "justify" }}>{description}</Card.Text>
       </Card.Body>
     </Card>

@@ -5,6 +5,7 @@ import DirectionIcon from "../../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
 
 interface Props {
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
   value: string;
   onChange: (newText: string) => void;
   placeholder?: string;
@@ -18,8 +19,8 @@ export default function PlainTextInput({
   placeholder,
   isTagTyping = false,
   onSelectionChange,
+  textareaRef,
 }: Props) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const undoStack = useRef<string[]>([]);
   const redoStack = useRef<string[]>([]);
   const [canUndo, setCanUndo] = useState(false);
@@ -178,7 +179,7 @@ export default function PlainTextInput({
           onChange={(e) => setFontSize(Number(e.target.value))}
           title="Font size"
         >
-          {[10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72, 100].map((size) => (
+          {[12, 14, 16, 18, 20, 24, 28, 36, 48, 72, 100, 120].map((size) => (
             <option key={size} value={size}>
               {size}px
             </option>

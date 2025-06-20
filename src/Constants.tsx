@@ -22,7 +22,7 @@ export const TOOLSETS = [
     image: CRASH_CHAR_SEQUENCE_GENERATOR,
     name: "Crash Char Sequence Generator",
     joke: "Unicode. SMASH!!! 😱",
-    description: "Generate crash making invisable character combination. Try this at your own risk.",
+    description: "Generate crash making invisible character combination. Try this at your own risk.",
     link: "crash-char-sequence-generator",
   },
   {
@@ -50,7 +50,7 @@ export const TOOLSETS = [
     image: ENCODED_PROMPT_INJECTION_GENERATOR,
     name: "Encoded Prompt Injection Generator",
     joke: "Humanity's last chance to stop Skynet 🌐",
-    description: "Explore how encoded inputs can trick AI systems. This would only work today on older models of AIs but worth tring.",
+    description: "Explore how encoded inputs can trick AI systems. This would only work today on older models of AIs but worth trying.",
     link: "encoded-prompt-injection-generator",
   },
 ];
