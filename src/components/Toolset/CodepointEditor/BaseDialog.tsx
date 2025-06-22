@@ -10,7 +10,9 @@ interface BaseDialogProps {
   triggerTitle?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  descriptionId?: string;
 }
+
 
 export default function BaseDialog({
   triggerIcon,
@@ -19,6 +21,7 @@ export default function BaseDialog({
   children,
   open,
   onOpenChange,
+  descriptionId,
 }: BaseDialogProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -31,7 +34,7 @@ export default function BaseDialog({
       )}
       <Dialog.Portal>
         <Dialog.Overlay className={styles.overlay} />
-        <Dialog.Content className={styles.modal}>
+        <Dialog.Content className={styles.modal} aria-describedby={descriptionId}>
           <Dialog.Title className={styles.title}>{title}</Dialog.Title>
           {children}
           <Dialog.Close className={styles.close}>×</Dialog.Close>

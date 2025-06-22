@@ -1,8 +1,26 @@
-import BaseDialog from './BaseDialog';
 import { useState, useEffect, useRef } from 'react';
+import BaseDialog from './BaseDialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@iconify/react';
 import styles from './CodepointDialog.module.css';
+
+type UnicodeEntry = {
+  short: string;
+  long: string;
+  category: string;
+  script: string;
+};
+
+let unicodeDataCache: Record<string, UnicodeEntry> | null = null;
+
+async function getUnicodeData(): Promise<Record<string, UnicodeEntry>> {
+  if (!unicodeDataCache) {
+    const res = await fetch('/unicode-min.json');
+    const json = await res.json();
+    unicodeDataCache = json as Record<string, UnicodeEntry>;
+  }
+  return unicodeDataCache;
+}
 
 export default function CodepointDialog({
   data,
@@ -12,12 +30,19 @@ export default function CodepointDialog({
   onClose: (newChar?: string) => void;
 }) {
   const [inputValue, setInputValue] = useState("");
+  const [unicodeInfo, setUnicodeInfo] = useState<UnicodeEntry | null>(null);
   const shouldDeleteRef = useRef(false);
 
   useEffect(() => {
     if (data) {
-      setInputValue(`U+${data.codePoint.toString(16).toUpperCase()}`);
+      const hex = data.codePoint.toString(16).toUpperCase().padStart(4, "0");
+      setInputValue(`U+${hex}`);
       shouldDeleteRef.current = false;
+
+      getUnicodeData().then((map) => {
+        const entry = map[hex];
+        setUnicodeInfo(entry ?? null);
+      });
     }
   }, [data]);
 
@@ -58,11 +83,21 @@ export default function CodepointDialog({
       title={codepointTitle}
       open={true}
       onOpenChange={handleClose}
+      descriptionId="codepoint-description"
     >
-      <div className={styles.dialogWrapper}>
-        <div className={styles.indexText}>Index: {data.position}</div>
+      <div className={styles.dialogWrapper} id="codepoint-description">
         <div className={styles.charDisplay}>{data.originalChar}</div>
-
+        <div className={styles.indexText}>
+          {unicodeInfo && (
+            <>
+              <div><strong>{unicodeInfo.long}</strong></div>
+              <div>Short Name: {unicodeInfo.short}</div>
+              <div>Category: {unicodeInfo.category}</div>
+              <div>Script: {unicodeInfo.script}</div>
+            </>
+          )}
+          <div>Index: {data.position}</div>
+        </div>
         <div className={styles.buttonRow}>
           <button
             onClick={copyToClipboard}
@@ -90,7 +125,7 @@ export default function CodepointDialog({
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              handleClose(); // ✅ Reuse your existing logic
+              handleClose();
             }
           }}
           placeholder="e.g., U+202F"
