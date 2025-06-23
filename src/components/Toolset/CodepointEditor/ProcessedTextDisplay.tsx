@@ -2,6 +2,8 @@ import React, { useMemo, useEffect, useRef, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import CodepointDialog from "./CodepointDialog";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../CodePointsConsts";
+import CollapsibleToolbar from "./CollapsibleToolbar";
+import { Icon } from "@iconify/react";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -18,6 +20,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     position: number;
     originalChar: string;
   } | null>(null);
+  const [isRtl, setIsRtl] = useState(false);
+
+  const toggleDirection = () => {
+    setIsRtl((prev) => !prev);
+  };
   const isInvisibleCodePoint = (code: number): boolean => {
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
@@ -127,23 +134,36 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
 
   return (
-    <div className={styles.processedText}>
-      {processedText}
-      {dialogData && (
-        <CodepointDialog
-          data={dialogData}
-          onClose={(newChar) => {
-            if (typeof newChar !== 'undefined') {
-              const { position, originalChar } = dialogData;
-              const before = text.slice(0, position);
-              const after = text.slice(position + originalChar.length);
-              setText(before + newChar + after);
-            }
-            setDialogData(null);
-          }}
-        />
-      )}
+    <div className={styles.wrapper}>
+      <CollapsibleToolbar>
+        <button
+          onClick={toggleDirection}
+          className={styles.toolbarButton}
+          style={{ transform: "translateY(-1px)" }}
+          title={isRtl ? "Switch to LTR" : "Switch to RTL"}
+        >
+          <Icon icon={isRtl ? "mdi:ltr" : "mdi:rtl"} className={styles.toolbarIcon} />
+        </button>
 
+      </CollapsibleToolbar>
+      <div className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} >
+        {processedText}
+        {dialogData && (
+          <CodepointDialog
+            data={dialogData}
+            onClose={(newChar) => {
+              if (typeof newChar !== 'undefined') {
+                const { position, originalChar } = dialogData;
+                const before = text.slice(0, position);
+                const after = text.slice(position + originalChar.length);
+                setText(before + newChar + after);
+              }
+              setDialogData(null);
+            }}
+          />
+        )}
+
+      </div>
     </div>
   );
 };
