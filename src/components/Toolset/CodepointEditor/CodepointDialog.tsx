@@ -15,7 +15,7 @@ let unicodeDataCache: Record<string, UnicodeEntry> | null = null;
 
 async function getUnicodeData(): Promise<Record<string, UnicodeEntry>> {
   if (!unicodeDataCache) {
-    const res = await fetch('/unicode-min.json');
+    const res = await fetch(`${import.meta.env.BASE_URL}unicode-min.json`);
     const json = await res.json();
     unicodeDataCache = json as Record<string, UnicodeEntry>;
   }
