@@ -132,9 +132,8 @@
 
 .cursorBar {
   position: absolute;
-  left: -2px;
-  top: 0;
-  bottom: 0;
+  inset-block: 0;
+  inset-inline-start: -2px;
   width: 1.5px;
   background-color: black;
   animation: blink 1s step-start infinite;
