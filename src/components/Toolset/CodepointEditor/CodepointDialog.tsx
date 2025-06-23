@@ -83,9 +83,8 @@ export default function CodepointDialog({
       title={codepointTitle}
       open={true}
       onOpenChange={handleClose}
-      descriptionId="codepoint-description"
     >
-      <div className={styles.dialogWrapper} id="codepoint-description">
+      <div className={styles.dialogWrapper}>
         <div className={styles.charDisplay}>{data.originalChar}</div>
         <div className={styles.indexText}>
           {unicodeInfo && (

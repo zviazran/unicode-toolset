@@ -21,7 +21,6 @@ export default function BaseDialog({
   children,
   open,
   onOpenChange,
-  descriptionId,
 }: BaseDialogProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -34,7 +33,10 @@ export default function BaseDialog({
       )}
       <Dialog.Portal>
         <Dialog.Overlay className={styles.overlay} />
-        <Dialog.Content className={styles.modal} aria-describedby={descriptionId}>
+        <Dialog.Content className={styles.modal}>
+          <Dialog.Description className={styles.srOnly}>
+            This is a description of the dialog's content.
+          </Dialog.Description>
           <Dialog.Title className={styles.title}>{title}</Dialog.Title>
           {children}
           <Dialog.Close className={styles.close}>×</Dialog.Close>
