@@ -3,24 +3,7 @@ import BaseDialog from './BaseDialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@iconify/react';
 import styles from './CodepointDialog.module.css';
-
-type UnicodeEntry = {
-  short: string;
-  long: string;
-  category: string;
-  script: string;
-};
-
-let unicodeDataCache: Record<string, UnicodeEntry> | null = null;
-
-async function getUnicodeData(): Promise<Record<string, UnicodeEntry>> {
-  if (!unicodeDataCache) {
-    const res = await fetch(`${import.meta.env.BASE_URL}unicode-min.json`);
-    const json = await res.json();
-    unicodeDataCache = json as Record<string, UnicodeEntry>;
-  }
-  return unicodeDataCache;
-}
+import useUnicodeData from "../../hooks/useUnicodeData";
 
 export default function CodepointDialog({
   data,
@@ -30,19 +13,15 @@ export default function CodepointDialog({
   onClose: (newChar?: string) => void;
 }) {
   const [inputValue, setInputValue] = useState("");
-  const [unicodeInfo, setUnicodeInfo] = useState<UnicodeEntry | null>(null);
   const shouldDeleteRef = useRef(false);
+  const { getEntry } = useUnicodeData();
+  const unicodeInfo = data ? getEntry(data.codePoint) : null;
 
   useEffect(() => {
     if (data) {
       const hex = data.codePoint.toString(16).toUpperCase().padStart(4, "0");
       setInputValue(`U+${hex}`);
       shouldDeleteRef.current = false;
-
-      getUnicodeData().then((map) => {
-        const entry = map[hex];
-        setUnicodeInfo(entry ?? null);
-      });
     }
   }, [data]);
 
