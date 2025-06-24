@@ -27,6 +27,7 @@ export default function PlainTextInput({
   const [canRedo, setCanRedo] = useState(false);
   const [direction, setDirection] = useState<"auto" | "ltr" | "rtl">("auto");
   const [fontSize, setFontSize] = useState(16);
+  const isFocusedRef = useRef(false);
 
   const applyText = (newText: string, pushToUndo = true) => {
     if (pushToUndo) {
@@ -99,7 +100,7 @@ export default function PlainTextInput({
   useEffect(() => {
     const handleSelect = () => {
       const node = textareaRef.current;
-      if (!node) return;
+      if (!node || !isFocusedRef.current) return;
 
       const start = node.selectionStart ?? -1;
       const end = node.selectionEnd ?? -1;
@@ -195,6 +196,13 @@ export default function PlainTextInput({
         style={{ fontSize: `${fontSize}px` }}
         value={value}
         onChange={handleChange}
+        onFocus={() => {
+          isFocusedRef.current = true;
+        }}
+        onBlur={() => {
+          isFocusedRef.current = false;
+          onSelectionChange?.(-1, -1);
+        }}
         placeholder={placeholder}
       />
     </div>

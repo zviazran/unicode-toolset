@@ -142,7 +142,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
           style={{ transform: "translateY(-1px)" }}
           title={isRtl ? "Switch to LTR" : "Switch to RTL"}
         >
-          <Icon icon={isRtl ? "mdi:ltr" : "mdi:rtl"} className={styles.toolbarIcon} />
+          <Icon icon={isRtl ? "mdi:rtl" : "mdi:ltr"} className={styles.toolbarIcon} />
         </button>
 
       </CollapsibleToolbar>
