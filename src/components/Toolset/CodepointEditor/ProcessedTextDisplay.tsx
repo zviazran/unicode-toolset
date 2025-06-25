@@ -4,6 +4,7 @@ import CodepointDialog from "./CodepointDialog";
 import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../CodePointsConsts";
 import CollapsibleToolbar from "./CollapsibleToolbar";
 import { Icon } from "@iconify/react";
+import useUnicodeData from "../../hooks/useUnicodeData";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -21,6 +22,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     originalChar: string;
   } | null>(null);
   const [isRtl, setIsRtl] = useState(false);
+  const [displayStyle, setDisplayStyle] = useState("U+hex");
+  const { getEntry } = useUnicodeData();
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
@@ -53,12 +56,31 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
                 : styles.visibleChar
         }`;
 
-      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean) => {
-        const displayedChar = isInvisible || isWordBreakChar || isNoBreakChar ? isTagChar ? String.fromCharCode(codePoint - 0xe0000) : (codePoint === 0x20) ? char : `U+${codePoint.toString(16).toUpperCase()}` : char;
+      const getDisplayedChar = (char: string, codePoint: number, isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean, isAIIndicator: boolean) => {
+        let displayedChar = char;
+
+        if (isInvisible || isWordBreakChar || isNoBreakChar) {
+          if (isTagChar) {
+            displayedChar = String.fromCharCode(codePoint - 0xe0000);
+          } else if (codePoint === 0x20) {
+            displayedChar = char;
+          } else if (displayStyle === "U+hex") {
+            displayedChar = `U+${codePoint.toString(16).toUpperCase()}`;
+          } else {
+            const entry = getEntry(codePoint);
+            displayedChar =
+              displayStyle === "Short Name"
+                ? entry?.short ?? `U+${codePoint.toString(16).toUpperCase()}`
+                : entry?.long ?? `U+${codePoint.toString(16).toUpperCase()}`;
+          }
+        }
+
         const finding = displayedChar !== char || isAIIndicator;
         if (finding) flagCallback?.(true);
+
         return displayedChar;
-      }
+      };
+
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
         let title = "";
@@ -99,7 +121,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
           >
             {isSelected && <span className={styles.selectionOverlay} />}
             {isCursorHere && <span className={styles.cursorBar} />}
-            {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar)}
+            {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar, isAIIndicator)}
           </span>
         );
       }
@@ -124,7 +146,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       findings ||= flag;
     });
     return { result, findings };
-  }, [text, selectionRange]);
+  }, [text, selectionRange, displayStyle]);
 
   useEffect(() => {
     onAnalysisChange?.(analysisResult.findings);
@@ -144,6 +166,20 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         >
           <Icon icon={isRtl ? "mdi:rtl" : "mdi:ltr"} className={styles.toolbarIcon} />
         </button>
+
+        <select
+          className={styles.toolbarButton}
+          style={{ textAlign: "center", padding: 0 }}
+          value={displayStyle}
+          onChange={(e) => setDisplayStyle(e.target.value)}
+          title="display style"
+        >
+          {['U+hex', 'Short Name', 'Full Name'].map((style) => (
+            <option key={style} value={style}>
+              {style}
+            </option>
+          ))}
+        </select>
 
       </CollapsibleToolbar>
       <div className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} >
