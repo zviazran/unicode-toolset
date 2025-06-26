@@ -1,6 +1,6 @@
 // LegendDialog.tsx
-import BaseDialog from './BaseDialog';
-import styles from './BaseDialog.module.css';
+import BaseDialog from '../../components/BaseDialog';
+import styles from '../../components/BaseDialog.module.css';
 import stylesColors from './ProcessedTextDisplay.module.css';
 
 export default function LegendDialog() {

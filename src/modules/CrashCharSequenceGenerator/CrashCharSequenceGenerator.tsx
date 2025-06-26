@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./CrashCharSequenceGenerator.module.css";
-import CounterBar from "../CounterBar";
+import CounterBar from "../../components/CounterBar";
 import BidiCrashSequenceGenerator from "./BidiCrashSequenceGenerator";
 
 const crashGenerator = new BidiCrashSequenceGenerator(); 

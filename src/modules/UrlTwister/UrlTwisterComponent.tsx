@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./UrlTwisterComponent.module.css";
-import CounterBar from "../CounterBar";
+import CounterBar from "../../components/CounterBar";
 import { StringTwister, URLTwister } from "string-twister";
 
 const UrlTwisterComponent: React.FC = () => {

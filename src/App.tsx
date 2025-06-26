@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import About from "./components/About/About";
-import Toolsets from "./components/Toolset/Toolsets";
-import CodepointEditor from "./components/Toolset/CodepointEditor/CodepointEditor";
-import DrUnicodeWrapper from "./components/Toolset/DrUnicode/DrUnicodeWrapper";
-import CrashCharSequenceGenerator from "./components/Toolset/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
-import EncodedPromptInjectionGenerator from "./components/Toolset/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
-import UrlTwisterComponent from "./components/Toolset/UrlTwister/UrlTwisterComponent";
-import WasThisYourText from "./components/Toolset/WasThisYourText/WasThisYourText";
+import About from "./modules/About/About";
+import Toolsets from "./modules/Toolsets/Toolsets";
+import CodepointEditor from "./modules/CodepointEditor/CodepointEditor";
+import DrUnicodeWrapper from "./modules/DrUnicode/DrUnicodeWrapper";
+import CrashCharSequenceGenerator from "./modules/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
+import EncodedPromptInjectionGenerator from "./modules/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
+import UrlTwisterComponent from "./modules/UrlTwister/UrlTwisterComponent";
+import WasThisYourText from "./modules/WasThisYourText/WasThisYourText";
 
 import Footer from "./components/Footer";
 import "./App.css";

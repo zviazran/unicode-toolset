@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./EncodedPromptInjectionGenerator.module.css";
-import CounterBar from "../CounterBar";
+import CounterBar from "../../components/CounterBar";
 import { encodingOptions } from "./EncodingOptions";
 
 const EncodedPromptInjectionGenerator: React.FC = () => {

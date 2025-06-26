@@ -1,4 +1,4 @@
-import { bidiCharacters } from "../CodePointsConsts";
+import { bidiCharacters } from "../../constants/CodePointsConsts";
 
 class BidiCrashSequenceGenerator {
   public crashSequences: Record<string, { left: number; right: number; break: number; circle: string; }> = {

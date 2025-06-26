@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import styles from "./PlainTextInput.module.css";
-import CollapsibleToolbar from "./CollapsibleToolbar";
-import DirectionIcon from "../../../assets/icons/DirectionIcon";
+import CollapsibleToolbar from "../../components/CollapsibleToolbar";
+import DirectionIcon from "../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
 
 interface Props {

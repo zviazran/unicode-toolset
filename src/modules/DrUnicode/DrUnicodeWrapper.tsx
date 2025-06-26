@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from './DrUnicodeWrapper.module.css';
 import { DrUnicode } from 'drunicode';
-import CounterBar from '../CounterBar';
+import CounterBar from '../../components/CounterBar';
 
 const DrUnicodeWrapper: React.FC = () => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import ProjectCard from "./ToolsetCards";
-import { TOOLSETS, RECOMMENDATIONS } from "../../Constants";
+import { TOOLSETS, RECOMMENDATIONS } from "../../constants/Constants";
 
 interface Project {
   name: string;

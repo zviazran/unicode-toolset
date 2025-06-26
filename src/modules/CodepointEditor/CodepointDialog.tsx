@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import BaseDialog from './BaseDialog';
+import BaseDialog from '../../components/BaseDialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@iconify/react';
 import styles from './CodepointDialog.module.css';

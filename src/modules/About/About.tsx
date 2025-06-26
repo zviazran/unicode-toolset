@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import myImg from "../../Assets/zvi_azran_img.jpg";
 import pdf from "../../Assets/zvi_azran_cv.pdf";
-import SocialMedia from "../SocialMedia";
+import SocialMedia from "../../components/SocialMedia";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import "../../App.css";
 

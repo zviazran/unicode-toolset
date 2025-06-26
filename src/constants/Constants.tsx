@@ -1,13 +1,13 @@
-import CODEPOINT_EDITOR from "./Assets/Toolsets/codepoint-editor.png";
-import DR_UNICODE from "./Assets/Toolsets/drunicode.png";
-import CRASH_CHAR_SEQUENCE_GENERATOR from "./Assets/Toolsets/crash-char-sequence-generator.png";
-import URL_TWISTER from "./Assets/Toolsets/url-twister.png";
-import WAS_THIS_YOUR_TEXT from "./Assets/Toolsets/was-this-your-text.png";
-import ENCODED_PROMPT_INJECTION_GENERATOR from "./Assets/Toolsets/encoded-prompt-injection-generator.png";
+import CODEPOINT_EDITOR from "../Assets/Toolsets/codepoint-editor.png";
+import DR_UNICODE from "../Assets/Toolsets/drunicode.png";
+import CRASH_CHAR_SEQUENCE_GENERATOR from "../Assets/Toolsets/crash-char-sequence-generator.png";
+import URL_TWISTER from "../Assets/Toolsets/url-twister.png";
+import WAS_THIS_YOUR_TEXT from "../Assets/Toolsets/was-this-your-text.png";
+import ENCODED_PROMPT_INJECTION_GENERATOR from "../Assets/Toolsets/encoded-prompt-injection-generator.png";
 
-import UNICODE_CODE_CONVERTER from "./Assets/Recommendations/unicode-code-converter.png";
-import UNICODE_UTILITIES_CONFUSABLES from "./Assets/Recommendations/unicode-utilities-confusables.png";
-import UNICODE_TECHNICAL_SITE from "./Assets/Recommendations/unicode-technical-site.png";
+import UNICODE_CODE_CONVERTER from "../Assets/Recommendations/unicode-code-converter.png";
+import UNICODE_UTILITIES_CONFUSABLES from "../Assets/Recommendations/unicode-utilities-confusables.png";
+import UNICODE_TECHNICAL_SITE from "../Assets/Recommendations/unicode-technical-site.png";
 
 
 export const TOOLSETS = [

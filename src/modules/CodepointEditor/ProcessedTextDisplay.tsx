@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import CodepointDialog from "./CodepointDialog";
-import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../CodePointsConsts";
-import CollapsibleToolbar from "./CollapsibleToolbar";
+import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../../constants/CodePointsConsts";
+import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import { Icon } from "@iconify/react";
 import useUnicodeData from "../../hooks/useUnicodeData";
 
