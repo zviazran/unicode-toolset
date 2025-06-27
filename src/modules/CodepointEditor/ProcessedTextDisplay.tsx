@@ -28,12 +28,22 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
   };
+
+  function getScriptColor(index: number): string {
+    if (index === 0) return "undefined";
+    const baseHue = 35; // orange
+    const saturation = 100;
+    const lightness = Math.max(30, 90 - (index - 1) * 8); // from 90% to 30%
+    return `hsl(${baseHue}, ${saturation}%, ${lightness}%)`;
+  }
+
   const isInvisibleCodePoint = (code: number): boolean => {
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
+    const scriptToColor: Record<string, string> = {};
 
     for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
@@ -47,6 +57,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
       const isSelected = i >= selectionRange.start && i < selectionRange.end;
       const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;
+      const script = getEntry(codePoint)?.script ?? "Unknown";
 
       const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean, isAIIndicator: boolean) =>
         `${styles.styledChar} ${isWordBreakChar ? styles.wordBreakChar
@@ -81,6 +92,15 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         return displayedChar;
       };
 
+      let backgroundColor: string | undefined = undefined;
+      const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator;
+      if (isStyleTarget && !(script in scriptToColor)) {
+        const nextIndex = Object.keys(scriptToColor).length;
+        scriptToColor[script] = getScriptColor(nextIndex);
+      }
+      if (isStyleTarget) {
+        backgroundColor = scriptToColor[script];
+      }
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
         let title = "";
@@ -104,10 +124,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
           <span
             key={`${startIndex}-${codePoint}`}
             className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar, isAIIndicator)}
+            style={backgroundColor ? { backgroundColor } : undefined}
             contentEditable={false}
             suppressContentEditableWarning
             data-original={char}
-            title={`U+${codePoint.toString(16).toUpperCase()}`}
+            title={`U+${codePoint.toString(16).toUpperCase()} - ${script}`}
             onPointerUp={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
             onPointerLeave={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
             onClick={() => {
