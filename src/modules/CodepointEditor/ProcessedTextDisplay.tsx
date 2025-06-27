@@ -93,7 +93,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       };
 
       let backgroundColor: string | undefined = undefined;
-      const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator;
+      const shouldIgnoreScript = script === "Common" || script === "Inherited" || script === "Unknown";
+      const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator && !shouldIgnoreScript;
       if (isStyleTarget && !(script in scriptToColor)) {
         const nextIndex = Object.keys(scriptToColor).length;
         scriptToColor[script] = getScriptColor(nextIndex);
