@@ -88,8 +88,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
         // overlay inherited / combining on dotted circle
         const generalCategory = getEntry(codePoint)?.category ?? "";
-        if (generalCategory.startsWith("M") || script === "Inherited")
-          displayedChar = `\u25CC${char}`;
+        const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
+        if ((generalCategory.startsWith("M") && dottedCircleAllowedScripts.includes(script)))
+          displayedChar = `${char}\u25CC`;
 
         const finding = displayedChar !== char || isAIIndicator;
         if (finding) flagCallback?.(true);

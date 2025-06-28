@@ -55,16 +55,27 @@ export default function CodepointDialog({
   };
 
   const unicodeLink = `https://util.unicode.org/UnicodeJsps/character.jsp?a=${data.codePoint.toString(16).toLowerCase()}`;
-  const codepointTitle = `U+${data.codePoint.toString(16).toUpperCase()}`;
 
   return (
     <BaseDialog
-      title={codepointTitle}
       open={true}
       onOpenChange={handleClose}
     >
       <div className={styles.dialogWrapper}>
+        <input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+          placeholder="e.g., U+202F"
+          className={styles.inputField}
+        />
         <div className={styles.charDisplay}>{data.originalChar}</div>
+
         <div className={styles.indexText}>
           {unicodeInfo && (
             <>
@@ -96,19 +107,6 @@ export default function CodepointDialog({
             </button>
           </Dialog.Close>
         </div>
-
-        <input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleClose();
-            }
-          }}
-          placeholder="e.g., U+202F"
-          className={styles.inputField}
-        />
 
         <a
           href={unicodeLink}

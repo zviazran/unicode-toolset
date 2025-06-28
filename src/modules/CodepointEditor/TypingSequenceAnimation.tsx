@@ -132,7 +132,7 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
     "🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦",
     "😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿",
     "\<div title=\"ل\"\>ع\<\/div\>",
-    "Understand Normalization:\nZoë Čech Åsōm vs Zoë Čech Åsōm\nfinance_ℌ①.AⅥ vs ﬁnance_H1.AVI\n/api/user/℅ vs /api/user/c/o",
+    "Understand Normalization:\nZoë Čech Åsậm vs Zoë Čech Åsậm\nfinance_ℌ①.AⅥ vs ﬁnance_H1.AVI\n/api/user/℅ vs /api/user/c/o",
     "Tab–space debates — never end ‒ it’s clear who is wrong.",
     "Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
   ];

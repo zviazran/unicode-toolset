@@ -4,7 +4,7 @@ import styles from './BaseDialog.module.css';
 import { Icon } from '@iconify/react';
 
 interface BaseDialogProps {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   triggerIcon?: string;
   triggerTitle?: string;
@@ -33,11 +33,15 @@ export default function BaseDialog({
       )}
       <Dialog.Portal>
         <Dialog.Overlay className={styles.overlay} />
-        <Dialog.Content className={styles.modal}>
+        <Dialog.Content className={styles.modal} onOpenAutoFocus={(event) => event.preventDefault()}>
           <Dialog.Description className={styles.srOnly}>
             This is a description of the dialog's content.
           </Dialog.Description>
-          <Dialog.Title className={styles.title}>{title}</Dialog.Title>
+          {title ? (
+            <Dialog.Title className={styles.title}>{title}</Dialog.Title>
+          ) : (
+            <Dialog.Title/>
+          )}
           {children}
           <Dialog.Close className={styles.close}>×</Dialog.Close>
         </Dialog.Content>
