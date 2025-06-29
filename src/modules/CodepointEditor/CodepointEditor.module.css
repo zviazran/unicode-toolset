@@ -10,6 +10,7 @@
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
+  font-family: "Noto Sans", "Segoe UI", "Roboto", "DejaVu Sans", "Arial Unicode MS", sans-serif;
 }
 
 .textBox {

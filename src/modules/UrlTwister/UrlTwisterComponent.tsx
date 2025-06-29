@@ -107,7 +107,7 @@ const UrlTwisterComponent: React.FC = () => {
         value={output}
         onChange={(e) => setOutput(e.target.value)}
       />
-      <CounterBar textareaRef={outputTextareaRef} />
+      <CounterBar text={output} />
     </div>
   );
 };

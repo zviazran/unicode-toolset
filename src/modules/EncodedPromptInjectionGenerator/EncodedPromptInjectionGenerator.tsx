@@ -61,7 +61,7 @@ const EncodedPromptInjectionGenerator: React.FC = () => {
       )}
 
       <textarea className={styles.textBox} ref={outputTextareaRef} value={output} />
-      <CounterBar textareaRef={outputTextareaRef} />
+      <CounterBar text={output} />
     </div>
   );
 };

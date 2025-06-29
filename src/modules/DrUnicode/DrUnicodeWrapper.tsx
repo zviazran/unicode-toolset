@@ -38,7 +38,7 @@ const DrUnicodeWrapper: React.FC = () => {
       <div className={styles.diagnosisText}>
           {diagnosisText}
       </div>
-      <CounterBar textareaRef={textareaRef} />
+      <CounterBar text={normalText} />
     </div>
   );
 };

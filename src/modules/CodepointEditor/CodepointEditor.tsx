@@ -175,7 +175,7 @@ const CodepointEditor: React.FC = () => {
         </div>
       </div>
       <CounterBar
-        textareaRef={textareaRef}
+        text={normalText}
         generateQueryString={() => {
           const params = new URLSearchParams();
           const text = textareaRef.current?.value || "";
