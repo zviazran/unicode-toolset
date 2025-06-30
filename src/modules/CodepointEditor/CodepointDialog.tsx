@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import BaseDialog from '../../components/BaseDialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@iconify/react';
 import styles from './CodepointDialog.module.css';
 import useUnicodeData from "../../hooks/useUnicodeData";
+import useConfusables from "../../hooks/useConfusables";
 
 export default function CodepointDialog({
   data,
@@ -16,6 +17,17 @@ export default function CodepointDialog({
   const shouldDeleteRef = useRef(false);
   const { getEntry } = useUnicodeData();
   const unicodeInfo = data ? getEntry(data.codePoint) : null;
+
+  const { data: confusablesMap, getConfusablesFor } = useConfusables();
+
+  const confusableInfos = useMemo(() => {
+    if (!data || !confusablesMap) return [];
+    const chars = getConfusablesFor ? getConfusablesFor(data.originalChar) : [];
+    return chars.map(char => ({
+      char,
+      info: getEntry(char.codePointAt(0)!)
+    }));
+  }, [data?.originalChar, confusablesMap, getConfusablesFor]);
 
   useEffect(() => {
     if (data) {
@@ -107,6 +119,31 @@ export default function CodepointDialog({
             </button>
           </Dialog.Close>
         </div>
+
+        {confusableInfos.length > 0 && (
+          <div className={styles.confusableList}>
+            {confusableInfos.length > 0 && (
+              <div>Replace with similar looking characters:</div>
+            )}
+            <div className={styles.confusableButtons}>
+              {confusableInfos.map(({ char, info }) => (
+                <button
+                  key={char}
+                  onClick={() => onClose(char)}
+                  className={styles.iconButton}
+                  title={
+                    info
+                      ? `${info.long} (U+${char.codePointAt(0)!.toString(16).toUpperCase()})`
+                      : 'Unknown'
+                  }
+                >
+                  {char}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
 
         <a
           href={unicodeLink}

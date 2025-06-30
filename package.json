@@ -1,7 +1,7 @@
 {
   "name": "unicode-toolset",
   "description": "A Collection of heuristic tools for analyzing, editing, and visualizing Unicode characters.",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "type": "module",
   "author": "Zvi Azran",
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate:unicode": "node scripts/generate-unicode-map.mjs && gzipper compress ./public/unicode-min.json",
+    "generate:confusables": "node scripts/generate-confusables.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
