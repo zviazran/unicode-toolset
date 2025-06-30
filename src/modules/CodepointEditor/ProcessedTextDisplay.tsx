@@ -14,6 +14,7 @@ type ProcessedTextDisplayProps = {
 };
 
 const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange }) => {
+  const processedTextRef = useRef<HTMLDivElement>(null);
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
   const [dialogData, setDialogData] = useState<{
@@ -24,6 +25,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const [isRtl, setIsRtl] = useState(false);
   const [displayStyle, setDisplayStyle] = useState("U+hex");
   const { getEntry } = useUnicodeData();
+  const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
+  const dottedCircleSafeFonts = ["Noto Sans", "DejaVu Sans", "Arial Unicode MS", "monospace"];
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
@@ -44,6 +47,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
+    const currentFont = processedTextRef.current ? window.getComputedStyle(processedTextRef.current).fontFamily : "";
+    const shouldOverlayDottedCircle = dottedCircleSafeFonts.some(f => currentFont.includes(f));
 
     for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
@@ -87,10 +92,9 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         }
 
         // overlay inherited / combining on dotted circle
-        const generalCategory = getEntry(codePoint)?.category ?? "";
-        const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
-        if ((generalCategory.startsWith("M") && dottedCircleAllowedScripts.includes(script)))
+        if (shouldOverlayDottedCircle && dottedCircleAllowedScripts.includes(script) && getEntry(codePoint)?.category.startsWith("M")) {
           displayedChar = `${char}\u25CC`;
+        }
 
         const finding = displayedChar !== char || isAIIndicator;
         if (finding) flagCallback?.(true);
@@ -210,7 +214,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         </select>
 
       </CollapsibleToolbar>
-      <div className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} >
+      <div ref={processedTextRef} className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} >
         {processedText}
         {dialogData && (
           <CodepointDialog
