@@ -58,7 +58,7 @@ const CodepointEditor: React.FC = () => {
   const [playInitialDemo, setPlayInitialDemo] = useState(false);
   const [hasTextIndicators, setHasTextIndicators] = useState(false);
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
-  const [selectedFont, setSelectedFont] = useState("monospace");
+  const [selectedFont, setSelectedFont] = useState("Noto Sans");
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -280,7 +280,7 @@ const CodepointEditor: React.FC = () => {
                 loadFontDynamically(font);
               }}
             >
-              {["monospace", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"].map(font => (
+              {["Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI", "monospace"].map(font => (
                 <option key={font} value={font}>{font}</option>
               ))}
             </select>

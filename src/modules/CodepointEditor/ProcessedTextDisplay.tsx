@@ -27,7 +27,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const [displayStyle, setDisplayStyle] = useState("U+hex");
   const { getEntry } = useUnicodeData();
   const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
-  const dottedCircleSafeFonts = ["monospace"];
+  const dottedCircleSafeFonts = ["Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
@@ -48,7 +48,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
-    const shouldOverlayDottedCircle = dottedCircleSafeFonts.some(f => fontFamily?.includes(f));
+    const actualFont = processedTextRef.current ? window.getComputedStyle(processedTextRef.current).fontFamily : "";
+    const shouldOverlayDottedCircle = dottedCircleSafeFonts.includes(fontFamily ?? "") && actualFont.includes(fontFamily ?? "");
 
     for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
@@ -93,7 +94,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
         // combining on dotted circle
         if (shouldOverlayDottedCircle && dottedCircleAllowedScripts.includes(script) && getEntry(codePoint)?.category.startsWith("M")) {
-          displayedChar = `${char}\u25CC`;
+          displayedChar = `\u25CC${char}`;
         }
 
         const finding = displayedChar !== char || isAIIndicator;
@@ -182,7 +183,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
   useEffect(() => {
     onAnalysisChange?.(analysisResult.findings);
-  }, [analysisResult.findings, onAnalysisChange, fontFamily]);
+  }, [analysisResult.findings, onAnalysisChange]);
 
   const processedText = analysisResult.result;
 
