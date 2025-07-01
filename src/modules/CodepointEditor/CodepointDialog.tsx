@@ -9,9 +9,11 @@ import useConfusables from "../../hooks/useConfusables";
 export default function CodepointDialog({
   data,
   onClose,
+  fontFamily
 }: {
   data: { codePoint: number; position: number; originalChar: string } | null;
   onClose: (newChar?: string) => void;
+  fontFamily?: string;
 }) {
   const [inputValue, setInputValue] = useState("");
   const shouldDeleteRef = useRef(false);
@@ -73,7 +75,7 @@ export default function CodepointDialog({
       open={true}
       onOpenChange={handleClose}
     >
-      <div className={styles.dialogWrapper}>
+      <div className={styles.dialogWrapper} style={{ fontFamily: `${fontFamily}, sans-serif` }}>
         <input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -123,14 +125,14 @@ export default function CodepointDialog({
         {confusableInfos.length > 0 && (
           <div className={styles.confusableList}>
             {confusableInfos.length > 0 && (
-              <div>Replace with similar looking characters:</div>
+              <div>Replace with:</div>
             )}
             <div className={styles.confusableButtons}>
               {confusableInfos.map(({ char, info }) => (
                 <button
                   key={char}
                   onClick={() => onClose(char)}
-                  className={styles.iconButton}
+                  className={styles.confusableButton}
                   title={
                     info
                       ? `${info.long} (U+${char.codePointAt(0)!.toString(16).toUpperCase()})`
@@ -143,7 +145,6 @@ export default function CodepointDialog({
             </div>
           </div>
         )}
-
 
         <a
           href={unicodeLink}

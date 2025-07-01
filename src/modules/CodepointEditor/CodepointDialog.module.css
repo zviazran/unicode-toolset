@@ -15,7 +15,7 @@
 }
 
 .inputField:focus {
-    outline: none;
+  outline: none;
 }
 
 .indexText {
@@ -34,7 +34,7 @@
   border-radius: 8px;
   background-color: #f9f9f9;
   user-select: text;
-  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-family: inherit;
 }
 
 .buttonRow {
@@ -62,13 +62,21 @@
 }
 
 .confusableList {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .confusableButtons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.1rem;
+}
+
+.confusableButton {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  min-width: 1rem;
+  text-align: center;
 }
 
 .link {

@@ -11,6 +11,7 @@ import NormalizationPanel from "./NormalizationPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
 import PlainTextInput from "./PlainTextInput";
+import WebFont from 'webfontloader';
 
 const computeValidRanges = (): [number, number][] => {
   const RandomInvisiblesExcludedRanges = [
@@ -57,6 +58,7 @@ const CodepointEditor: React.FC = () => {
   const [playInitialDemo, setPlayInitialDemo] = useState(false);
   const [hasTextIndicators, setHasTextIndicators] = useState(false);
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
+  const [selectedFont, setSelectedFont] = useState("monospace");
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -147,6 +149,14 @@ const CodepointEditor: React.FC = () => {
     return `Text indicators: ${osList.slice(0, -1).join(", ")} & ${osList.slice(-1)}`;
   }
 
+  function loadFontDynamically(fontName: string) {
+    WebFont.load({
+      google: {
+        families: [fontName]
+      }
+    });
+  }
+
   return (
     <div className={styles.codepointEditor}>
       <h1>The Unseen Side Of Text</h1>
@@ -167,11 +177,18 @@ const CodepointEditor: React.FC = () => {
               if (start < normalText.length)
                 typingPanelRef.current?.stopTyping();
             }}
+            fontFamily={selectedFont}
           />
         </div>
         <div className={styles.textBox}>
           <h2>What the computer sees<LegendDialog /></h2>
-          <ProcessedTextDisplay text={processedText} setText={setText} selectionRange={lastSelection} onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)} />
+          <ProcessedTextDisplay
+            text={processedText}
+            setText={setText}
+            selectionRange={lastSelection}
+            onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)}
+            fontFamily={selectedFont}
+          />
         </div>
       </div>
       <CounterBar
@@ -252,6 +269,22 @@ const CodepointEditor: React.FC = () => {
             text={normalText}
             setText={setText}
           />
+        </CollapsiblePanel>
+        <CollapsiblePanel title="Fonts" queryKey="fonts" onToggle={handlePanelToggle}>
+          <div className={styles.buttonColumn}>
+            <select
+              value={selectedFont}
+              onChange={(e) => {
+                const font = e.target.value;
+                setSelectedFont(font);
+                loadFontDynamically(font);
+              }}
+            >
+              {["monospace", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"].map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+          </div>
         </CollapsiblePanel>
       </div>
     </div>

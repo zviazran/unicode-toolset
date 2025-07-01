@@ -11,6 +11,7 @@ interface Props {
   placeholder?: string;
   isTagTyping?: boolean;
   onSelectionChange?: (start: number, end: number) => void;
+  fontFamily?: string;
 }
 
 export default function PlainTextInput({
@@ -20,6 +21,7 @@ export default function PlainTextInput({
   isTagTyping = false,
   onSelectionChange,
   textareaRef,
+  fontFamily
 }: Props) {
   const undoStack = useRef<string[]>([]);
   const redoStack = useRef<string[]>([]);
@@ -193,7 +195,7 @@ export default function PlainTextInput({
       <textarea
         ref={textareaRef}
         className={styles.textarea}
-        style={{ fontSize: `${fontSize}px` }}
+        style={{ fontSize: `${fontSize}px` , fontFamily: `${fontFamily}, sans-serif` }}
         value={value}
         onChange={handleChange}
         onFocus={() => {

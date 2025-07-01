@@ -21,14 +21,15 @@ export default function useConfusables() {
     if (!cachedConfusablesData) return [];
 
     const directMatches = cachedConfusablesData[char] || [];
+    let combined = directMatches;
 
     // If only one and it's a single char, get its confusables too
     if (directMatches.length === 1 && directMatches[0].length === 1) {
       const additional = cachedConfusablesData[directMatches[0]] || [];
-      return [...new Set([...directMatches, ...additional])];
+      combined = [...new Set([...directMatches, ...additional])];
     }
 
-    return directMatches;
+    return combined.filter(c => c !== char);
   };
 
   return { data, getConfusablesFor };
