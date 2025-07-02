@@ -27,7 +27,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const [displayStyle, setDisplayStyle] = useState("U+hex");
   const { getEntry } = useUnicodeData();
   const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
-  const dottedCircleSafeFonts = ["Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
+  const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
@@ -174,20 +174,22 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     return result;
   };
 
+  const [postRenderPass, setPostRenderPass] = useState(0);
+  useEffect(() => { setTimeout(() => setPostRenderPass(1), 50); }, []);
+
   const analysisResult = useMemo(() => {
     let findings = false;
     const result = replaceUnseenChars(text, selectionRange, selectedFont ?? "", (flag) => {
       findings ||= flag;
     });
     return { result, findings };
-  }, [text, selectionRange, displayStyle, selectedFont]);
+  }, [text, selectionRange, displayStyle, selectedFont, postRenderPass]);
 
   useEffect(() => {
     onAnalysisChange?.(analysisResult.findings);
   }, [analysisResult.findings, onAnalysisChange]);
 
   const processedText = analysisResult.result;
-
 
   return (
     <div className={styles.wrapper}>
