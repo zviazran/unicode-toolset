@@ -25,23 +25,18 @@ const computeValidRanges = (): [number, number][] => {
 
   for (const [start, end] of invisibleCharRanges) {
     let currentStart = start;
-
     for (const [exStart, exEnd] of RandomInvisiblesExcludedRanges) {
-      if (exEnd < currentStart) continue; // Skip exclusions that are before our range
-      if (exStart > end) break; // No more exclusions affect this range
-
+      if (exEnd < currentStart) continue;
+      if (exStart > end) break;
       if (currentStart < exStart) {
         validRanges.push([currentStart, Math.min(end, exStart - 1)]);
       }
-
       currentStart = Math.max(currentStart, exEnd + 1);
     }
-
     if (currentStart <= end) {
       validRanges.push([currentStart, end]);
     }
   }
-
   return validRanges;
 };
 
@@ -59,6 +54,8 @@ const CodepointEditor: React.FC = () => {
   const [hasTextIndicators, setHasTextIndicators] = useState(false);
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
   const [selectedFont, setSelectedFont] = useState("sans-serif");
+
+  const isMobileView = window.innerWidth < 768;
 
   const setText = (text: string) => {
     setNormalText(text);
@@ -86,24 +83,20 @@ const CodepointEditor: React.FC = () => {
   const getRandomInvisibleChar = (): string => {
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
     const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
-
     return String.fromCodePoint(codePoint);
   };
 
   function getRandomCharFromRegex(regex: RegExp): string {
     const cps = new Set<number>();
     const rx = regex.source;
-
     rx.replace(/\\u\{([0-9a-fA-F]+)\}|\\u([0-9a-fA-F]{4})/g, (_, braced, short) => {
       cps.add(parseInt(braced || short, 16));
       return "";
     });
-
     rx.replace(/\\u(?:\{)?([0-9a-fA-F]+)(?:\})?-\\u(?:\{)?([0-9a-fA-F]+)(?:\})?/g, (_, a, b) => {
       for (let i = parseInt(a, 16); i <= parseInt(b, 16); i++) cps.add(i);
       return "";
     });
-
     const list = [...cps];
     const cp = list[Math.floor(Math.random() * list.length)];
     return cp !== undefined ? String.fromCodePoint(cp) : "";
@@ -111,30 +104,21 @@ const CodepointEditor: React.FC = () => {
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
     let randomChar = "";
-
-    if (type === "invisible") {
-      randomChar = getRandomInvisibleChar();
-    } else if (type === "wordBreak") {
-      randomChar = getRandomCharFromRegex(WordBreakWSegSpaceNewlineRegex);
-    } else if (type === "noBreak") {
-      randomChar = getRandomCharFromRegex(DecompositionTypeNoBreakRegex);
-    }
+    if (type === "invisible") randomChar = getRandomInvisibleChar();
+    else if (type === "wordBreak") randomChar = getRandomCharFromRegex(WordBreakWSegSpaceNewlineRegex);
+    else if (type === "noBreak") randomChar = getRandomCharFromRegex(DecompositionTypeNoBreakRegex);
 
     let updatedText = "";
-
     if (lastSelection && textareaRef.current && lastSelection.start >= 0 && lastSelection.end >= 0) {
       const { start, end } = lastSelection;
       updatedText = normalText.slice(0, start) + randomChar + normalText.slice(end);
       setLastSelection({ start: -1, end: -1 });
     } else {
-      const chars = [...normalText]; // Unicode-safe
-      const insertPos = chars.length > 4
-        ? Math.floor(Math.random() * (chars.length - 1)) + 1
-        : Math.floor(Math.random() * (chars.length + 1));
+      const chars = [...normalText];
+      const insertPos = chars.length > 4 ? Math.floor(Math.random() * (chars.length - 1)) + 1 : Math.floor(Math.random() * (chars.length + 1));
       chars.splice(insertPos, 0, randomChar);
       updatedText = chars.join('');
     }
-
     setText(updatedText);
   };
 
@@ -150,12 +134,104 @@ const CodepointEditor: React.FC = () => {
   }
 
   function loadFontDynamically(fontName: string) {
-    WebFont.load({
-      google: {
-        families: [fontName]
-      }
-    });
+    WebFont.load({ google: { families: [fontName] } });
   }
+
+  const panels = [
+    {
+      key: "indicators",
+      title: "Text Indicators",
+      content: (
+        <div className={styles.buttonColumn}>
+          <div className={styles.description}>{describeTextIndicators(normalText)}</div>
+          <button
+            disabled={!hasTextIndicators}
+            onClick={() => setText(IndicatorsCleaner.deepClean(normalText))}
+            className={`${styles.charButton} ${innerStyles.aiIndicator}`}
+            title={!hasTextIndicators ? "No indicators found" : undefined}
+          >
+            Deep Clean
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: "unseen",
+      title: "Add Unseen Characters",
+      content: (
+        <div className={styles.buttonColumn}>
+          <label className={styles.tagToggle}>
+            <input
+              type="checkbox"
+              checked={isTagTyping}
+              onChange={() => setIsAddTagsMode((prev) => !prev)}
+            />
+            <span>Tag Typing</span>
+          </label>
+          <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${innerStyles.invisibleChar}`}>
+            Add Random Invisible Character
+          </button>
+          <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${innerStyles.wordBreakChar}`}>
+            Add Random Word-Break Space
+          </button>
+          <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${innerStyles.noBreakChar}`}>
+            Add Random No-Break Space
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: "typing",
+      title: "Typing Animation",
+      content: (
+        <TypingSequencePanel
+          setText={setText}
+          getCurrentText={() => normalText}
+          playInitialDemo={playInitialDemo}
+          scrollTargetRef={textareaRef}
+          ref={typingPanelRef}
+        />
+      ),
+    },
+    {
+      key: "normalization",
+      title: "Normalization",
+      content: (
+        <NormalizationPanel
+          text={normalText}
+          setText={setText}
+        />
+      ),
+    },
+    {
+      key: "fonts",
+      title: "Fonts",
+      content: (
+        <div className={styles.buttonColumn}>
+          <select
+            value={selectedFont}
+            onChange={(e) => {
+              const font = e.target.value;
+              setSelectedFont(font);
+              loadFontDynamically(font);
+            }}
+          >
+            {["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI", "monospace"].map(font => (
+              <option key={font} value={font}>{font}</option>
+            ))}
+          </select>
+        </div>
+      ),
+    }
+  ];
+
+  const orderedPanels = isMobileView
+    ? [...panels].sort((a, b) => {
+        const aOpen = openPanels[a.key] ? -1 : 0;
+        const bOpen = openPanels[b.key] ? -1 : 0;
+        return aOpen - bOpen;
+      })
+    : panels;
 
   return (
     <div className={styles.codepointEditor}>
@@ -174,8 +250,7 @@ const CodepointEditor: React.FC = () => {
             isTagTyping={isTagTyping}
             onSelectionChange={(start, end) => {
               setLastSelection({ start, end });
-              if (start < normalText.length)
-                typingPanelRef.current?.stopTyping();
+              if (start < normalText.length) typingPanelRef.current?.stopTyping();
             }}
             fontFamily={selectedFont}
           />
@@ -197,20 +272,13 @@ const CodepointEditor: React.FC = () => {
           const params = new URLSearchParams();
           const text = textareaRef.current?.value || "";
           const dir = textareaRef.current?.dir || "auto";
-
           if (text) params.set("text", text);
           if (dir !== "auto") params.set("dir", dir);
-
           Object.entries(openPanels).forEach(([key, open]) => {
             if (open) params.set(key, "1");
           });
-
           const queryString = params.toString();
-          navigate(
-            { pathname: location.pathname, search: queryString },
-            { replace: true }
-          );
-
+          navigate({ pathname: location.pathname, search: queryString }, { replace: true });
           return queryString ? `?${queryString}` : "";
         }}
         showShareLink
@@ -219,73 +287,16 @@ const CodepointEditor: React.FC = () => {
         onSetText={setText}
       />
       <div className={styles.panelGrid}>
-        <CollapsiblePanel title="Text Indicators" queryKey="indicators" onToggle={handlePanelToggle}>
-          <div className={styles.buttonColumn}>
-            <div className={styles.description}>
-              {describeTextIndicators(normalText)}
-            </div>
-            <button
-              disabled={!hasTextIndicators}
-              onClick={() => setText(IndicatorsCleaner.deepClean(normalText))}
-              className={`${styles.charButton} ${innerStyles.aiIndicator}`}
-              title={!hasTextIndicators ? "No indicators found" : undefined}
-            >
-              Deep Clean
-            </button>
-          </div>
-        </CollapsiblePanel>
-        <CollapsiblePanel title="Add Unseen Characters" queryKey="unseen" onToggle={handlePanelToggle}>
-          <div className={styles.buttonColumn}>
-            <label className={styles.tagToggle}>
-              <input
-                type="checkbox"
-                checked={isTagTyping}
-                onChange={() => setIsAddTagsMode((prev) => !prev)}
-              />
-              <span>Tag Typing</span>
-            </label>
-            <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${innerStyles.invisibleChar}`}>
-              Add Random Invisible Character
-            </button>
-            <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${innerStyles.wordBreakChar}`}>
-              Add Random Word-Break Space
-            </button>
-            <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${innerStyles.noBreakChar}`}>
-              Add Random No-Break Space
-            </button>
-          </div>
-        </CollapsiblePanel>
-        <CollapsiblePanel title="Typing Animation" queryKey="typing" onToggle={handlePanelToggle}>
-          <TypingSequencePanel
-            setText={setText}
-            getCurrentText={() => normalText}
-            playInitialDemo={playInitialDemo}
-            scrollTargetRef={textareaRef}
-            ref={typingPanelRef}
-          />
-        </CollapsiblePanel>
-        <CollapsiblePanel title="Normalization" queryKey="normalization" onToggle={handlePanelToggle}>
-          <NormalizationPanel
-            text={normalText}
-            setText={setText}
-          />
-        </CollapsiblePanel>
-        <CollapsiblePanel title="Fonts" queryKey="fonts" onToggle={handlePanelToggle}>
-          <div className={styles.buttonColumn}>
-            <select
-              value={selectedFont}
-              onChange={(e) => {
-                const font = e.target.value;
-                setSelectedFont(font);
-                loadFontDynamically(font);
-              }}
-            >
-              {["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI", "monospace"].map(font => (
-                <option key={font} value={font}>{font}</option>
-              ))}
-            </select>
-          </div>
-        </CollapsiblePanel>
+        {orderedPanels.map(panel => (
+          <CollapsiblePanel
+            key={panel.key}
+            title={panel.title}
+            queryKey={panel.key}
+            onToggle={handlePanelToggle}
+          >
+            {panel.content}
+          </CollapsiblePanel>
+        ))}
       </div>
     </div>
   );

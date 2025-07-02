@@ -104,6 +104,7 @@ export default function NormalizationPanel({ text, setText }: Props) {
         <button
           onClick={() => handleSelect("Original")}
           disabled={!originalFrozen}
+          onMouseEnter={() => setHoveredForm("Original")}
           className={selectedForm === "Original" ? styles.selectedButton : styles.normalButton}
         >
           Original Text
