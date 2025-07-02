@@ -11,10 +11,10 @@ type ProcessedTextDisplayProps = {
   setText: (text: string) => void;
   selectionRange: { start: number; end: number };
   onAnalysisChange?: (hasFindings: boolean) => void;
-  fontFamily?: string;
+  selectedFont?: string;
 };
 
-const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange, fontFamily }) => {
+const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange, selectedFont }) => {
   const processedTextRef = useRef<HTMLDivElement>(null);
   const longPressTimeout = useRef<number | null>(null);
   const longPressVisualTimeout = useRef<number | null>(null);
@@ -45,11 +45,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
   };
 
-  const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
+  const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, selectedFont: string, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
-    const actualFont = processedTextRef.current ? window.getComputedStyle(processedTextRef.current).fontFamily : "";
-    const shouldOverlayDottedCircle = dottedCircleSafeFonts.includes(fontFamily ?? "") && actualFont.includes(fontFamily ?? "");
+    const shouldOverlayDottedCircle = dottedCircleSafeFonts.includes(selectedFont ?? "");
 
     for (let i = 0; i < text.length;) {
       const codePoint = text.codePointAt(i)!;
@@ -64,6 +63,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       const isSelected = i >= selectionRange.start && i < selectionRange.end;
       const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;
       const script = getEntry(codePoint)?.script ?? "Unknown";
+      let extraStyle: React.CSSProperties = {};
 
       const getCharClassName = (isInvisible: boolean, isTagChar: boolean, isWordBreakChar: boolean, isNoBreakChar: boolean, isAIIndicator: boolean) =>
         `${styles.styledChar} ${isWordBreakChar ? styles.wordBreakChar
@@ -93,8 +93,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         }
 
         // combining on dotted circle
-        if (shouldOverlayDottedCircle && dottedCircleAllowedScripts.includes(script) && getEntry(codePoint)?.category.startsWith("M")) {
-          displayedChar = `\u25CC${char}`;
+        if (dottedCircleAllowedScripts.includes(script) && getEntry(codePoint)?.category.startsWith("M")) {
+          if (shouldOverlayDottedCircle)
+            displayedChar = `\u25CC${char}`;
+          extraStyle.minWidth = "0.7em";
         }
 
         const finding = displayedChar !== char || isAIIndicator;
@@ -103,7 +105,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         return displayedChar;
       };
 
-      let backgroundColor: string | undefined = undefined;
       const shouldIgnoreScript = (script === "Common" && codePoint < 1000) || script === "Inherited" || script === "Unknown";
       const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator && !shouldIgnoreScript;
       if (isStyleTarget && !(script in scriptToColor)) {
@@ -111,7 +112,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         scriptToColor[script] = getScriptColor(nextIndex);
       }
       if (isStyleTarget) {
-        backgroundColor = scriptToColor[script];
+          extraStyle.backgroundColor = scriptToColor[script];
       }
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
@@ -136,7 +137,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
           <span
             key={`${startIndex}-${codePoint}`}
             className={getCharClassName(isInvisible, isTagChar, isWordBreakChar, isNoBreakChar, isAIIndicator)}
-            style={backgroundColor ? { backgroundColor } : undefined}
+            style={extraStyle}
             contentEditable={false}
             suppressContentEditableWarning
             data-original={char}
@@ -175,11 +176,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
 
   const analysisResult = useMemo(() => {
     let findings = false;
-    const result = replaceUnseenChars(text, selectionRange, (flag) => {
+    const result = replaceUnseenChars(text, selectionRange, selectedFont ?? "", (flag) => {
       findings ||= flag;
     });
     return { result, findings };
-  }, [text, selectionRange, displayStyle]);
+  }, [text, selectionRange, displayStyle, selectedFont]);
 
   useEffect(() => {
     onAnalysisChange?.(analysisResult.findings);
@@ -215,7 +216,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         </select>
 
       </CollapsibleToolbar>
-      <div ref={processedTextRef} className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} style={{ fontFamily: `${fontFamily}, sans-serif` }} >
+      <div ref={processedTextRef} className={`${styles.processedText} ${isRtl ? styles.rtlInput : styles.ltrInput}`} style={{ fontFamily: selectedFont }} >
         {processedText}
         {dialogData && (
           <CodepointDialog
@@ -229,7 +230,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
               }
               setDialogData(null);
             }}
-            fontFamily={fontFamily}
+            fontFamily={selectedFont}
           />
         )}
 

@@ -195,7 +195,7 @@ export default function PlainTextInput({
       <textarea
         ref={textareaRef}
         className={styles.textarea}
-        style={{ fontSize: `${fontSize}px` , fontFamily: `${fontFamily}, sans-serif` }}
+        style={{ fontSize: `${fontSize}px` , fontFamily: fontFamily }}
         value={value}
         onChange={handleChange}
         onFocus={() => {

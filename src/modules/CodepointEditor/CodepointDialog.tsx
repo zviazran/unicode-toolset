@@ -75,7 +75,7 @@ export default function CodepointDialog({
       open={true}
       onOpenChange={handleClose}
     >
-      <div className={styles.dialogWrapper} style={{ fontFamily: `${fontFamily}, sans-serif` }}>
+      <div className={styles.dialogWrapper} style={{ fontFamily: `${fontFamily}` }}>
         <input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

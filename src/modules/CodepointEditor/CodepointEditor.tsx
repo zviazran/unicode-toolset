@@ -187,7 +187,7 @@ const CodepointEditor: React.FC = () => {
             setText={setText}
             selectionRange={lastSelection}
             onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)}
-            fontFamily={selectedFont}
+            selectedFont={selectedFont}
           />
         </div>
       </div>

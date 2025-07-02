@@ -65,7 +65,7 @@
   cursor: pointer;
   outline: none;
   text-align: center;
-  min-width: 0.6em;
+  min-width: 0.5em;
   border-left: 0.5px solid rgba(255, 180, 190, 0.2);
   border-right: 0.5px solid rgba(255, 180, 190, 0.2);
   user-select: none;
