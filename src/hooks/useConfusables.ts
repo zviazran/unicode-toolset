@@ -23,17 +23,23 @@ export default function useConfusables() {
     const directMatches = cachedConfusablesData[char] || [];
     let combined = directMatches;
 
-    // add the NFD normalized version
-    combined = [...combined, char.normalize("NFD")];
-
-    // If only one and it's a single char, get its confusables too
     if (directMatches.length === 1 && directMatches[0].length === 1) {
       const additional = cachedConfusablesData[directMatches[0]] || [];
       combined = [...new Set([...directMatches, ...additional])];
     }
 
-    return combined.filter(c => c !== char);
+    const nfdForm = char.normalize("NFD");
+    if (nfdForm.length > 1) {
+      const first = nfdForm[0];
+      const rest = nfdForm.slice(1);
+
+      const firstConfusables = cachedConfusablesData[first] || [];
+      combined = [...combined, ...firstConfusables.map(c => c + rest)];
+    }
+
+    return [...new Set(combined)].filter(c => c && c !== char);
   };
+
 
   return { data, getConfusablesFor };
 }
