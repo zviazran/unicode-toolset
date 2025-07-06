@@ -15,7 +15,7 @@ export const TOOLSETS = [
     image: CODEPOINT_EDITOR,
     name: "The Unseen Side of Text",
     joke: "It's not a bug, it's an invisible character 👻",
-    description: "Inspect and edit text at the codepoint level including invisible characters, breaks and AI indicators. What you see isn’t always what your computer sees.",
+    description: "Inspect and edit text at the codepoin level. uncover invisibles, breaks, script mismatches, and AI traces. Explore homograph spoofing and see that what you see isn't always what your computer sees.",
     link: "char-editor",
   },
   {
