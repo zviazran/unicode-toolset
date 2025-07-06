@@ -23,6 +23,9 @@ export default function useConfusables() {
     const directMatches = cachedConfusablesData[char] || [];
     let combined = directMatches;
 
+    // add the NFD normalized version
+    combined = [...combined, char.normalize("NFD")];
+
     // If only one and it's a single char, get its confusables too
     if (directMatches.length === 1 && directMatches[0].length === 1) {
       const additional = cachedConfusablesData[directMatches[0]] || [];
