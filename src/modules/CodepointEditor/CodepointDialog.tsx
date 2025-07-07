@@ -90,17 +90,38 @@ export default function CodepointDialog({
         />
         <div className={styles.charDisplay}>{data.originalChar}</div>
 
-        <div className={styles.indexText}>
-          {unicodeInfo && (
-            <>
-              <div><strong>{unicodeInfo.long}</strong></div>
-              <div>Short Name: {unicodeInfo.short}</div>
-              <div>Category: {unicodeInfo.category}</div>
-              <div>Script: {unicodeInfo.script}</div>
-            </>
-          )}
-          <div>Index: {data.position}</div>
+        <div className={styles.charInfoTableWrapper}>
+          <table className={styles.charInfoTable}>
+            <tbody>
+              {unicodeInfo && (
+                <>
+                  <tr>
+                    <td colSpan={2} className={styles.charInfoTitle}>
+                      {unicodeInfo.long}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ whiteSpace: 'nowrap' }}>Short Name</td>
+                    <td>{unicodeInfo.short}</td>
+                  </tr>
+                  <tr>
+                    <td>Category</td>
+                    <td>{unicodeInfo.category}</td>
+                  </tr>
+                  <tr>
+                    <td>Script</td>
+                    <td>{unicodeInfo.script}</td>
+                  </tr>
+                </>
+              )}
+              <tr>
+                <td>Index</td>
+                <td>{data.position}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
         <div className={styles.buttonRow}>
           <button
             onClick={copyToClipboard}

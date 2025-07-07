@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .inputField {
@@ -35,6 +35,57 @@
   background-color: #f9f9f9;
   user-select: text;
   font-family: inherit;
+}
+
+.charInfoTableWrapper {
+  width: 100%;
+  max-width: 20rem;
+  min-width: 12rem;
+}
+
+.charInfoTable {
+  width: 100%;
+  border-radius: 6px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8em;
+  color: #444;
+  border: 1px solid #ddd;
+}
+
+.charInfoTable td {
+  border: 1px solid #ddd;
+  padding: 0.1em 0.5em;
+}
+
+.charInfoTitle {
+  font-weight: bold;
+  text-align: center;
+  background-color: #f9f9f9;
+  padding: 0.6em;
+  font-size: 1.1em;
+}
+
+.charInfoTable td:first-child {
+  width: 1%;
+}
+
+.charInfoTable td:nth-child(2) {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.charInfoTable tr:first-child td:first-child {
+  border-top-left-radius: 6px;
+}
+.charInfoTable tr:first-child td:last-child {
+  border-top-right-radius: 6px;
+}
+.charInfoTable tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+.charInfoTable tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
 }
 
 .buttonRow {
