@@ -3,6 +3,8 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5em;
+  position: relative;
+  min-width: 12rem;
 }
 
 .inputField {
@@ -25,22 +27,47 @@
 }
 
 .charDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2.4em;
   width: 2.8em;
   height: 2.8em;
-  line-height: 2.8em;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
   user-select: text;
   font-family: inherit;
+  margin-bottom: clamp(3em, 30vw, 4em);
+  position: relative;
+}
+
+.overlayChar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: #333;
+}
+
+.overlayHex {
+  margin-left: 0.4em;
+  font-weight: 600;
+  color: #555;
 }
 
 .charInfoTableWrapper {
+  position: absolute;
+  top: 10em;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  max-width: 20rem;
-  min-width: 12rem;
+  z-index: 2;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .charInfoTable {
@@ -48,7 +75,7 @@
   border-radius: 6px;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.8em;
+  font-size: clamp(0.6em, 2.5vw, 0.8em);
   color: #444;
   border: 1px solid #ddd;
 }
@@ -78,12 +105,15 @@
 .charInfoTable tr:first-child td:first-child {
   border-top-left-radius: 6px;
 }
+
 .charInfoTable tr:first-child td:last-child {
   border-top-right-radius: 6px;
 }
+
 .charInfoTable tr:last-child td:first-child {
   border-bottom-left-radius: 6px;
 }
+
 .charInfoTable tr:last-child td:last-child {
   border-bottom-right-radius: 6px;
 }
@@ -128,6 +158,7 @@
   background-color: white;
   min-width: 1rem;
   text-align: center;
+  user-select: none;
 }
 
 .link {

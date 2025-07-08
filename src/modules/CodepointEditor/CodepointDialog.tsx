@@ -16,11 +16,17 @@ export default function CodepointDialog({
   fontFamily?: string;
 }) {
   const [inputValue, setInputValue] = useState("");
+  const [previewData, setPreviewData] = useState<{
+    char: string,
+    info: ReturnType<typeof getEntry> | null
+  } | null>(null);
+
   const shouldDeleteRef = useRef(false);
   const { getEntry } = useUnicodeData();
   const unicodeInfo = data ? getEntry(data.codePoint) : null;
 
   const { data: confusablesMap, getConfusablesFor } = useConfusables();
+  const longPressActive = useRef(false);
 
   const confusableInfos = useMemo(() => {
     if (!data || !confusablesMap) return [];
@@ -64,11 +70,13 @@ export default function CodepointDialog({
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(data.originalChar).catch(() => {
-      alert("Failed to copy character.");
+      console.log("Failed to copy character.");
     });
   };
 
   const unicodeLink = `https://util.unicode.org/UnicodeJsps/character.jsp?a=${data.codePoint.toString(16).toLowerCase()}`;
+
+  const activeInfo = previewData?.info || unicodeInfo;
 
   return (
     <BaseDialog
@@ -77,10 +85,10 @@ export default function CodepointDialog({
     >
       <div className={styles.dialogWrapper} style={{ fontFamily: `${fontFamily}` }}>
         <input
-          value={inputValue}
+          value={previewData ? ` U+${previewData.char.codePointAt(0)!.toString(16).toUpperCase()}` : inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !previewData) {
               e.preventDefault();
               handleClose();
             }
@@ -88,35 +96,45 @@ export default function CodepointDialog({
           placeholder="e.g., U+202F"
           className={styles.inputField}
         />
-        <div className={styles.charDisplay}>{data.originalChar}</div>
+
+        <div className={styles.charDisplay}>
+          <span style={{ opacity: previewData ? 0.2 : 1 }}>
+            {data.originalChar}
+          </span>
+          {previewData && (
+            <span className={styles.overlayChar}>{previewData.char}</span>
+          )}
+        </div>
 
         <div className={styles.charInfoTableWrapper}>
           <table className={styles.charInfoTable}>
             <tbody>
-              {unicodeInfo && (
+              {activeInfo && (
                 <>
                   <tr>
                     <td colSpan={2} className={styles.charInfoTitle}>
-                      {unicodeInfo.long}
+                      {activeInfo.long}
                     </td>
                   </tr>
                   <tr>
                     <td style={{ whiteSpace: 'nowrap' }}>Short Name</td>
-                    <td>{unicodeInfo.short}</td>
+                    <td>{activeInfo.short}</td>
                   </tr>
                   <tr>
                     <td>Category</td>
-                    <td>{unicodeInfo.category}</td>
+                    <td>{activeInfo.category}</td>
                   </tr>
                   <tr>
                     <td>Script</td>
-                    <td>{unicodeInfo.script}</td>
+                    <td>{activeInfo.script}</td>
                   </tr>
                 </>
               )}
               <tr>
                 <td>Index</td>
-                <td>{data.position}</td>
+                <td>
+                  {data.position}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -145,20 +163,17 @@ export default function CodepointDialog({
 
         {confusableInfos.length > 0 && (
           <div className={styles.confusableList}>
-            {confusableInfos.length > 0 && (
-              <div>Replace with:</div>
-            )}
+            <div>Replace with:</div>
             <div className={styles.confusableButtons}>
               {confusableInfos.map(({ char, info }) => (
                 <button
                   key={char}
-                  onClick={() => onClose(char)}
+                  onMouseEnter={() => setPreviewData({ char, info })}
+                  onMouseLeave={() => setPreviewData(null)}
+                  onTouchStart={() => { setPreviewData({ char, info }); longPressActive.current = true; }}
+                  onTouchEnd={() => { setPreviewData(null); longPressActive.current = false; }}
+                  onClick={() => { if (!longPressActive.current) onClose(char) }}
                   className={styles.confusableButton}
-                  title={
-                    info
-                      ? `${info.long} (U+${char.codePointAt(0)!.toString(16).toUpperCase()})`
-                      : 'Unknown'
-                  }
                 >
                   {char}
                 </button>

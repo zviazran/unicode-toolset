@@ -37,9 +37,10 @@ export default function useConfusables() {
       combined = [...combined, ...firstConfusables.map(c => c + rest)];
     }
 
-    return [...new Set(combined)].filter(c => c && c !== char);
+    return [...new Set(combined)]
+      .filter(c => c && c !== char)
+      .sort((a, b) => (a.codePointAt(0)! - b.codePointAt(0)!));
   };
-
 
   return { data, getConfusablesFor };
 }
