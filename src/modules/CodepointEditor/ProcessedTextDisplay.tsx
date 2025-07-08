@@ -5,6 +5,7 @@ import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeN
 import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import { Icon } from "@iconify/react";
 import useUnicodeData from "../../hooks/useUnicodeData";
+import CodepointChecker from "../../utils/CodepointChecker";
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -105,7 +106,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         return displayedChar;
       };
 
-      const shouldIgnoreScript = (script === "Common" && codePoint < 1000) || script === "Inherited" || script === "Unknown";
+      const shouldIgnoreScript = (script === "Common" && codePoint < 1000) || CodepointChecker.isEmoji(codePoint)|| script === "Inherited" || script === "Unknown";
       const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator && !shouldIgnoreScript;
       if (isStyleTarget && !(script in scriptToColor)) {
         const nextIndex = Object.keys(scriptToColor).length;
