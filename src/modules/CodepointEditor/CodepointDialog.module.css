@@ -143,13 +143,22 @@
 }
 
 .confusableList {
-  font-size: 1rem;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: inherit;
 }
 
 .confusableButtons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.1rem;
+}
+
+.confusableButtons button:first-of-type {
+  margin-left: 0.2em;
 }
 
 .confusableButton {

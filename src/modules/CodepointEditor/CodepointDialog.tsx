@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BaseDialog from '../../components/BaseDialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@iconify/react';
@@ -28,18 +28,24 @@ export default function CodepointDialog({
   const { data: confusablesMap, getConfusablesFor } = useConfusables();
   const longPressActive = useRef(false);
 
-  const confusableInfos = useMemo(() => {
-    if (!data || !confusablesMap) return [];
+  const normalizeSame: { char: string, info: ReturnType<typeof getEntry> }[] = [];
+  const normalizeDifferent: { char: string, info: ReturnType<typeof getEntry> }[] = [];
+
+  if (data && confusablesMap) {
     const chars = getConfusablesFor ? getConfusablesFor(data.originalChar) : [];
-    return chars.map(char => ({
-      char,
-      info: getEntry(char.codePointAt(0)!)
-    }));
-  }, [data?.originalChar, confusablesMap, getConfusablesFor]);
+    for (const char of chars) {
+      const info = getEntry(char.codePointAt(0)!);
+      if (char.normalize("NFKC") === data.originalChar.normalize("NFKC")) {
+        normalizeSame.push({ char, info });
+      } else {
+        normalizeDifferent.push({ char, info });
+      }
+    }
+  }
 
   useEffect(() => {
     if (data) {
-      const hex = data.codePoint.toString(16).toUpperCase().padStart(4, "0");
+      const hex = data.codePoint.toString(16).toUpperCase();
       setInputValue(`U+${hex}`);
       shouldDeleteRef.current = false;
     }
@@ -161,26 +167,31 @@ export default function CodepointDialog({
           </Dialog.Close>
         </div>
 
-        {confusableInfos.length > 0 && (
-          <div className={styles.confusableList}>
-            <div>Replace with:</div>
-            <div className={styles.confusableButtons}>
-              {confusableInfos.map(({ char, info }) => (
-                <button
-                  key={char}
-                  onMouseEnter={() => setPreviewData({ char, info })}
-                  onMouseLeave={() => setPreviewData(null)}
-                  onTouchStart={() => { setPreviewData({ char, info }); longPressActive.current = true; }}
-                  onTouchEnd={() => { setPreviewData(null); longPressActive.current = false; }}
-                  onClick={() => { if (!longPressActive.current) onClose(char) }}
-                  className={styles.confusableButton}
-                >
-                  {char}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className={styles.confusableList}>
+          {[{ label: "Replace with:", data: normalizeDifferent },
+          { label: "Normalizes same:", data: normalizeSame }
+          ].map(({ label, data }) => (
+            data.length > 0 && (
+              <div key={label}>
+                <div className={styles.confusableButtons}>
+                  {label} {data.map(({ char, info }) => (
+                    <button
+                      key={char}
+                      onMouseEnter={() => setPreviewData({ char, info })}
+                      onMouseLeave={() => setPreviewData(null)}
+                      onTouchStart={() => { setPreviewData({ char, info }); longPressActive.current = true; }}
+                      onTouchEnd={() => { setPreviewData(null); longPressActive.current = false; }}
+                      onClick={() => { if (!longPressActive.current) onClose(char) }}
+                      className={styles.confusableButton}
+                    >
+                      {char}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )
+          ))}
+        </div>
 
         <a
           href={unicodeLink}
