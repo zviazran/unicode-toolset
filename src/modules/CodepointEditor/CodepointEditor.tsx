@@ -182,7 +182,7 @@ const CodepointEditor: React.FC = () => {
     },
     {
       key: "typing",
-      title: "Typing Animation",
+      title: "Examples & Animations",
       content: (
         <TypingSequencePanel
           setText={setText}
