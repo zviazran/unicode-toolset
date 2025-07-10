@@ -1,7 +1,7 @@
 {
   "name": "unicode-toolset",
   "description": "A Collection of heuristic tools for analyzing, editing, and visualizing Unicode characters.",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "type": "module",
   "author": "Zvi Azran",
   "scripts": {

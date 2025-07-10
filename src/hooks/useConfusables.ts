@@ -34,7 +34,7 @@ export default function useConfusables() {
       const rest = nfdForm.slice(1);
 
       const firstConfusables = cachedConfusablesData[first] || [];
-      combined = [...combined, ...firstConfusables.map(c => c + rest)];
+      combined = [...combined, nfdForm, ...firstConfusables.map(c => c + rest)];
     }
 
     return [...new Set(combined)]

@@ -82,7 +82,19 @@ export default function CodepointDialog({
 
   const unicodeLink = `https://util.unicode.org/UnicodeJsps/character.jsp?a=${data.codePoint.toString(16).toLowerCase()}`;
 
-  const activeInfo = previewData?.info || unicodeInfo;
+  let activeInfo = unicodeInfo;
+
+  if (previewData) {
+    const codePoints = Array.from(previewData.char).map(c => c.codePointAt(0)!);
+    const infos = codePoints.map(cp => getEntry(cp));
+
+    activeInfo = {
+      long: infos.length > 1 ? `${infos[0]?.long} + ${infos.length - 1} other` : infos[0]?.long || "",
+      short: infos.map(i => i?.short).filter(Boolean).join(" + "),
+      category: infos.map(i => i?.category).filter(Boolean).join(" + "),
+      script: infos.map(i => i?.script).filter(Boolean).join(" + ")
+    };
+  }
 
   return (
     <BaseDialog
