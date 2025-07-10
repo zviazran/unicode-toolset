@@ -123,6 +123,7 @@ const CodepointEditor: React.FC = () => {
   };
 
   const handlePanelToggle = (key: string, isOpen: boolean) => {
+    typingPanelRef.current?.stopTyping();
     setOpenPanels((prev) => ({ ...prev, [key]: isOpen }));
   };
 

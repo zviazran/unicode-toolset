@@ -17,8 +17,6 @@ type ProcessedTextDisplayProps = {
 
 const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange, selectedFont }) => {
   const processedTextRef = useRef<HTMLDivElement>(null);
-  const longPressTimeout = useRef<number | null>(null);
-  const longPressVisualTimeout = useRef<number | null>(null);
   const [dialogData, setDialogData] = useState<{
     codePoint: number;
     position: number;
@@ -106,14 +104,14 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         return displayedChar;
       };
 
-      const shouldIgnoreScript = (script === "Common" && codePoint < 1000) || CodepointChecker.isEmoji(codePoint)|| script === "Inherited" || script === "Unknown";
+      const shouldIgnoreScript = (script === "Common" && codePoint < 1000) || CodepointChecker.isEmoji(codePoint) || script === "Inherited" || script === "Unknown";
       const isStyleTarget = !isInvisible && !isTagChar && !isWordBreakChar && !isNoBreakChar && !isAIIndicator && !shouldIgnoreScript;
       if (isStyleTarget && !(script in scriptToColor)) {
         const nextIndex = Object.keys(scriptToColor).length;
         scriptToColor[script] = getScriptColor(nextIndex);
       }
       if (isStyleTarget) {
-          extraStyle.backgroundColor = scriptToColor[script];
+        extraStyle.backgroundColor = scriptToColor[script];
       }
 
       if (codePoint === 0x0D || codePoint === 0x0A) {
@@ -143,10 +141,14 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
             suppressContentEditableWarning
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()} - ${script}`}
-            onPointerUp={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
-            onPointerLeave={() => { clearTimeout(longPressTimeout.current!); clearTimeout(longPressVisualTimeout.current!); }}
+            ref={(el) => {
+              if (el) {
+                requestAnimationFrame(() => {
+                  el.classList.add(styles.newlyAddedChar);
+                });
+              }
+            }}
             onClick={() => {
-              clearTimeout(longPressTimeout.current!);
               setDialogData({
                 codePoint,
                 position: startIndex,

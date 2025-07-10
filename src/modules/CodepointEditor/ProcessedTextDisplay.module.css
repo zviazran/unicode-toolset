@@ -151,3 +151,14 @@
   z-index: -1;
   pointer-events: none;
 }
+
+@keyframes pressableHint {
+  0%   { transform: scale(1);     box-shadow: 0 0 0 transparent;  border-radius: 4px;}
+  50%  { transform: scale(1.08);  box-shadow: 0 0 10px rgba(0,0,0,0.2);  border-radius: 4px;}
+  100% { transform: scale(1);     box-shadow: 0 0 0 transparent; border-radius: 4px; }
+}
+
+.newlyAddedChar {
+  animation: pressableHint 0.5s ease-out;
+}
+
