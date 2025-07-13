@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import styles from "./TypingSequenceAnimation.module.css";
 import { Icon } from "@iconify/react";
+import IconSlider from "../../components/IconSlider";
 
 export type TypingController = {
   cancel: () => void;
@@ -226,20 +227,16 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
       </label>
 
       <label className={styles.speedControl}>
-        <div className={styles.sliderRow}>
-          <Icon icon="mdi:snail" width="19" />
-          <input
-            type="range"
-            min={10}
-            max={600}
-            step={15}
-            value={typingSpeed}
-            onChange={(e) => setTypingSpeed(Number(e.target.value))}
-            className={styles.slider}
-            dir="rtl"
-          />
-          <Icon icon="mdi:flash" width="20" />
-        </div>
+        <IconSlider
+          min={10}
+          max={600}
+          step={15}
+          value={typingSpeed}
+          onChange={setTypingSpeed}
+          leftIcon={<Icon icon="mdi:snail" width="19" />}
+          rightIcon={<Icon icon="mdi:flash" width="20" />}
+          dir="rtl"
+        />
       </label>
 
       <div className={styles.toggleButtonContainer}>
