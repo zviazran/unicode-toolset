@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+export type ConfusablesGroups = {
+  normalizeSame: string[];
+  normalizeDifferent: string[];
+};
+
 let cachedConfusablesData: Record<string, string[]> | null = null;
 
 export default function useConfusables() {
@@ -42,5 +47,20 @@ export default function useConfusables() {
       .sort((a, b) => (a.codePointAt(0)! - b.codePointAt(0)!));
   };
 
-  return { data, getConfusablesFor };
+  const getConfusablesGroups = (char: string): ConfusablesGroups => {
+    const confusables = getConfusablesFor(char);
+    const normalizeSame: string[] = [];
+    const normalizeDifferent: string[] = [];
+    const originalNorm = char.normalize("NFKC");
+    for (const c of confusables) {
+      if (c.normalize("NFKC") === originalNorm) {
+        normalizeSame.push(c);
+      } else {
+        normalizeDifferent.push(c);
+      }
+    }
+    return { normalizeSame, normalizeDifferent };
+  };
+
+  return { data, getConfusablesFor, getConfusablesGroups };
 }

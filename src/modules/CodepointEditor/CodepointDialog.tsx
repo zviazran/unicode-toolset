@@ -25,22 +25,16 @@ export default function CodepointDialog({
   const { getEntry } = useUnicodeData();
   const unicodeInfo = data ? getEntry(data.codePoint) : null;
 
-  const { data: confusablesMap, getConfusablesFor } = useConfusables();
+  const { data: confusablesMap, getConfusablesGroups } = useConfusables();
   const longPressActive = useRef(false);
 
-  const normalizeSame: { char: string, info: ReturnType<typeof getEntry> }[] = [];
-  const normalizeDifferent: { char: string, info: ReturnType<typeof getEntry> }[] = [];
+  let normalizeSame: { char: string, info: ReturnType<typeof getEntry> }[] = [];
+  let normalizeDifferent: { char: string, info: ReturnType<typeof getEntry> }[] = [];
 
   if (data && confusablesMap) {
-    const chars = getConfusablesFor ? getConfusablesFor(data.originalChar) : [];
-    for (const char of chars) {
-      const info = getEntry(char.codePointAt(0)!);
-      if (char.normalize("NFKC") === data.originalChar.normalize("NFKC")) {
-        normalizeSame.push({ char, info });
-      } else {
-        normalizeDifferent.push({ char, info });
-      }
-    }
+    const groups = getConfusablesGroups ? getConfusablesGroups(data.originalChar) : { normalizeSame: [], normalizeDifferent: [] };
+    normalizeSame = groups.normalizeSame.map(char => ({ char, info: getEntry(char.codePointAt(0)!) }));
+    normalizeDifferent = groups.normalizeDifferent.map(char => ({ char, info: getEntry(char.codePointAt(0)!) }));
   }
 
   useEffect(() => {
