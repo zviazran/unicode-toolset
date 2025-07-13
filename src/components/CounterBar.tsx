@@ -26,7 +26,7 @@ export default function CounterBar({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_UPLOAD_LENGTH = 10000;
 
-  const characterCount = text.length;
+  const characterCount = [...text].length;
   const byteCount = new TextEncoder().encode(text).length;
 
   const handleCopy = () => {
