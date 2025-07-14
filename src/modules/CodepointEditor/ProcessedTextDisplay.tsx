@@ -1,7 +1,6 @@
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import styles from "./ProcessedTextDisplay.module.css";
 import CodepointDialog from "./CodepointDialog";
-import { invisibleCharRanges, WordBreakWSegSpaceNewlineRegex, DecompositionTypeNoBreakRegex, AIIndicatorRegex } from "../../constants/CodePointsConsts";
 import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import { Icon } from "@iconify/react";
 import useUnicodeData from "../../hooks/useUnicodeData";
@@ -40,10 +39,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     return `hsl(${baseHue}, ${saturation}%, ${lightness}%)`;
   }
 
-  const isInvisibleCodePoint = (code: number): boolean => {
-    return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
-  };
-
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, selectedFont: string, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
@@ -53,11 +48,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       const codePoint = text.codePointAt(i)!;
       const char = String.fromCodePoint(codePoint);
       const startIndex = i;
-      const isInvisible = isInvisibleCodePoint(codePoint);
+      const isInvisible = CodepointChecker.isInvisibleCodePoint(codePoint);
       const isTagChar = codePoint >= 0xe0020 && codePoint <= 0xe007f;
-      const isWordBreakChar = WordBreakWSegSpaceNewlineRegex.test(char);
-      const isNoBreakChar = DecompositionTypeNoBreakRegex.test(char);
-      const isAIIndicator = AIIndicatorRegex.test(char);
+      const isWordBreakChar = CodepointChecker.isWordBreakChar(char);
+      const isNoBreakChar = CodepointChecker.isNoBreakChar(char);
+      const isAIIndicator = CodepointChecker.isAIIndicator(char);
 
       const isSelected = i >= selectionRange.start && i < selectionRange.end;
       const isCursorHere = selectionRange.start === selectionRange.end && selectionRange.start === i;

@@ -1,3 +1,9 @@
+import { invisibleCharRanges, 
+  WordBreakWSegSpaceNewlineRegex, 
+  DecompositionTypeNoBreakRegex, 
+  AIIndicatorRegex 
+} from "../constants/CodePointsConsts";
+
 export const CodepointChecker = {
   isEmoji(codePoint: number): boolean {
     return (
@@ -10,7 +16,23 @@ export const CodepointChecker = {
       (codePoint >= 0x1FA70 && codePoint <= 0x1FAFF) || // Symbols and Pictographs Extended-A
       (codePoint >= 0x1F1E6 && codePoint <= 0x1F1FF)    // Flags (regional indicator symbols)
     );
-  }
+  },
+
+  isInvisibleCodePoint(code: number): boolean {
+    return invisibleCharRanges.some(([start, end]) => code >= start && code <= end);
+  },
+
+  isWordBreakChar(char: string): boolean {
+    return WordBreakWSegSpaceNewlineRegex.test(char);
+  },
+
+  isNoBreakChar(char: string): boolean {
+    return DecompositionTypeNoBreakRegex.test(char);
+  },
+
+  isAIIndicator(char: string): boolean {
+    return AIIndicatorRegex.test(char);
+  },
 };
 
 export default CodepointChecker;
