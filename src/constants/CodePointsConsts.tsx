@@ -9,7 +9,7 @@ export const invisibleCharRanges = [
   [0xfeff, 0xfeff],  // Zero-width no-break space
   [0x1d173, 0x1d17a], // Musical invisible symbols
   [0xe0000, 0xe007f], // Tags
-  [0xe0100, 0xe01ef] // Variation selectors
+  [0xe0100, 0xe01ef] // Variation selectors Supplement
 ];
 
 export const bidiCharacters = new Map<string, number>([
@@ -30,5 +30,8 @@ export const bidiCharacters = new Map<string, number>([
 // about 25 options total 
 export const WordBreakWSegSpaceNewlineRegex = /[\u0020\u000C\u2000-\u2006\u2008-\u200A\u2028\u2029\u205F\u3000]/;
 export const DecompositionTypeNoBreakRegex = /[\u00A0\u2007\u202F]/;
+export const ThinWordBreakRegex = /[\u202F\u200A\u2009\u205F]/;
+
+export const VariationSelectorsRegex = /[\ufe00-\ufe0f]/;
 
 export const AIIndicatorRegex  = /[\u00AB\u00BB\u02D7\u2000-\u206F\u2190-\u21FF\u2212\u2794\u27A4\u2CBA\u05BE\u060C\u061B\u06D4\u061F\u3001\u3002\u30FB\uFE58\uFF01-\uFF0F\uFF1A-\uFF1F]/;

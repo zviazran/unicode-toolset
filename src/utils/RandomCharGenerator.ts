@@ -1,7 +1,8 @@
 import { invisibleCharRanges, 
   WordBreakWSegSpaceNewlineRegex, 
   DecompositionTypeNoBreakRegex, 
-  AIIndicatorRegex 
+  ThinWordBreakRegex,
+  VariationSelectorsRegex
 } from "../constants/CodePointsConsts";
 
 // Compute once at module load
@@ -56,6 +57,12 @@ export const RandomCharGenerator = {
   },
   getRandomNoBreak(): string {
     return this.getRandomCharFromRegex(DecompositionTypeNoBreakRegex); 
+  },
+  getRandomThinWordBreak(): string {
+    return this.getRandomCharFromRegex(ThinWordBreakRegex); 
+  },
+  getRandomVariationSelector(): string {
+    return this.getRandomCharFromRegex(VariationSelectorsRegex);
   },
   getRandomInvisibleChar(): string {
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
