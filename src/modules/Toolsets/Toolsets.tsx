@@ -16,7 +16,7 @@ const Toolsets: React.FC = () => {
     <Container fluid className="toolset-section">
       <Container>
         <h1 className="toolset-heading">
-          Uոі𐐽൦ꓒ𝖾 ‮ytiruceS‬ Тօօl⁤ꮪet
+          Uոі𐐽൦ꓒ𝖾 ‮ytiruceS‬ Т︃օ︃օ︃l︃ꮪ︃e︃t
         </h1>
         <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
           {TOOLSETS.map((project: Project, index: number) => (

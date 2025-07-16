@@ -12,6 +12,7 @@ const options = [
   { value: "replaceSame", label: "Replace Normalize Same" },
   { value: "addThinSpaces", label: "Add Thin Spaces" },
   { value: "addVariationSelectors", label: "Add Variation Selectors" },
+  { value: "filpOverride", label: "Flip & Override Derection" },
 ];
 
 type HomograficSpoofingPanelProps = {
@@ -35,6 +36,11 @@ export const HomograficSpoofingPanel: React.FC<HomograficSpoofingPanelProps> = (
       const randomChar = (selectedOption === "addThinSpaces") ? RandomCharGenerator.getRandomThinWordBreak() : RandomCharGenerator.getRandomVariationSelector();
       chars = addRandomCharacters(chars, chaosLevel, randomChar);
       changes = Math.max(0, chars.length - [...text].length);
+    } else if (selectedOption === "filpOverride") {
+      const startMarker = CodepointChecker.isHebrewOrArabic(chars[0]) ? '\u202D' : '\u202E';
+      chars = chars.reverse();
+      chars = [startMarker, ...chars, '\u202C'];
+      changes = 2;
     } else if (selectedOption === "replaceDifferent" || selectedOption === "replaceSame") {
       const replaceType = selectedOption === "replaceDifferent" ? "normalizeDifferent" : "normalizeSame";
       const count = chars.length;
