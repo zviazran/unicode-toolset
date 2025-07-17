@@ -11,6 +11,7 @@ interface Props {
   placeholder?: string;
   isTagTyping?: boolean;
   onSelectionChange?: (start: number, end: number) => void;
+  onClick?: () => void;
   fontFamily?: string;
 }
 
@@ -20,6 +21,7 @@ export default function PlainTextInput({
   placeholder,
   isTagTyping = false,
   onSelectionChange,
+  onClick,
   textareaRef,
   fontFamily
 }: Props) {
@@ -205,6 +207,7 @@ export default function PlainTextInput({
           isFocusedRef.current = false;
           onSelectionChange?.(-1, -1);
         }}
+        onClick={() => {onClick?.();}}
         placeholder={placeholder}
       />
     </div>

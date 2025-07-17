@@ -212,10 +212,8 @@ const CodepointEditor: React.FC = () => {
             onChange={setText}
             placeholder="Type your text here..."
             isTagTyping={isTagTyping}
-            onSelectionChange={(start, end) => {
-              setLastSelection({ start, end });
-              if (start < normalText.length) typingPanelRef.current?.stopTyping();
-            }}
+            onSelectionChange={(start, end) => { setLastSelection({ start, end });}}
+            onClick={() => { typingPanelRef.current?.stopTyping(); }}
             fontFamily={selectedFont}
           />
         </div>

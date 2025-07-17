@@ -127,14 +127,15 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
   const initialAnimations = [
     "This text is 󠁩󠁮visible󠀠󠁢󠁹󠀠󠁵󠁳󠁩󠁮󠁧󠀠󠁴󠁡󠁧󠁳!",
     "Only this character ‮.kcatta edirrevo idib siht seod",
-    "זה feature זה לא bug",
+    "Ａ,𝖠,𝐀,𝗔 normalize to A but not Α,А,Ꭺ,ꓮ,𖽀,ᗅ,𐊠 - They're from different scripts.",
+    "AI–indicators — now everywhere ‒ it’s our new reality.",
   ];
   const exampleAnimations = [
     "🚶🏽‍➡️\n🏃🏻‍♂️‍➡️\n🧑🏼‍🤝‍🧑🏽\n👩‍❤️‍💋‍👨\n👨‍👩‍👧‍👦",
     "😶‍🌫️\n😵‍💫\n🇺🇳\n🇺🇸\n🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    "\<div title=\"ل\"\>ع\<\/div\>",
     "Understand Normalization:\nZoë Čech Åsậm vs Zoë Čech Åsậm\nfinance_ℌ①.AⅥ vs ﬁnance_H1.AVI\n/api/user/℅ vs /api/user/c/o",
-    "Tab–space debates — never end ‒ it’s clear who is wrong.",
+    "\<div title=\"ل\"\>ع\<\/div\>",
+    "זה feature זה לא bug",
     "Ok, עשיתי totalCount = 42 ואז קראתי לeval()."
   ];
 
@@ -154,9 +155,13 @@ export const TypingSequencePanel = forwardRef(function TypingSequencePanel(
         scrollTargetRef,
         onComplete: () => {
           if (activeRunId.current === 0) {
-            setTimeout(() => {
+            if (initial.isCancelled()) {
               setText("");
-            }, 2000);
+            } else {
+              setTimeout(() => {
+                setText("");
+              }, 2000);
+            }
             hasPlayedInitialDemo.current = true;
           }
         },
