@@ -10,6 +10,7 @@ import CollapsiblePanel from "../../components/CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
 import { HomograficSpoofingPanel } from "./HomograficSpoofingPanel";
+import { NoiseGeneratorPanel } from "./NoiseGeneratorPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
 import WebFont from 'webfontloader';
@@ -133,6 +134,18 @@ const CodepointEditor: React.FC = () => {
       ),
     },
     {
+      key: "noise",
+      title: "Noise Generator",
+      content: (
+        <NoiseGeneratorPanel
+          setText={setText}
+          getCurrentText={() => normalText}
+          scrollTargetRef={textareaRef}
+        />
+      ),
+    },
+
+    {
       key: "unseen",
       title: "Add Unseen Characters",
       content: (
@@ -212,7 +225,7 @@ const CodepointEditor: React.FC = () => {
             onChange={setText}
             placeholder="Type your text here..."
             isTagTyping={isTagTyping}
-            onSelectionChange={(start, end) => { setLastSelection({ start, end });}}
+            onSelectionChange={(start, end) => { setLastSelection({ start, end }); }}
             onClick={() => { typingPanelRef.current?.stopTyping(); }}
             fontFamily={selectedFont}
           />
