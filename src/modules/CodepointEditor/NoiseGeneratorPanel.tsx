@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./CodepointEditor.module.css";
+import RandomCharGenerator from "../../utils/RandomCharGenerator";
 
 type NoiseGeneratorPanelProps = {
   setText: (t: string) => void;
@@ -11,8 +12,9 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
   setText,
   getCurrentText,
 }) => {
-  const [includeRanges, setIncludeRanges] = useState("00A1-2BFF,FE00-FFFF,1D400-1D7FF,1F300-1F6FF,1F900-1FAFF");
+  const [includeRanges, setIncludeRanges] = useState("00A1-202A, 2030-30FF, FE00-FFFF, 1D400-1D7FF, 1F300-1F6FF, 1F900-1FAFF");
   const [count, setCount] = useState(10);
+  const [addWordBreaks, setAddWordBreaks] = useState(true);
 
   const parseRanges = (input: string): [number, number][] => {
     return input
@@ -39,7 +41,13 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
       attempts++;
     }
 
-    const noise = noiseChars.join("");
+    let noise = noiseChars
+      .map((ch) => {
+        const insertZWS = addWordBreaks && Math.random() < 0.3; // ~30% chance
+        return insertZWS ? ch + RandomCharGenerator.getRandomWordBreak() : ch;
+      })
+      .join("");
+
     const insertAt = Math.floor(Math.random() * (noise.length + 1));
     const before = noise.slice(0, insertAt);
     const after = noise.slice(insertAt);
@@ -48,7 +56,6 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
     setText(newText);
   };
 
-
   return (
     <div className={styles.buttonColumn}>
       <input
@@ -56,7 +63,7 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
         placeholder="Include ranges (e.g. 0020-007F)"
         value={includeRanges}
         onChange={e => setIncludeRanges(e.target.value)}
-        style={{ marginBottom: 6 }}
+        style={{ marginBottom: 6, width: "15rem" }}
       />
       <input
         type="number"
@@ -65,8 +72,16 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
         className={styles.charInput}
         value={count}
         onChange={e => setCount(parseInt(e.target.value, 10))}
-        style={{ marginBottom: 6 }}
+        style={{ marginBottom: 6, width: "4rem" }}
       />
+      <label className={styles.tagToggle} style={{ marginBottom: 6 }}>
+        <input
+          type="checkbox"
+          checked={addWordBreaks}
+          onChange={e => setAddWordBreaks(e.target.checked)}
+          style={{ marginTop: 2 }} />
+        <span>Random Word Breaks</span>
+      </label>
       <button className={styles.charButton} onClick={handleGenerate}>
         Add Noise
       </button>
