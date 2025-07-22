@@ -35,4 +35,4 @@ export const ThinWordBreakRegex = /[\u202F\u200A\u2009\u205F]/;
 export const VariationSelectorsRegex = /[\ufe00-\ufe0f]/;
 
 export const AIIndicatorRegex  = /[\u00AB\u00BB\u02D7\u2000-\u206F\u2190-\u21FF\u2212\u2794\u27A4\u2CBA\u05BE\u060C\u061B\u06D4\u061F\u3001\u3002\u30FB\uFE58\uFF01-\uFF0F\uFF1A-\uFF1F]/;
-export const HebrewOrArabicRegex = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u08FF]/;
+export const HebrewOrArabicRegex = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u08FF\uFB50-\uFEFF]/;

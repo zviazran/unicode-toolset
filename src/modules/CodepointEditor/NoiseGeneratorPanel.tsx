@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./CodepointEditor.module.css";
 import RandomCharGenerator from "../../utils/RandomCharGenerator";
+import { HebrewOrArabicRegex } from "../../constants/CodePointsConsts";
 
 type NoiseGeneratorPanelProps = {
   setText: (t: string) => void;
@@ -30,31 +31,39 @@ export const NoiseGeneratorPanel: React.FC<NoiseGeneratorPanelProps> = ({
 
   const handleGenerate = () => {
     const includes = parseRanges(includeRanges);
+    const currentText = getCurrentText();
+    const skipRTL = !HebrewOrArabicRegex.test(currentText);
+
     const noiseChars: string[] = [];
     let attempts = 0;
-    const maxAttempts = count * 20;
+    const maxAttempts = count * 30;
 
-    while (noiseChars.length < count && attempts < maxAttempts) {
+    while (noiseChars.length < count && attempts < maxAttempts && includes.length > 0) {
       const [rangeStart, rangeEnd] = includes[Math.floor(Math.random() * includes.length)];
       const cp = rangeStart + Math.floor(Math.random() * (rangeEnd - rangeStart + 1));
-      noiseChars.push(String.fromCodePoint(cp));
+      const ch = String.fromCodePoint(cp);
+
+      if (skipRTL && HebrewOrArabicRegex.test(ch)) {
+        attempts++;
+        continue;
+      }
+
+      noiseChars.push(ch);
       attempts++;
     }
 
     let noise = noiseChars
-      .map((ch) => {
-        const insertZWS = addWordBreaks && Math.random() < 0.3; // ~30% chance
-        return insertZWS ? ch + RandomCharGenerator.getRandomWordBreak() : ch;
-      })
+      .map(ch => addWordBreaks && Math.random() < 0.3 ? ch + RandomCharGenerator.getRandomWordBreak() : ch)
       .join("");
 
     const insertAt = Math.floor(Math.random() * (noise.length + 1));
     const before = noise.slice(0, insertAt);
     const after = noise.slice(insertAt);
-    const newText = before + getCurrentText() + after;
+    const newText = before + currentText + after;
 
     setText(newText);
   };
+
 
   return (
     <div className={styles.buttonColumn}>
