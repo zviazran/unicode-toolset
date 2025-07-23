@@ -27,22 +27,29 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const { getEntry } = useUnicodeData();
   const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
   const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
+  const hasDetectedInitialDirection = useRef(false);
 
   useEffect(() => {
-    let detectedRtl = false;
-    if (textareaRef && textareaRef.current) {
-      const dir = textareaRef.current.dir;
-      if (dir === "rtl") detectedRtl = true;
-      else if (dir === "auto") {
-        const firstChar = text.trim()[0];
-        if (firstChar && CodepointChecker.isHebrewOrArabic(firstChar)) detectedRtl = true;
+    if (!text && hasDetectedInitialDirection.current) 
+      hasDetectedInitialDirection.current = false;
+    else if (!hasDetectedInitialDirection.current && text && text.length > 0) {
+      let detectedRtl = false;
+      if (textareaRef && textareaRef.current) {
+        const dir = textareaRef.current.dir;
+        if (dir === "rtl") detectedRtl = true;
+        else if (dir === "auto") {
+          const firstChar = text.trim()[0];
+          if (firstChar && CodepointChecker.isHebrewOrArabic(firstChar)) detectedRtl = true;
+        }
       }
+      setIsRtl(detectedRtl);
+      hasDetectedInitialDirection.current = true;
     }
-    setIsRtl(detectedRtl);
-  }, [textareaRef?.current?.dir]);
+  }, [text, textareaRef?.current?.dir]);
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
+    hasDetectedInitialDirection.current = true;
   };
 
   function getScriptColor(index: number): string {
