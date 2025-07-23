@@ -238,6 +238,7 @@ const CodepointEditor: React.FC = () => {
             selectionRange={lastSelection}
             onAnalysisChange={(hasfindings) => setHasTextIndicators(hasfindings)}
             selectedFont={selectedFont}
+            textareaRef={textareaRef}
           />
         </div>
       </div>

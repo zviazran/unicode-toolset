@@ -12,9 +12,10 @@ type ProcessedTextDisplayProps = {
   selectionRange: { start: number; end: number };
   onAnalysisChange?: (hasFindings: boolean) => void;
   selectedFont?: string;
+  textareaRef?: React.RefObject<HTMLTextAreaElement>;
 };
 
-const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange, selectedFont }) => {
+const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setText, selectionRange, onAnalysisChange, selectedFont, textareaRef }) => {
   const processedTextRef = useRef<HTMLDivElement>(null);
   const [dialogData, setDialogData] = useState<{
     codePoint: number;
@@ -26,6 +27,19 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const { getEntry } = useUnicodeData();
   const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
   const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
+
+  useEffect(() => {
+    let detectedRtl = false;
+    if (textareaRef && textareaRef.current) {
+      const dir = textareaRef.current.dir;
+      if (dir === "rtl") detectedRtl = true;
+      else if (dir === "auto") {
+        const firstChar = text.trim()[0];
+        if (firstChar && CodepointChecker.isHebrewOrArabic(firstChar)) detectedRtl = true;
+      }
+    }
+    setIsRtl(detectedRtl);
+  }, [textareaRef?.current?.dir]);
 
   const toggleDirection = () => {
     setIsRtl((prev) => !prev);
