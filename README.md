@@ -6,7 +6,7 @@ Built with **Vite** for fast development, this project showcases my knowledge an
 
 ## Features
 
-- **The Unseen Side of Text**: Online tool to display, edit and add invisible characters and breaks to text. To be used for simple homograph spoofing and detection.
+- **The Unseen Side of Text**: An online tool to display, edit, and insert invisible characters, breaks, confusables and text indicators. Designed for detecting and experimenting with selection logic, emojis, homographic spoofing and normalization.
 - **Crash Char Sequence Generator**: Generate a crash making character combination. Try this at your own risk.
 - **URL Twister**: Enter a URL to generate random tricky spoofing versions. Would you be fooled?
 - **Was This Your Text?**: Enter your corrupted text and maybe we can find how it happened. Is one of them your original?
