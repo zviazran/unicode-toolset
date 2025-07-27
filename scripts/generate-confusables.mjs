@@ -30,7 +30,9 @@ function parseConfusables(lines) {
 
     const [srcSeq, targetSeq] = trimmed.split(';').map(s => s.trim());
     const srcChars = srcSeq.split(' ').map(cp => String.fromCodePoint(parseInt(cp, 16))).join('');
-    const targetChars = targetSeq.split(' ').map(cp => String.fromCodePoint(parseInt(cp, 16))).join('');
+    let targetChars = targetSeq.split(' ').map(cp => String.fromCodePoint(parseInt(cp, 16))).join('');
+
+    if (targetChars === 'rn') targetChars = 'm';
 
     // forward
     if (!forwardMap[srcChars]) forwardMap[srcChars] = [];
@@ -50,6 +52,8 @@ function parseConfusables(lines) {
   }
 
   for (const key in reverseMap) {
+    if (key.length > 1) continue; // no mecanizem to handle multi-character targets
+
     if (!combinedMap[key]) combinedMap[key] = [];
     combinedMap[key].push(...reverseMap[key]);
   }
