@@ -15,13 +15,13 @@ const options = [
   { value: "filpOverride", label: "Flip & Override Derection" },
 ];
 
-type HomograficSpoofingPanelProps = {
+type HomographicSpoofingPanelProps = {
   setText: (t: string) => void;
   getCurrentText: () => string;
   scrollTargetRef?: React.RefObject<HTMLElement>;
 };
 
-export const HomograficSpoofingPanel: React.FC<HomograficSpoofingPanelProps> = ({ setText, getCurrentText }) => {
+export const HomographicSpoofingPanel: React.FC<HomographicSpoofingPanelProps> = ({ setText, getCurrentText }) => {
   const [selectedOption, setSelectedOption] = useState(options[0].value);
   const [chaosLevel, setChaosLevel] = useState(0.5);
   const { getConfusablesGroups } = useConfusables();

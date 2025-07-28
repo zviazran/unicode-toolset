@@ -9,7 +9,7 @@ import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "../../components/CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
-import { HomograficSpoofingPanel } from "./HomograficSpoofingPanel";
+import { HomographicSpoofingPanel } from "./HomographicSpoofingPanel";
 import { NoiseGeneratorPanel } from "./NoiseGeneratorPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
@@ -93,9 +93,9 @@ const CodepointEditor: React.FC = () => {
   const panels = [
     {
       key: "spoofing",
-      title: "Homografic spoofing",
+      title: "Homographic spoofing",
       content: (
-        <HomograficSpoofingPanel
+        <HomographicSpoofingPanel
           setText={setText}
           getCurrentText={() => normalText}
           scrollTargetRef={textareaRef}
