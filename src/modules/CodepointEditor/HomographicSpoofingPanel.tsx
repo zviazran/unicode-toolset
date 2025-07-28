@@ -26,6 +26,7 @@ export const HomographicSpoofingPanel: React.FC<HomographicSpoofingPanelProps> =
   const [chaosLevel, setChaosLevel] = useState(0.5);
   const { getConfusablesGroups } = useConfusables();
   const [lastChangeSummary, setLastChangeSummary] = useState<string>("");
+  const [lastSpoofedText, setLastSpoofedText] = useState<string>("");
 
   const handleSpoof = () => {
     const text = getCurrentText();
@@ -61,8 +62,16 @@ export const HomographicSpoofingPanel: React.FC<HomographicSpoofingPanelProps> =
       }
     }
     setText(chars.join(""));
+    setLastSpoofedText(chars.join(""));
     setLastChangeSummary(changes > 0 ? `Made ${changes} change${changes !== 1 ? "s" : ""}.` : "No changes made.");
   };
+
+  // Hide summary if text changed since spoof
+  React.useEffect(() => {
+    if (lastChangeSummary && getCurrentText() !== lastSpoofedText) {
+      setLastChangeSummary("");
+    }
+  }, [getCurrentText, lastSpoofedText, lastChangeSummary]);
 
   return (
     <div className={styles.buttonColumn}>
