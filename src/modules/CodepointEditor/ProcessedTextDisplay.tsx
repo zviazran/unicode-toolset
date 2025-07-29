@@ -194,7 +194,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   };
 
   const [postRenderPass, setPostRenderPass] = useState(0);
-  useEffect(() => { setTimeout(() => setPostRenderPass(1), 50); }, []);
+  useEffect(() => { setTimeout(() => setPostRenderPass(1), 200); }, []);
 
   const analysisResult = useMemo(() => {
     let findings = false;
