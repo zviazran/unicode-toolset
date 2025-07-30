@@ -5,6 +5,18 @@ import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import { Icon } from "@iconify/react";
 import useUnicodeData from "../../hooks/useUnicodeData";
 import CodepointChecker from "../../utils/CodepointChecker";
+import bidiFactory from 'bidi-js';
+
+const bidi = bidiFactory()
+export function getDirectionArrow(char: string): JSX.Element {
+  const bidiClass = bidi.getBidiCharTypeName(char);
+  if (["R", "AL"].includes(bidiClass))
+    return <span style={{ color: "crimson" }}>←</span>;
+  if (bidiClass === "L")
+    return <span style={{ color: "royalblue" }}>→</span>;
+  return <span style={{ color: "gray" }}>•</span>;
+}
+
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -28,9 +40,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const dottedCircleAllowedScripts = ["Inherited", "Common", "Latin", "Greek", "Cyrillic"];
   const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
   const hasDetectedInitialDirection = useRef(false);
+  const [showDirectionArrows, setShowDirectionArrows] = useState(false);
 
   useEffect(() => {
-    if (!text && hasDetectedInitialDirection.current) 
+    if (!text && hasDetectedInitialDirection.current)
       hasDetectedInitialDirection.current = false;
     else if (!hasDetectedInitialDirection.current && text && text.length > 0) {
       let detectedRtl = false;
@@ -175,6 +188,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
             {isSelected && <span className={styles.selectionOverlay} />}
             {isCursorHere && <span className={styles.cursorBar} />}
             {getDisplayedChar(char, codePoint, isInvisible, isTagChar, isWordBreakChar, isNoBreakChar, isAIIndicator)}
+            {showDirectionArrows && <div className={styles.directionIndicator}>{getDirectionArrow(char)}</div>}
           </span>
         );
       }
@@ -202,7 +216,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       findings ||= flag;
     });
     return { result, findings };
-  }, [text, selectionRange, displayStyle, selectedFont, postRenderPass]);
+  }, [text, selectionRange, displayStyle, selectedFont, showDirectionArrows, postRenderPass]);
 
   useEffect(() => {
     onAnalysisChange?.(analysisResult.findings);
@@ -220,6 +234,14 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
           title={isRtl ? "Switch to LTR" : "Switch to RTL"}
         >
           <Icon icon={isRtl ? "mdi:rtl" : "mdi:ltr"} className={styles.toolbarIcon} />
+        </button>
+
+        <button
+          onClick={() => setShowDirectionArrows(prev => !prev)}
+          className={styles.toolbarButton}
+          title="Toggle Direction Indicators"
+        >
+          <Icon icon={showDirectionArrows ? "mdi:arrow-expand-horizontal" : "mdi:arrow-collapse-horizontal"} className={styles.toolbarIcon} />
         </button>
 
         <select
