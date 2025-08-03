@@ -27,7 +27,7 @@ const About: React.FC = () => {
                 </h2>
 
                 <p className="heading-description blockquote">
-                  I'm an educator and a software engineer with a decade of experience in JavaScript, C#, C++ and more. Experienced in developing for cybersecurity solutions, optimizing performance, and maintaining complex codebases. Also an unapologetic Unicode enthusiast.<br/><br/>This project is both a showcase of my capabilities, thoroughness and dedication and a love letter to the plain old text that everyone unfairly takes for granted.<br/><br/>My goal is to make this project worthy of your browser favorites 🤗 It's free and publicly available for all. 
+                  I'm a software engineer with a decade of experience in JavaScript, C#, C++ and more. Experienced in developing for cybersecurity solutions, optimizing performance, and maintaining complex codebases. Also an unapologetic Unicode enthusiast.<br/><br/>This project is both a showcase of my capabilities, thoroughness and dedication and a love letter to the plain old text that everyone unfairly takes for granted.<br/><br/>My goal is to make this project worthy of your browser favorites 🤗 It's free and publicly available for all. 
                 </p>
               </Col>
 

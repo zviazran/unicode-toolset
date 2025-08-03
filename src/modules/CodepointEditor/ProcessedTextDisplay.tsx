@@ -7,16 +7,6 @@ import useUnicodeData from "../../hooks/useUnicodeData";
 import CodepointChecker from "../../utils/CodepointChecker";
 import bidiFactory from 'bidi-js';
 
-const bidi = bidiFactory()
-export function getDirectionArrow(char: string): JSX.Element {
-  const bidiClass = bidi.getBidiCharTypeName(char);
-  if (["R", "AL"].includes(bidiClass))
-    return <span style={{ color: "crimson" }}>←</span>;
-  if (bidiClass === "L")
-    return <span style={{ color: "royalblue" }}>→</span>;
-  return <span style={{ color: "gray" }}>•</span>;
-}
-
 
 type ProcessedTextDisplayProps = {
   text: string;
@@ -41,6 +31,16 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
   const hasDetectedInitialDirection = useRef(false);
   const [showDirectionArrows, setShowDirectionArrows] = useState(false);
+
+  const bidi = bidiFactory()
+  function getDirectionArrow(char: string): JSX.Element {
+    const bidiClass = bidi.getBidiCharTypeName(char);
+    if (["R", "AL"].includes(bidiClass))
+      return <span style={{ color: "magenta" }}>←</span>;
+    if (bidiClass === "L")
+      return <span style={{ color: "darkblue" }}>→</span>;
+    return <span style={{ color: "gray" }}>•</span>;
+  }
 
   useEffect(() => {
     if (!text && hasDetectedInitialDirection.current)
@@ -239,9 +239,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         <button
           onClick={() => setShowDirectionArrows(prev => !prev)}
           className={styles.toolbarButton}
+          style={{ transform: "translateY(-2px)" }}
           title="Toggle Direction Indicators"
         >
-          <Icon icon={showDirectionArrows ? "mdi:arrow-expand-horizontal" : "mdi:arrow-collapse-horizontal"} className={styles.toolbarIcon} />
+          <Icon icon={showDirectionArrows ? "mdi:format-letter-case" : "mdi:swap-horizontal"} className={styles.toolbarIcon} />
         </button>
 
         <select
