@@ -3,6 +3,7 @@ import styles from "./ProcessedTextDisplay.module.css";
 import CodepointDialog from "./CodepointDialog";
 import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import { Icon } from "@iconify/react";
+import ShowDirectionArrowIcon from "../../assets/icons/ShowDirectionArrowIcon";
 import useUnicodeData from "../../hooks/useUnicodeData";
 import CodepointChecker from "../../utils/CodepointChecker";
 import bidiFactory from 'bidi-js';
@@ -239,10 +240,10 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
         <button
           onClick={() => setShowDirectionArrows(prev => !prev)}
           className={styles.toolbarButton}
-          style={{ transform: "translateY(-2px)" }}
+          style={{ transform: "translateY(-1px)" }}
           title="Toggle Direction Indicators"
         >
-          <Icon icon={showDirectionArrows ? "mdi:format-letter-case" : "mdi:swap-horizontal"} className={styles.toolbarIcon} />
+          <ShowDirectionArrowIcon showArrow={!showDirectionArrows} className={styles.toolbarIcon} />
         </button>
 
         <select
