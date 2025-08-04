@@ -7,9 +7,9 @@ const ShowDirectionArrowIcon = ({ showArrow = true, className }: { showArrow?: b
     fill="currentColor"
   >
     <g>
-    <text x="12.6" y="14.5" textAnchor="middle" fontSize="17.5" font-weight="bold">Ω</text>
+    <text x="12.6" y="14.5" textAnchor="middle" fontSize="17.5" fontWeight="bold">Ω</text>
       {showArrow && (
-        <text x="12.6" y="24" textAnchor="middle" fontSize="18" font-weight="bold">↔</text>
+        <text x="12.6" y="24" textAnchor="middle" fontSize="17" fontWeight="bold">↔</text>
       )}
     </g>
   </svg>
