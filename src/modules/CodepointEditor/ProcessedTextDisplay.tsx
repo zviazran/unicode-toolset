@@ -201,6 +201,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       result.push(
         <span key="cursor-end" className={styles.styledChar}>
           <span className={styles.cursorBar} />؜
+          {showDirectionArrows && <div style={{ fontSize: "0px" }}>؜</div>}
         </span>
       );
     }
