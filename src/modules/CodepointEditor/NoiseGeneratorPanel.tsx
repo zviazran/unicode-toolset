@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./CodepointEditor.module.css";
-import RandomCharGenerator from "../../utils/RandomCharGenerator";
+import RandomCharGenerator from "../../utils/CharGenerator";
 import { HebrewOrArabicRegex } from "../../constants/CodePointsConsts";
 
 type NoiseGeneratorPanelProps = {

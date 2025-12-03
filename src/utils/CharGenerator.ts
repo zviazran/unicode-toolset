@@ -68,6 +68,24 @@ export const RandomCharGenerator = {
     const [start, end] = validRanges[Math.floor(Math.random() * validRanges.length)];
     const codePoint = Math.floor(Math.random() * (end - start + 1)) + start;
     return String.fromCodePoint(codePoint);
+  },
+
+  getBidiChar(name: string): string {
+    const bidiMap: Record<string, string> = {
+      LRM: "\u200E",
+      RLM: "\u200F",
+      ALM: "\u061C",
+      LRE: "\u202A",
+      RLE: "\u202B",
+      LRO: "\u202D",
+      RLO: "\u202E",
+      PDF: "\u202C",
+      LRI: "\u2066",
+      RLI: "\u2067",
+      FSI: "\u2068",
+      PDI: "\u2069",
+    };
+    return bidiMap[name] || "";
   }
 };
 

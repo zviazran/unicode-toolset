@@ -4,7 +4,7 @@ import styles from "./CodepointEditor.module.css";
 import IconSlider from "../../components/IconSlider";
 import { Icon } from "@iconify/react";
 import CodepointChecker from "../../utils/CodepointChecker";
-import RandomCharGenerator from "../../utils/RandomCharGenerator";
+import RandomCharGenerator from "../../utils/CharGenerator";
 import { addRandomCharacters } from "../../utils/TextTransforms";
 
 const options = [
