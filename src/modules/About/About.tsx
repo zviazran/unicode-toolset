@@ -43,9 +43,9 @@ const About: React.FC = () => {
             <Col md={12} className="about-social">
               <h1>Get in Touch</h1>
               <p style={{ fontSize: 20 }} >
-                If you need someone with deep Unicode knowledge to lecture and enhance your team
-                <br />
-                <strong>Feel free to connect</strong>
+                Any suggestions or bugs? please email me at <a href="mailto:zviazran@gmail.com">zviazran@gmail.com</a>      
+                <br/>
+                Also feel free to connect for anything regarding Unicode
               </p>
               <SocialMedia />
             </Col>
