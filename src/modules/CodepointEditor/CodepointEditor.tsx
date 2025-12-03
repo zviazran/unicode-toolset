@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from './CodepointEditor.module.css';
 import innerStyles from './ProcessedTextDisplay.module.css';
 import CounterBar from '../../components/CounterBar';
-import RandomCharGenerator from "../../utils/RandomCharGenerator";
+import CharGenerator from "../../utils/CharGenerator";
 import PlainTextInput from "./PlainTextInput";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
 import CollapsiblePanel from "../../components/CollapsiblePanel";
@@ -56,9 +56,9 @@ const CodepointEditor: React.FC = () => {
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
     let randomChar = "";
-    if (type === "invisible") randomChar = RandomCharGenerator.getRandomInvisibleChar();
-    else if (type === "wordBreak") randomChar = RandomCharGenerator.getRandomWordBreak();
-    else if (type === "noBreak") randomChar = RandomCharGenerator.getRandomNoBreak();
+    if (type === "invisible") randomChar = CharGenerator.getRandomInvisibleChar();
+    else if (type === "wordBreak") randomChar = CharGenerator.getRandomWordBreak();
+    else if (type === "noBreak") randomChar = CharGenerator.getRandomNoBreak();
 
     let updatedText = "";
     if (lastSelection && textareaRef.current && lastSelection.start >= 0 && lastSelection.end >= 0) {
