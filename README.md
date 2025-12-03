@@ -2,7 +2,7 @@
 # Uոі𐐽൦ꓒ𝖾 ‮ytiruceS‬ Т︃օ︃օ︃l︃ꮪ︃e︃t
 
 The Unicode Security Toolset is a collection of utilities aimed at simplifying the process of analyzing, editing, and visualizing Unicode characters. This toolset is particularly useful for developers working with text encoding, Unicode vulnerabilities, or those interested in character manipulation techniques like spoofing and crash testing.
-Built with **Vite** for fast development, this project showcases my knowledge and provides useful utilities for developers and enthusiasts working with Unicode.
+This project is to showcases my knowledge and to be useful for developers and enthusiasts working with Unicode.
 
 ## Features
 
@@ -20,3 +20,4 @@ Link to built project: https://zviazran.github.io/unicode-toolset
 For more information, inquiries, or collaboration opportunities, feel free to reach out to me via:
 - Email: zviazran@gmail.com
 - GitHub: [zviazran](https://github.com/zviazran)
+- LinkedIn: https://www.linkedin.com/in/zvi-azran-131956121

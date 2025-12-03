@@ -33,14 +33,39 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const hasDetectedInitialDirection = useRef(false);
   const [showDirectionArrows, setShowDirectionArrows] = useState(false);
 
-  const bidi = bidiFactory()
+  const bidi = bidiFactory();
+
   function getDirectionArrow(char: string): JSX.Element {
     const bidiClass = bidi.getBidiCharTypeName(char);
-    if (["R", "AL"].includes(bidiClass))
-      return <span style={{ color: "magenta" }}>←</span>;
-    if (bidiClass === "L")
-      return <span style={{ color: "darkblue" }}>→</span>;
-    return <span style={{ color: "gray" }}>•</span>;
+
+    const bidiMap: Record<string, { symbol: string; color: string }> = {
+      // Strong types
+      L: { symbol: "→", color: "darkblue" },      // Left-to-Right
+      R: { symbol: "←", color: "magenta" },       // Right-to-Left
+      AL: { symbol: "←", color: "deeppink" },     // Right-to-Left Arabic
+
+      // Weak types
+      EN: { symbol: "-", color: "green" },        // European Number
+      ES: { symbol: "-", color: "green" },        // European Separator
+      ET: { symbol: "-", color: "green" },        // European Terminator
+      AN: { symbol: "-", color: "darkgreen" },    // Arabic Number
+      CS: { symbol: "∣", color: "teal" },         // Common Separator
+      NSM: { symbol: "∣", color: "gray" },        // Nonspacing Mark
+      BN: { symbol: "∣", color: "lightgray" },    // Boundary Neutral
+
+      // Neutral types
+      B: { symbol: "•", color: "gray" },          // Paragraph Separator
+      S: { symbol: "•", color: "gray" },          // Segment Separator
+      WS: { symbol: "•", color: "gray" },         // Whitespace
+      ON: { symbol: "•", color: "gray" },         // Other Neutrals
+    };
+
+    const entry = bidiMap[bidiClass] ?? { symbol: "•", color: "gray" };
+    return (
+      <span style={{ color: entry.color }} title={bidiClass}>
+        {entry.symbol}
+      </span>
+    );
   }
 
   useEffect(() => {
@@ -201,6 +226,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
       result.push(
         <span key="cursor-end" className={styles.styledChar}>
           <span className={styles.cursorBar} />؜
+          {showDirectionArrows && <div style={{ fontSize: "0px" }}>؜</div>}
         </span>
       );
     }

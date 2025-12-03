@@ -30,7 +30,7 @@ class BidiCrashSequenceGenerator {
     }
     str += String.fromCharCode(sequence.break);
     if (length > 1000)
-      str += "󠁈󠁩󠀠󠁚󠁶󠁩󠀠󠁁󠁺󠁲󠁡󠁮󠀠󠁩󠁳󠀠󠁯󠁰󠁥󠁮󠀠󠁦󠁯󠁲󠀠󠁷󠁯󠁲󠁫󠀡";
+      str += "󠁂󠁹󠀠󠁚󠁶󠁩󠀠󠁁󠁺󠁲󠁡󠁮";
     if (selectedStyle == "Classic")
       str += " 👈";
     else if (selectedStyle !== "Invisible"){
