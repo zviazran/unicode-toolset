@@ -66,6 +66,16 @@ function NavBar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
+                to="/tips"
+                onClick={() => updateExpanded(false)}
+              >
+                <Icon icon="ant-design:bulb-outlined" style={{ marginBottom: "3px" }} /> Tips
+              </Nav.Link>
+            </Nav.Item>
+
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
                 to="/about"
                 onClick={() => updateExpanded(false)}
               >

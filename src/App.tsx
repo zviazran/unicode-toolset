@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Tips from "./modules/Tips/Tips";
 import About from "./modules/About/About";
 import Toolsets from "./modules/Toolsets/Toolsets";
 import CodepointEditor from "./modules/CodepointEditor/CodepointEditor";
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path="/home" element={<Toolsets />} />
+          <Route path="/tips" element={<Tips />} />
           <Route path="/about" element={<About />} />
           <Route path="/toolset" element={<Toolsets />} />
           <Route path="/char-editor" element={<CodepointEditor />} />
