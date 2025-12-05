@@ -205,7 +205,8 @@ html {
 
 .about-section {
   position: relative;
-  z-index: -1;
+  /* ensure this section sits above the page background so links are clickable */
+  z-index: 0;
   background-position: top center;
   background-repeat: no-repeat;
   padding-bottom: 30px !important;

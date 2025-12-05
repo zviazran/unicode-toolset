@@ -113,34 +113,10 @@ const tryMethods = async (rssUrl: string, maxArticles = 5): Promise<Article[]> =
   throw new Error("All fetch methods failed");
 };
 
-async function fetchOgImage(articleUrl: string): Promise<string | null> {
-  try {
-    // Use r.jina.ai as a CORS-friendly raw HTML proxy
-    const proxied = `https://r.jina.ai/http://${articleUrl.replace(/^https?:\/\//, "")}`;
-    const res = await fetch(proxied);
-    if (!res.ok) throw new Error(`proxy failed: ${res.status}`);
-    const text = await res.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, "text/html");
-    const og = (doc.querySelector('meta[property="og:image"]') as HTMLMetaElement)?.content
-      || (doc.querySelector('meta[name="twitter:image"]') as HTMLMetaElement)?.content
-      || (doc.querySelector('link[rel="image_src"]') as HTMLLinkElement)?.href;
-    if (og) return og;
-
-    // fallback: first image in article content
-    const img = doc.querySelector('img');
-    if (img && (img as HTMLImageElement).src) return (img as HTMLImageElement).src;
-    return null;
-  } catch (err) {
-    return null;
-  }
-}
-
 const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: number }> = ({ feedUrl, username, maxArticles = 5 }) => {
   const [articles, setArticles] = useState<Article[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [imageStates, setImageStates] = useState<Record<string, { loading: boolean; error?: string }>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -157,31 +133,6 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
       try {
         const data = await tryMethods(rss, maxArticles);
         if (!cancelled) setArticles(data);
-        // For articles missing thumbnails, try to fetch og:image from the article page via a CORS-friendly proxy
-        const needFill = (data || []).map((a, idx) => ({ a, idx })).filter(x => !x.a.thumbnail);
-        if (!cancelled && needFill.length > 0) {
-          const updated = [...data];
-          const concurrency = 3;
-          for (let i = 0; i < needFill.length; i += concurrency) {
-            const batch = needFill.slice(i, i + concurrency);
-            await Promise.all(batch.map(async ({ a, idx }) => {
-              try {
-                console.log('[MediumFeed] fetching OG image for', a.link);
-                setImageStates(prev => ({ ...prev, [a.link]: { loading: true } }));
-                const og = await fetchOgImage(a.link);
-                if (og && !cancelled) {
-                  updated[idx] = { ...updated[idx], thumbnail: og };
-                  setImageStates(prev => ({ ...prev, [a.link]: { loading: false } }));
-                }
-              } catch (e: any) {
-                // record error so UI shows a hint
-                console.warn('[MediumFeed] OG fetch failed for', a.link, e?.message || e);
-                setImageStates(prev => ({ ...prev, [a.link]: { loading: false, error: e?.message || 'failed' } }));
-              }
-            }));
-            if (!cancelled) setArticles([...updated]);
-          }
-        }
       } catch (err: any) {
         if (!cancelled) setError(err?.message || "Failed to load feed");
       } finally {
@@ -207,30 +158,19 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
   return (
     <div style={{ display: "grid", gap: 16 }}>
       {articles.map((a) => (
-        <article key={a.link} style={{ display: "flex", gap: 12, border: "1px solid #e6e6e6", borderRadius: 8, padding: 12, alignItems: "flex-start" }}>
-          {a.thumbnail ? (
-            <div style={{ width: 140, flex: "0 0 140px" }}>
-              <img src={a.thumbnail} alt={a.title} style={{ width: "100%", height: "auto", borderRadius: 6 }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+        <a key={a.link} href={a.link} target="_blank" rel="noreferrer" aria-label={`Open ${a.title} on Medium`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <article style={{ display: "flex", gap: 12, border: "1px solid #e6e6e6", borderRadius: 8, padding: 12, alignItems: "flex-start" }}>
+            {a.thumbnail ? (
+              <div style={{ width: 140, flex: "0 0 140px" }}>
+                <img src={a.thumbnail} alt={a.title} style={{ width: "100%", height: "auto", borderRadius: 6 }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+            ) : null}
+            <div style={{ flex: 1 }}>
+              <h3 style={{ margin: 0, fontSize: 18 }}>{a.title}</h3>
+              {a.description ? <p style={{ marginTop: 8 }}>{stripHtml(a.description).slice(0, 240)}{a.description.length > 240 ? '…' : ''}</p> : null}
             </div>
-          ) : (
-            <div style={{ width: 140, flex: "0 0 140px", display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f6f6f6', borderRadius: 6 }}>
-              {imageStates[a.link]?.loading ? (
-                <div style={{ fontSize: 12, color: '#666' }}>Loading image…</div>
-              ) : imageStates[a.link]?.error ? (
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 12, color: '#a00' }}>No image</div>
-                  <div style={{ fontSize: 11, color: '#999' }}>{imageStates[a.link].error}</div>
-                </div>
-              ) : (
-                <div style={{ textAlign: 'center', fontSize: 12, color: '#666' }}>No image</div>
-              )}
-            </div>
-          )}
-          <div style={{ flex: 1 }}>
-            <h3 style={{ margin: 0, fontSize: 18 }}><a href={a.link} target="_blank" rel="noreferrer">{a.title}</a></h3>
-            {a.description ? <p style={{ marginTop: 8 }}>{stripHtml(a.description).slice(0, 240)}{a.description.length > 240 ? '…' : ''}</p> : null}
-          </div>
-        </article>
+          </article>
+        </a>
       ))}
     </div>
   );

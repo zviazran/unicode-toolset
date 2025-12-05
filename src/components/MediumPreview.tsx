@@ -111,28 +111,36 @@ const MediumPreview: React.FC<{ url: string }> = ({ url }) => {
     );
   }
 
-  // If provider returned embeddable HTML, render it. Otherwise render a simple card.
+  // If provider returned embeddable HTML, render it and show a small 'Open on Medium' button below.
   if (data.html) {
     return (
-      <div style={{ marginTop: 8 }} dangerouslySetInnerHTML={{ __html: data.html }} />
-    );
-  }
-
-  return (
-    <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginTop: 8 }}>
-      {data.thumbnail_url ? (
-        <img src={data.thumbnail_url} alt={data.title || "thumbnail"} style={{ width: 140, height: "auto", borderRadius: 6 }} />
-      ) : null}
-      <div>
-        <h4 style={{ margin: 0 }}>{data.title}</h4>
-        {data.author_name ? <div style={{ color: "#666", fontSize: 13 }}>{data.author_name}</div> : null}
+      <div style={{ marginTop: 8 }}>
+        <div dangerouslySetInnerHTML={{ __html: data.html }} />
         <div style={{ marginTop: 8 }}>
-          <a href={url} target="_blank" rel="noreferrer">
-            Read on Medium
+          <a href={url} target="_blank" rel="noreferrer" aria-label="Open article on Medium" style={{ fontSize: 13 }}>
+            Open on Medium
           </a>
         </div>
       </div>
-    </div>
+    );
+  }
+
+  // Otherwise render a simple card and make the whole card a clickable link to the article.
+  return (
+    <a href={url} target="_blank" rel="noreferrer" aria-label={`Open ${data.title} on Medium`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+      <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginTop: 8 }}>
+        {data.thumbnail_url ? (
+          <img src={data.thumbnail_url} alt={data.title || "thumbnail"} style={{ width: 140, height: "auto", borderRadius: 6 }} />
+        ) : null}
+        <div>
+          <h4 style={{ margin: 0 }}>{data.title}</h4>
+          {data.author_name ? <div style={{ color: "#666", fontSize: 13 }}>{data.author_name}</div> : null}
+          <div style={{ marginTop: 8, fontSize: 13, color: '#0b66c3' }}>
+            Read on Medium
+          </div>
+        </div>
+      </div>
+    </a>
   );
 };
 
