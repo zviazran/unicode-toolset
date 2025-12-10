@@ -11,13 +11,13 @@ const Tips: React.FC = () => {
           <Container className="about-content">
             <Row>
               <Col md={8} className="about-header">
-                <h1 className="heading">Tips & Articles</h1>
+                <h1 className="heading">Tips</h1>
                 <p className="heading-description">
-                  Some tips about Unicode everyone should know. 
+                  Some Unicode tips everyone should know. 
                 </p>
 
                 <div style={{ marginTop: 20 }}>
-                  <MediumFeed username="zviazran" maxArticles={5} />
+                  <MediumFeed username="zviazran" maxArticles={10} />
                 </div>
               </Col>
             </Row>

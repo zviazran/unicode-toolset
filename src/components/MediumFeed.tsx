@@ -9,7 +9,7 @@ type Article = {
   thumbnail?: string | null;
 };
 
-async function parseRSSFromXML(xmlContent: string, maxArticles = 5): Promise<Article[]> {
+async function parseRSSFromXML(xmlContent: string, maxArticles = 10): Promise<Article[]> {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
   const items = xmlDoc.querySelectorAll("item");
@@ -117,6 +117,7 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
   const [articles, setArticles] = useState<Article[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -145,7 +146,7 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
     };
   }, [feedUrl, username, maxArticles]);
 
-  if (loading) return <div style={{ padding: 12 }}>Loading articles…</div>;
+  if (loading) return <div style={{ padding: 12 }}>Loading tips…</div>;
   if (error) return (
     <div style={{ padding: 12 }}>
       <div style={{ color: "#a00" }}>Could not load feed: {error}</div>
@@ -153,13 +154,27 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
     </div>
   );
 
-  if (!articles || articles.length === 0) return <div style={{ padding: 12 }}>No articles found.</div>;
+  if (!articles || articles.length === 0) return <div style={{ padding: 12 }}>No tips found.</div>;
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      {articles.map((a) => (
+      {articles.slice().reverse().map((a) => (
         <a key={a.link} href={a.link} target="_blank" rel="noreferrer" aria-label={`Open ${a.title} on Medium`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-          <article style={{ display: "flex", gap: 12, border: "1px solid #e6e6e6", borderRadius: 8, padding: 12, alignItems: "flex-start" }}>
+          <article style={{ 
+            display: "flex", 
+            gap: 12, 
+            border: hoveredLink === a.link ? "1px solid #0b66c3" : "1px solid #e6e6e6", 
+            borderRadius: 8, 
+            padding: 12, 
+            alignItems: "flex-start",
+            backgroundColor: "#f9f9f9",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            boxShadow: hoveredLink === a.link ? "0 4px 8px rgba(0,0,0,0.15)" : "0 1px 3px rgba(0,0,0,0.1)",
+            transform: hoveredLink === a.link ? "translateY(-2px)" : "translateY(0)"
+          }}
+          onMouseEnter={() => setHoveredLink(a.link)}
+          onMouseLeave={() => setHoveredLink(null)}>
             {a.thumbnail ? (
               <div style={{ width: 140, flex: "0 0 140px" }}>
                 <img src={a.thumbnail} alt={a.title} style={{ width: "100%", height: "auto", borderRadius: 6 }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
@@ -168,6 +183,9 @@ const MediumFeed: React.FC<{ feedUrl?: string; username?: string; maxArticles?: 
             <div style={{ flex: 1 }}>
               <h3 style={{ margin: 0, fontSize: 18 }}>{a.title}</h3>
               {a.description ? <p style={{ marginTop: 8 }}>{stripHtml(a.description).slice(0, 240)}{a.description.length > 240 ? '…' : ''}</p> : null}
+              <div style={{ marginTop: 8, fontSize: 13, color: '#0b66c3', fontWeight: 500 }}>
+                Read More...
+              </div>
             </div>
           </article>
         </a>
