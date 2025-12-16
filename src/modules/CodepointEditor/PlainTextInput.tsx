@@ -13,6 +13,7 @@ interface Props {
   onSelectionChange?: (start: number, end: number) => void;
   onClick?: () => void;
   fontFamily?: string;
+  onBlur?: () => void;
 }
 
 export default function PlainTextInput({
@@ -23,7 +24,8 @@ export default function PlainTextInput({
   onSelectionChange,
   onClick,
   textareaRef,
-  fontFamily
+  fontFamily,
+  onBlur
 }: Props) {
   const undoStack = useRef<string[]>([]);
   const redoStack = useRef<string[]>([]);
@@ -205,7 +207,7 @@ export default function PlainTextInput({
         }}
         onBlur={() => {
           isFocusedRef.current = false;
-          onSelectionChange?.(-1, -1);
+          onBlur?.();
         }}
         onClick={() => {onClick?.();}}
         placeholder={placeholder}

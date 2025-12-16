@@ -28,6 +28,7 @@ const CodepointEditor: React.FC = () => {
   const [hasTextIndicators, setHasTextIndicators] = useState(false);
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
   const [selectedFont, setSelectedFont] = useState("sans-serif");
+  const [isButtonClick, setIsButtonClick] = useState(false);
 
   const isMobileView = window.innerWidth < 768;
 
@@ -61,17 +62,26 @@ const CodepointEditor: React.FC = () => {
     else if (type === "noBreak") randomChar = CharGenerator.getRandomNoBreak();
 
     let updatedText = "";
+    let cursorPos = 0;
     if (lastSelection && textareaRef.current && lastSelection.start >= 0 && lastSelection.end >= 0) {
       const { start, end } = lastSelection;
       updatedText = normalText.slice(0, start) + randomChar + normalText.slice(end);
+      cursorPos = start + randomChar.length;
       setLastSelection({ start: -1, end: -1 });
     } else {
       const chars = [...normalText];
       const insertPos = chars.length > 4 ? Math.floor(Math.random() * (chars.length - 1)) + 1 : Math.floor(Math.random() * (chars.length + 1));
       chars.splice(insertPos, 0, randomChar);
       updatedText = chars.join('');
+      cursorPos = insertPos + randomChar.length;
     }
     setText(updatedText);
+    setTimeout(() => {
+      const node = textareaRef.current;
+      if (node) {
+        node.selectionStart = node.selectionEnd = cursorPos;
+      }
+    }, 0);
   };
 
   const handlePanelToggle = (key: string, isOpen: boolean) => {
@@ -158,13 +168,13 @@ const CodepointEditor: React.FC = () => {
             />
             <span>Tag Typing</span>
           </label>
-          <button onClick={() => handleAddChar("invisible")} className={`${styles.charButton} ${innerStyles.invisibleChar}`}>
+          <button onPointerDown={() => { setIsButtonClick(true); const node = textareaRef.current; if (node) setLastSelection({ start: node.selectionStart ?? -1, end: node.selectionEnd ?? -1 }); }} onClick={() => { handleAddChar("invisible"); setIsButtonClick(false); }} className={`${styles.charButton} ${innerStyles.invisibleChar}`}>
             Add Random Invisible Character
           </button>
-          <button onClick={() => handleAddChar("wordBreak")} className={`${styles.charButton} ${innerStyles.wordBreakChar}`}>
+          <button onPointerDown={() => { setIsButtonClick(true); const node = textareaRef.current; if (node) setLastSelection({ start: node.selectionStart ?? -1, end: node.selectionEnd ?? -1 }); }} onClick={() => { handleAddChar("wordBreak"); setIsButtonClick(false); }} className={`${styles.charButton} ${innerStyles.wordBreakChar}`}>
             Add Random Word-Break Space
           </button>
-          <button onClick={() => handleAddChar("noBreak")} className={`${styles.charButton} ${innerStyles.noBreakChar}`}>
+          <button onPointerDown={() => { setIsButtonClick(true); const node = textareaRef.current; if (node) setLastSelection({ start: node.selectionStart ?? -1, end: node.selectionEnd ?? -1 }); }} onClick={() => { handleAddChar("noBreak"); setIsButtonClick(false); }} className={`${styles.charButton} ${innerStyles.noBreakChar}`}>
             Add Random No-Break Space
           </button>
         </div>
@@ -228,6 +238,7 @@ const CodepointEditor: React.FC = () => {
             onSelectionChange={(start, end) => { setLastSelection({ start, end }); }}
             onClick={() => { typingPanelRef.current?.stopTyping(); }}
             fontFamily={selectedFont}
+            onBlur={() => { if (!isButtonClick) setLastSelection({ start: -1, end: -1 }); }}
           />
         </div>
         <div className={styles.textBox}>
