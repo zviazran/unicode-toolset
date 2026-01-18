@@ -14,6 +14,7 @@ import { NoiseGeneratorPanel } from "./NoiseGeneratorPanel";
 import LegendDialog from "./LegendDialog";
 import { IndicatorsCleaner } from "string-twister";
 import WebFont from 'webfontloader';
+import BIDISupport from "./BIDISupport";
 
 const CodepointEditor: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -55,11 +56,14 @@ const CodepointEditor: React.FC = () => {
     }
   }, []);
 
-  const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak") => {
+  const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak" | "bidi", bidiName?: string) => {
     let randomChar = "";
     if (type === "invisible") randomChar = CharGenerator.getRandomInvisibleChar();
     else if (type === "wordBreak") randomChar = CharGenerator.getRandomWordBreak();
     else if (type === "noBreak") randomChar = CharGenerator.getRandomNoBreak();
+    else if (type === "bidi" && bidiName) {
+      randomChar = CharGenerator.getBidiChar(bidiName);
+    }
 
     let updatedText = "";
     let cursorPos = 0;
@@ -180,6 +184,19 @@ const CodepointEditor: React.FC = () => {
         </div>
       ),
     },
+    {
+      key: "BIDISupport",
+      title: "Invisible BIDI Support",
+      content: (
+        <BIDISupport
+          handleAddChar={handleAddChar}
+          textareaRef={textareaRef}
+          setIsButtonClick={setIsButtonClick}
+          setLastSelection={setLastSelection}
+        />
+      ),
+    },
+
     {
       key: "normalization",
       title: "Normalization",

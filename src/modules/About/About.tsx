@@ -1,9 +1,7 @@
 import React from "react";
-import { Icon } from "@iconify/react";
 import myImg from "../../Assets/zvi_azran_img.jpg";
-import pdf from "../../Assets/zvi_azran_cv.pdf";
 import SocialMedia from "../../components/SocialMedia";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import "../../App.css";
 
 const About: React.FC = () => {
@@ -23,7 +21,7 @@ const About: React.FC = () => {
 
                 <h2 className="heading-name">
                   I'm
-                  <strong className="main-name"> Zvi Azran</strong>
+                  <strong className="main-name"> Zvi Azran</strong> (צבי עזרן)
                 </h2>
 
                 <p className="heading-description blockquote">
@@ -50,16 +48,6 @@ const About: React.FC = () => {
               <SocialMedia />
             </Col>
           </Row>
-
-          <Button
-            variant="primary"
-            href={pdf}
-            target="_blank"
-            className="download-button"
-          >
-            <Icon icon="mdi:download" style={{ marginBottom: "2px" }} />
-            &nbsp;Download CV
-          </Button>
           
         </Container>
       </section>
