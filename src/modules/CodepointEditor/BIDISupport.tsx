@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './BIDISupport.module.css';
-import editorStyles from './CodepointEditor.module.css';
 import innerStyles from './ProcessedTextDisplay.module.css';
 
 interface Props {
@@ -55,16 +54,16 @@ const BIDISupport: React.FC<Props> = ({
         { title: "Embedding", chars: ["LRE", "PDF"], desc: "Start and end embedding of LTR text." },
         { title: "Override", chars: ["LRO", "PDF"], desc: "Force directionality override for LTR text." },
         { title: "Isolate", chars: ["LRI", "PDI"], desc: "Isolate LTR text from surrounding content." },
-        { title: "Neutral Isolate", chars: ["FSI", "PDI"], desc: "Isolate text with automatic direction detection." },
+        { title: "Neutral Isolate", chars: ["FSI"], desc: "Isolate text with automatic direction detection." },
       ];
 
   return (
-    <div className={editorStyles.buttonColumn}>
+    <div>
       <button
-        className={editorStyles.directionToggle}
+        className={styles.directionToggle}
         onClick={() => setIsRTLMode(!isRTLMode)}
       >
-        {isRTLMode ? "🡄 🡄 🡄 RTL" : "🡆 🡆 🡆 LTR"} Controls {isRTLMode ? "🡄 🡄 🡄" : "🡆 🡆 🡆"} 
+        {isRTLMode ? "🡄 🡄 RTL" : "🡆 🡆 LTR"} Controls {isRTLMode ? "🡄 🡄" : "🡆 🡆"} 
       </button>
 
       {groups.map((group) => (
