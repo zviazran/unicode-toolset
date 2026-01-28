@@ -63,7 +63,7 @@ const BIDISupport: React.FC<Props> = ({
         className={styles.directionToggle}
         onClick={() => setIsRTLMode(!isRTLMode)}
       >
-        {isRTLMode ? "🡄 🡄 RTL" : "🡆 🡆 LTR"} Controls {isRTLMode ? "🡄 🡄" : "🡆 🡆"} 
+        {isRTLMode ? "← ← RTL" : "→ → LTR"} Controls {isRTLMode ? "← ←" : "→ →"} 
       </button>
 
       {groups.map((group) => (

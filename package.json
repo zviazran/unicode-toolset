@@ -1,7 +1,7 @@
 {
   "name": "unicode-toolset",
   "description": "A Collection of web tools for analyzing, editing, and visualizing Unicode characters.",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "type": "module",
   "author": "Zvi Azran",
   "scripts": {
@@ -24,7 +24,7 @@
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "string-twister": "^2.1.2",
+    "string-twister": "^2.2.0",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
