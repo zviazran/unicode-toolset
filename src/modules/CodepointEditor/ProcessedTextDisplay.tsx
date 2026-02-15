@@ -99,6 +99,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     return `hsl(${baseHue}, ${saturation}%, ${lightness}%)`;
   }
 
+  const disableCharAnimation = text.length > 250;
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, selectedFont: string, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
@@ -197,7 +198,7 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()} - ${script}`}
             ref={(el) => {
-              if (el) {
+              if (el && !disableCharAnimation) {
                 requestAnimationFrame(() => {
                   el.classList.add(styles.newlyAddedChar);
                 });
