@@ -3,6 +3,7 @@ import styles from "./PlainTextInput.module.css";
 import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import DirectionIcon from "../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
+import CopyButton from '../../components/CopyButton';
 
 interface Props {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -112,6 +113,13 @@ export default function PlainTextInput({
       const end = node.selectionEnd ?? -1;
       onSelectionChange?.(start, end);
     };
+        <CopyButton
+          text={value}
+          className={styles.toolbarButton}
+          iconClassName={styles.toolbarIcon}
+          title="Copy"
+          style={{ transform: "translateY(-2px)" }}
+        />
 
     document.addEventListener("selectionchange", handleSelect);
     return () => {
@@ -144,6 +152,15 @@ export default function PlainTextInput({
   return (
     <div className={styles.wrapper}>
       <CollapsibleToolbar>
+
+        <CopyButton
+          text={value}
+          className={styles.toolbarButton}
+          iconClassName={styles.toolbarIcon}
+          title="Copy"
+          style={{ transform: "scale(0.9)"}}
+        />
+
         <button
           onClick={handleUndo}
           disabled={!canUndo}
@@ -194,6 +211,8 @@ export default function PlainTextInput({
             </option>
           ))}
         </select>
+
+
       </CollapsibleToolbar>
 
       <textarea

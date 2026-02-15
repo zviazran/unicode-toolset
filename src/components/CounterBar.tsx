@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import CopyButton from "./CopyButton";
 import { Icon } from "@iconify/react";
 import styles from "./CounterBar.module.css";
 
@@ -21,7 +22,6 @@ export default function CounterBar({
   showClear,
   onSetText,
 }: CounterBarProps) {
-  const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_UPLOAD_LENGTH = 10000;
@@ -29,12 +29,7 @@ export default function CounterBar({
   const characterCount = [...text].length;
   const byteCount = new TextEncoder().encode(text).length;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
+
 
   const handleCopyLink = () => {
     if (generateQueryString) {
@@ -104,12 +99,14 @@ export default function CounterBar({
 
   return (
     <div className={styles.counterBar}>
-      <button onClick={handleCopy} className={styles.barButton} title="Copy to clipboard">
-        <Icon
-          icon={copied ? "mdi:check" : "mdi:content-copy"}
-          className={`${styles.icon} ${copied ? styles.iconCheck : styles.iconCopy}`}
-        />
-      </button>
+      <CopyButton
+        text={text}
+        className={styles.barButton}
+        iconClassName={styles.icon}
+        copiedClassName={styles.iconCheck}
+        copyClassName={styles.iconCopy}
+        title="Copy to clipboard"
+      />
 
       {generateQueryString && !showShareLink && (
         <button onClick={handleCopyLink} className={styles.barButton} title="Copy link with parameters">
