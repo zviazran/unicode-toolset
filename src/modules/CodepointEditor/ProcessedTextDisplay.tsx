@@ -32,6 +32,8 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
   const dottedCircleSafeFonts = ["sans-serif", "Noto Sans", "Roboto", "DejaVu Sans", "Arial Unicode MS", "San Francisco", "Segoe UI"];
   const hasDetectedInitialDirection = useRef(false);
   const [showDirectionArrows, setShowDirectionArrows] = useState(false);
+  const prevTextRef = useRef(text);
+  const disableCharAnimation = text.length > 300;
 
   const bidi = bidiFactory();
 
@@ -91,6 +93,26 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     hasDetectedInitialDirection.current = true;
   };
 
+  const newCharIndex = useMemo(() => {
+    if (disableCharAnimation) return null;
+
+    const prev = prevTextRef.current;
+    const lengthDiff = text.length - prev.length;
+    if (lengthDiff !== 1) return null;
+
+    let i = 0;
+    while (i < prev.length && prev[i] === text[i]) {
+      i++;
+    }
+
+    return i;
+  }, [text, disableCharAnimation]);
+
+  useEffect(() => {
+    prevTextRef.current = text;
+  }, [text]);
+
+
   function getScriptColor(index: number): string {
     if (index === 0) return "undefined";
     const baseHue = 35; // orange
@@ -99,7 +121,6 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
     return `hsl(${baseHue}, ${saturation}%, ${lightness}%)`;
   }
 
-  const disableCharAnimation = text.length > 250;
   const replaceUnseenChars = (text: string, selectionRange: { start: number; end: number }, selectedFont: string, flagCallback?: (hasFinding: boolean) => void): (string | JSX.Element)[] => {
     const result: (string | JSX.Element)[] = [];
     const scriptToColor: Record<string, string> = {};
@@ -198,7 +219,11 @@ const ProcessedTextDisplay: React.FC<ProcessedTextDisplayProps> = ({ text, setTe
             data-original={char}
             title={`U+${codePoint.toString(16).toUpperCase()} - ${script}`}
             ref={(el) => {
-              if (el && !disableCharAnimation) {
+              if (
+                el &&
+                !disableCharAnimation &&
+                newCharIndex === startIndex && text.length > prevTextRef.current.length
+              ) {
                 requestAnimationFrame(() => {
                   el.classList.add(styles.newlyAddedChar);
                 });
