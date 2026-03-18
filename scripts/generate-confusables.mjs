@@ -70,6 +70,20 @@ async function main() {
   const confusablesLines = await fetchLines(CONFUSABLES_URL);
   const confusablesMap = parseConfusables(confusablesLines);
 
+  // Add manual extensions from file
+  const manualPath = './scripts/manual-confusables.json';
+  if (fs.existsSync(manualPath)) {
+    const manualData = JSON.parse(fs.readFileSync(manualPath, 'utf8'));
+    for (const key in manualData) {
+      if (!confusablesMap[key]) confusablesMap[key] = [];
+      confusablesMap[key] = [...new Set([...confusablesMap[key], ...manualData[key]])];
+      for (const char of manualData[key]) {
+        if (!confusablesMap[char]) confusablesMap[char] = [];
+        confusablesMap[char].push(key);
+      }
+    }
+  }
+
   fs.mkdirSync(path.dirname(OUTPUT_JSON), { recursive: true });
 
   const jsonData = JSON.stringify(confusablesMap);
