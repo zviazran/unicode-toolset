@@ -5,8 +5,10 @@ import URL_TWISTER from "../Assets/Toolsets/url-twister.png";
 import WAS_THIS_YOUR_TEXT from "../Assets/Toolsets/was-this-your-text.png";
 import ENCODED_PROMPT_INJECTION_GENERATOR from "../Assets/Toolsets/encoded-prompt-injection-generator.png";
 
-import UNICODE_CODE_CONVERTER from "../Assets/Recommendations/unicode-code-converter.png";
+import CYBER_CHEF_SITE from "../Assets/Recommendations/cyberchef.png";
+import SHAPECATCHER_SITE from "../Assets/Recommendations/shapecatcher.png";
 import UNICODE_UTILITIES_CONFUSABLES from "../Assets/Recommendations/unicode-utilities-confusables.png";
+import UNICODE_CODE_CONVERTER from "../Assets/Recommendations/unicode-code-converter.png";
 import UNICODE_TECHNICAL_SITE from "../Assets/Recommendations/unicode-technical-site.png";
 
 
@@ -57,11 +59,18 @@ export const TOOLSETS = [
 
 export const RECOMMENDATIONS = [
   {
-    image: UNICODE_CODE_CONVERTER,
-    name: "Unicode Code Converter",
-    joke: "Daddy? Is it you? 🧐",
-    description: "The swift army knife of unicode encodings.",
-    link: "https://r12a.github.io/app-conversion/",
+    image: CYBER_CHEF_SITE,
+    name: "CyberChef",
+    joke: "Gordon Ramsay would say the bytes are undercooked 🔥",
+    description: "A powerful web app for encoding, decoding, encryption, and data transformations.",
+    link: "https://gchq.github.io/CyberChef/",
+  },
+  {
+    image: SHAPECATCHER_SITE,
+    name: "ShapeCatcher",
+    joke: "One does not simply recognize this code point 👌",
+    description: "Draw a symbol to discover lookalike characters. Great for finding unconvetional homograph exploits.",
+    link: "https://shapecatcher.com/",
   },
   {
     image: UNICODE_UTILITIES_CONFUSABLES,
@@ -69,6 +78,13 @@ export const RECOMMENDATIONS = [
     joke: "You got to homograph spoof that string! 🎭",
     description: "The best tool out there to make your perfect homograph exploit.",
     link: "https://util.unicode.org/UnicodeJsps/confusables.jsp",
+  },
+  {
+    image: UNICODE_CODE_CONVERTER,
+    name: "Unicode Code Converter",
+    joke: "Daddy? Is it you? 🧐",
+    description: "The swift army knife of unicode encodings.",
+    link: "https://r12a.github.io/app-conversion/",
   },
   {
     image: UNICODE_TECHNICAL_SITE,
