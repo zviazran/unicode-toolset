@@ -1,9 +1,30 @@
 /**
- * Randomly inserts up to changeFraction * codepoint count characters inside the text (never before or after).
- * @param text The original text
- * @param changeFraction A float between 0 and 1 for how many characters to insert
+ * Utility helpers for text transformations.
+ *
+ * These functions are designed to be Unicode-aware where possible,
+ * using grapheme cluster segmentation when available.
+ */
+const graphemeSegmenter: any = typeof Intl !== "undefined" && (Intl as any).Segmenter
+  ? new (Intl as any).Segmenter(undefined, { granularity: "grapheme" })
+  : null;
+
+function splitGraphemes(text: string): string[] {
+  if (graphemeSegmenter) {
+    return Array.from((graphemeSegmenter as any).segment(text), (segment: any) => segment.segment);
+  }
+  return Array.from(text);
+}
+
+/**
+ * Randomly inserts the specified character into the array of characters.
+ *
+ * This function mutates the provided array and inserts `char` at random
+ * positions, never at index 0 and never beyond the last index.
+ *
+ * @param chars Array of characters to mutate
+ * @param changeFraction Fraction of positions to insert into (0–1)
  * @param char The character to insert
- * @returns The new text with insertions
+ * @returns The mutated character array
  */
 export function addRandomCharacters(chars: string[], changeFraction: number, char: string): string[] {
   if (!chars.length || changeFraction < 0 || chars.length <= 1) return chars;
@@ -24,4 +45,28 @@ export function addRandomCharacters(chars: string[], changeFraction: number, cha
   }
 
   return chars;
+}
+
+/**
+ * Reverse text while preserving grapheme clusters when supported.
+ *
+ * If `start` and `end` are provided, only the selected substring is reversed.
+ * Otherwise the whole string is reversed.
+ *
+ * @param text The input text to transform
+ * @param start Optional start index of the range to reverse
+ * @param end Optional end index of the range to reverse
+ * @returns The transformed text with the selected region reversed
+ */
+export function reverseString(text: string, start?: number, end?: number): string {
+  if (start === undefined || end === undefined || start === end) {
+    return splitGraphemes(text).reverse().join("");
+  }
+
+  const normalizedStart = Math.max(0, Math.min(start, text.length));
+  const normalizedEnd = Math.max(normalizedStart, Math.min(end, text.length));
+  const before = text.slice(0, normalizedStart);
+  const selected = splitGraphemes(text.slice(normalizedStart, normalizedEnd)).reverse().join("");
+  const after = text.slice(normalizedEnd);
+  return before + selected + after;
 }

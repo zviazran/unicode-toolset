@@ -4,6 +4,7 @@ import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import DirectionIcon from "../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
 import CopyButton from '../../components/CopyButton';
+import { reverseString } from "../../utils/TextTransforms";
 
 interface Props {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -35,6 +36,7 @@ export default function PlainTextInput({
   const [direction, setDirection] = useState<"auto" | "ltr" | "rtl">("auto");
   const [fontSize, setFontSize] = useState(16);
   const isFocusedRef = useRef(false);
+  const selectionRangeRef = useRef<{ start: number; end: number } | null>(null);
 
   const applyText = (newText: string, pushToUndo = true) => {
     if (pushToUndo) {
@@ -102,6 +104,25 @@ export default function PlainTextInput({
     onChange(next);
     setCanUndo(true);
     setCanRedo(redoStack.current.length > 0);
+  };
+
+  const handleReverse = () => {
+    const textarea = textareaRef.current;
+    const actualStart = textarea?.selectionStart ?? 0;
+    const actualEnd = textarea?.selectionEnd ?? 0;
+    const range = selectionRangeRef.current ?? { start: actualStart, end: actualEnd };
+    const normalizedStart = Math.min(range.start, range.end);
+    const normalizedEnd = Math.max(range.start, range.end);
+
+    applyText(reverseString(value, range.start, range.end));
+    selectionRangeRef.current = null;
+
+    if (textarea) {
+      setTimeout(() => {
+        textarea.setSelectionRange(normalizedStart, normalizedEnd);
+        textarea.focus();
+      }, 0);
+    }
   };
 
   useEffect(() => {
@@ -180,7 +201,15 @@ export default function PlainTextInput({
         </button>
 
         <button
-          onClick={() => applyText(value.split("").reverse().join(""))}
+          onMouseDown={() => {
+            const textarea = textareaRef.current;
+            if (!textarea) return;
+            selectionRangeRef.current = {
+              start: textarea.selectionStart ?? 0,
+              end: textarea.selectionEnd ?? 0,
+            };
+          }}
+          onClick={handleReverse}
           className={styles.toolbarButton}
           style={{ transform: "scale(0.9) translateY(2px)" }}
           title="Reverse text"
