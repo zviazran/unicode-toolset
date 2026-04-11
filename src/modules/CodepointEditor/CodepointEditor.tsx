@@ -6,9 +6,11 @@ import CounterBar from '../../components/CounterBar';
 import CharGenerator from "../../utils/CharGenerator";
 import PlainTextInput from "./PlainTextInput";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
+import { buildTypingReplacerMap, loadTypingReplacerState, ReplacementSet } from "../../utils/TypingReplacer";
 import CollapsiblePanel from "../../components/CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
+import TypingReplacerPanel from "./TypingReplacerPanel";
 import { HomographicSpoofingPanel } from "./HomographicSpoofingPanel";
 import { NoiseGeneratorPanel } from "./NoiseGeneratorPanel";
 import LegendDialog from "./LegendDialog";
@@ -30,6 +32,9 @@ const CodepointEditor: React.FC = () => {
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
   const [selectedFont, setSelectedFont] = useState("sans-serif");
   const [isButtonClick, setIsButtonClick] = useState(false);
+  const [typingReplacerMappings, setTypingReplacerMappings] = useState<Record<string, string>>({});
+  const [typingReplacerSets, setTypingReplacerSets] = useState<ReplacementSet[]>([]);
+  const [enabledTypingReplacerSetIds, setEnabledTypingReplacerSetIds] = useState<string[]>([]);
 
   const isMobileView = window.innerWidth < 768;
 
@@ -55,6 +60,24 @@ const CodepointEditor: React.FC = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const state = loadTypingReplacerState();
+    setTypingReplacerSets(state.sets);
+    setTypingReplacerMappings({});
+    setEnabledTypingReplacerSetIds([]);
+  }, []);
+
+  const toggleTypingReplacerSet = (setId: string) => {
+    setEnabledTypingReplacerSetIds((prev) => {
+      const next = prev.includes(setId)
+        ? prev.filter((id) => id !== setId)
+        : [...prev, setId];
+      const nextMap = buildTypingReplacerMap(typingReplacerSets, next);
+      setTypingReplacerMappings(nextMap);
+      return next;
+    });
+  };
 
   const handleAddChar = (type: "invisible" | "wordBreak" | "noBreak" | "bidi", bidiName?: string) => {
     let randomChar = "";
@@ -196,6 +219,17 @@ const CodepointEditor: React.FC = () => {
         />
       ),
     },
+    {
+      key: "typingreplacer",
+      title: "Typing Replacer",
+      content: (
+        <TypingReplacerPanel
+          typingReplacerSets={typingReplacerSets}
+          enabledTypingReplacerSetIds={enabledTypingReplacerSetIds}
+          toggleTypingReplacerSet={toggleTypingReplacerSet}
+        />
+      ),
+    },
 
     {
       key: "normalization",
@@ -252,6 +286,7 @@ const CodepointEditor: React.FC = () => {
             onChange={setText}
             placeholder="Type your text here..."
             isTagTyping={isTagTyping}
+            typingReplacerMappings={typingReplacerMappings}
             onSelectionChange={(start, end) => { setLastSelection({ start, end }); }}
             onClick={() => { typingPanelRef.current?.stopTyping(); }}
             fontFamily={selectedFont}

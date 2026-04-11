@@ -43,10 +43,10 @@ export const TOOLSETS = [
   },
   {
     image: DR_UNICODE,
-    name: "Dr. Unicode",
-    joke: "An isValid(string) a day keeps the bugs away 🐞",
-    description: "A heuristic utility for detecting and diagnosing common string corruptions, encoding issues, and alterations.",
-    link: "drunicode",
+    name: "Typing Replacer",
+    joke: "Type it once, replace it forever 🎯",
+    description: "Create custom typing replacements and use them while editing text in the codepoint editor.",
+    link: "typing-replacer",
   },  
   {
     image: ENCODED_PROMPT_INJECTION_GENERATOR,

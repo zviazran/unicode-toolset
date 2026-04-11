@@ -4,7 +4,7 @@ import Tips from "./modules/Tips/Tips";
 import About from "./modules/About/About";
 import Toolsets from "./modules/Toolsets/Toolsets";
 import CodepointEditor from "./modules/CodepointEditor/CodepointEditor";
-import DrUnicodeWrapper from "./modules/DrUnicode/DrUnicodeWrapper";
+import TypingReplacer from "./modules/TypingReplacer/TypingReplacer";
 import CrashCharSequenceGenerator from "./modules/CrashCharSequenceGenerator/CrashCharSequenceGenerator";
 import EncodedPromptInjectionGenerator from "./modules/EncodedPromptInjectionGenerator/EncodedPromptInjectionGenerator";
 import UrlTwisterComponent from "./modules/UrlTwister/UrlTwisterComponent";
@@ -26,7 +26,8 @@ const App: React.FC = () => {
           <Route path="/toolset" element={<Toolsets />} />
           <Route path="/char-editor" element={<CodepointEditor />} />
           <Route path="/invisible-char-editor" element={<CodepointEditor />} />
-          <Route path="/drunicode" element={<DrUnicodeWrapper />} />
+          <Route path="/typing-replacer" element={<TypingReplacer />} />
+          <Route path="/drunicode" element={<TypingReplacer />} />
           <Route path="/crash-char-sequence-generator" element={<CrashCharSequenceGenerator />} />
           <Route path="/url-twister" element={<UrlTwisterComponent />} />
           <Route path="/encoded-prompt-injection-generator" element={<EncodedPromptInjectionGenerator />} />

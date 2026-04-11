@@ -1,0 +1,120 @@
+.typingReplacer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  margin-top: 6.5rem;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  min-height: 33rem;
+}
+
+.typingReplacerHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.typingReplacerHeader h1 {
+  margin: 0;
+}
+
+.typingReplacerHeaderButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.replacementSetCard {
+  border: 1px solid #d8d8d8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.replacementCardTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.replacementTitleInput {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.setControls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mappingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.75rem;
+}
+
+.mappingsTable th,
+.mappingsTable td {
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+}
+
+.mappingsTable th {
+  text-align: left;
+  background: #f9f9f9;
+}
+
+.mappingInput {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.mappingRowButton {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #c62828;
+  font-size: 1rem;
+}
+
+.addMappingButton,
+.addSetButton,
+.toggleButton,
+.smallButton {
+  border: 1px solid #d0d0d0;
+  background: #f3f3f3;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.addMappingButton:hover,
+.addSetButton:hover,
+.toggleButton:hover,
+.smallButton:hover {
+  background: #e8e8e8;
+}
+
+.disabledText {
+  opacity: 0.65;
+}
+
+.noSetsMessage {
+  padding: 1rem;
+  color: #555;
+  border: 1px dashed #ccc;
+  border-radius: 0.75rem;
+  background: #fafafa;
+}

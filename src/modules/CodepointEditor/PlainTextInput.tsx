@@ -4,6 +4,7 @@ import CollapsibleToolbar from "../../components/CollapsibleToolbar";
 import DirectionIcon from "../../assets/icons/DirectionIcon";
 import { Icon } from "@iconify/react";
 import CopyButton from '../../components/CopyButton';
+import { applyTypingReplacements } from "../../utils/TypingReplacer";
 import { reverseString } from "../../utils/TextTransforms";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
   onChange: (newText: string) => void;
   placeholder?: string;
   isTagTyping?: boolean;
+  typingReplacerMappings?: Record<string, string>;
   onSelectionChange?: (start: number, end: number) => void;
   onClick?: () => void;
   fontFamily?: string;
@@ -23,6 +25,7 @@ export default function PlainTextInput({
   onChange,
   placeholder,
   isTagTyping = false,
+  typingReplacerMappings = {},
   onSelectionChange,
   onClick,
   textareaRef,
@@ -50,9 +53,27 @@ export default function PlainTextInput({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
+    const selectionStart = e.target.selectionStart ?? newValue.length;
+    const isTypingReplacerActive = !isTagTyping && Object.keys(typingReplacerMappings || {}).length > 0;
 
-    if (!isTagTyping) {
+    if (!isTagTyping && !isTypingReplacerActive) {
       applyText(newValue);
+      return;
+    }
+
+    if (!isTagTyping && isTypingReplacerActive) {
+      const replaced = applyTypingReplacements(newValue, typingReplacerMappings);
+      applyText(replaced);
+
+      setTimeout(() => {
+        const node = textareaRef.current;
+        if (node) {
+          const cursorOffset = replaced.length - newValue.length;
+          const newCursor = Math.max(0, Math.min(replaced.length, selectionStart + cursorOffset));
+          node.selectionStart = node.selectionEnd = newCursor;
+        }
+      }, 0);
+
       return;
     }
 

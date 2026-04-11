@@ -1,0 +1,38 @@
+.typingReplacerPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.typingReplacerCheckboxList {
+  width: 100%;
+  max-height: 18rem;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: #fafafa;
+}
+
+.typingReplacerCheckboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.typingReplacerCheckboxRow:last-child {
+  border-bottom: none;
+}
+
+.typingReplacerCheckboxRow input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #007bff;
+}
+
+.noSetsMessage {
+  color: #444;
+  font-size: 0.95rem;
+}
