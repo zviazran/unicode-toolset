@@ -113,13 +113,6 @@ export default function PlainTextInput({
       const end = node.selectionEnd ?? -1;
       onSelectionChange?.(start, end);
     };
-        <CopyButton
-          text={value}
-          className={styles.toolbarButton}
-          iconClassName={styles.toolbarIcon}
-          title="Copy"
-          style={{ transform: "translateY(-2px)" }}
-        />
 
     document.addEventListener("selectionchange", handleSelect);
     return () => {
@@ -158,7 +151,7 @@ export default function PlainTextInput({
           className={styles.toolbarButton}
           iconClassName={styles.toolbarIcon}
           title="Copy"
-          style={{ transform: "scale(0.9)"}}
+          style={{ transform: "scale(0.8) translateY(1px)" }}
         />
 
         <button
@@ -180,9 +173,19 @@ export default function PlainTextInput({
         <button
           onClick={() => applyText("")}
           className={styles.toolbarButton}
+          style={{ transform: "scale(0.95) translateY(1px)" }}
           title="Clear"
         >
           <Icon icon="mdi:delete-outline" className={styles.toolbarIcon} />
+        </button>
+
+        <button
+          onClick={() => applyText(value.split("").reverse().join(""))}
+          className={styles.toolbarButton}
+          style={{ transform: "scale(0.9) translateY(2px)" }}
+          title="Reverse text"
+        >
+          <Icon icon="mdi:reflect-horizontal" className={styles.toolbarIcon} />
         </button>
 
         <button
