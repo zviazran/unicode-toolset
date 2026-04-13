@@ -18,13 +18,26 @@
 }
 
 .typingReplacerHeader h1 {
-  margin: 0;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.typingReplacerHeader p {
+  font-size: 1.1rem;
+  color: #333;
 }
 
 .typingReplacerHeaderButtons {
+  margin-left: auto;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.replacementSetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem;
 }
 
 .replacementSetCard {
@@ -41,6 +54,7 @@
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .replacementTitleInput {
@@ -57,15 +71,25 @@
   align-items: center;
 }
 
+.mappingsTableWrapper {
+  max-height: 20rem;
+  overflow: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+}
+
 .mappingsTable {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 0.75rem;
+}
+
+.mappingsTable thead th {
+  padding: 0.5rem;
 }
 
 .mappingsTable th,
 .mappingsTable td {
-  padding: 0.5rem;
+  padding: 0.1rem;
   border: 1px solid #e0e0e0;
 }
 
@@ -76,9 +100,8 @@
 
 .mappingInput {
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  padding: 0.4rem 0.6rem;
+  border: none;
+  padding: 0rem 0.6rem;
 }
 
 .mappingRowButton {
@@ -89,7 +112,58 @@
   font-size: 1rem;
 }
 
-.addMappingButton,
+.addMappingRow {
+  border-top: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.addMappingRow:hover {
+  background: #f8f8f8;
+}
+
+.addMappingCell {
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.addMappingButton{
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding-bottom: 0.3rem;
+
+}
+
+.jsonEditorWrapper {
+  max-height: 20rem;
+  overflow: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+}
+
+.jsonEditorArea {
+  width: 100%;
+  min-height: 12rem;
+  max-height: 18rem;
+  padding: 0.75rem;
+  margin: 0;
+  border: none;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.jsonEditorArea:focus {
+  outline: none;
+}
+
+.jsonError {
+  margin: 0.5rem 0 0;
+  color: #b00020;
+  font-size: 0.95rem;
+}
+
 .addSetButton,
 .toggleButton,
 .smallButton {
@@ -100,7 +174,13 @@
   cursor: pointer;
 }
 
-.addMappingButton:hover,
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem;
+}
+
 .addSetButton:hover,
 .toggleButton:hover,
 .smallButton:hover {

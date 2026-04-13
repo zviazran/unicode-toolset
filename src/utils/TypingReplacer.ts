@@ -16,30 +16,120 @@ const DEFAULT_STATE: TypingReplacerState = {
   sets: [
     {
       id: "typing-replacer-default",
-      title: "Default replacennent set",
+      title: "Default replacement set",
       map: {
-        m: "nn",
-        I: "l",
+        a: "а", // Cyrillic a
+        b: "Ь", // Cyrillic soft sign
+        c: "с", // Cyrillic es
+        d: "ԁ", // Cyrillic d
+        e: "е", // Cyrillic ie
+        f: "ƒ", // Latin f hook
+        g: "ɡ", // Latin script g
+        h: "һ", // Cyrillic shha
+        i: "і", // Cyrillic i
+        j: "ј", // Cyrillic je
+        k: "κ", // Greek kappa
+        l: "ⅼ", // Roman numeral fifty
+        m: "ⅿ", // Roman numeral thousand
+        n: "ո", // Armenian nu
+        o: "ο", // Greek omicron
+        p: "р", // Cyrillic er
+        q: "ԛ", // Cyrillic qa
+        r: "г", // Cyrillic ge
+        s: "ѕ", // Cyrillic dze
+        t: "т", // Cyrillic te
+        u: "υ", // Greek upsilon
+        v: "ν", // Greek nu
+        w: "ԝ", // Cyrillic we
+        x: "х", // Cyrillic ha
+        y: "у", // Cyrillic u
+        z: "ᴢ", // Latin small capital z
+
+        A: "Α", // Greek alpha
+        B: "Β", // Greek beta
+        C: "С", // Cyrillic es
+        D: "Ꭰ", // Cherokee A
+        E: "Ε", // Greek epsilon
+        F: "Ϝ", // Greek digamma
+        G: "Ԍ", // Cyrillic G
+        H: "Η", // Greek eta
+        I: "І", // Cyrillic I
+        J: "Ј", // Cyrillic Je
+        K: "Κ", // Greek kappa
+        L: "Ꮮ", // Cherokee L
+        M: "Μ", // Greek mu
+        N: "Ν", // Greek nu
+        O: "Ο", // Greek omicron
+        P: "Ρ", // Greek rho
+        Q: "Ԛ", // Cyrillic QA
+        R: "Ꭱ", // Cherokee R
+        S: "Ѕ", // Cyrillic Dze
+        T: "Τ", // Greek tau
+        U: "Ս", // Armenian se
+        V: "Ѵ", // Cyrillic izhitsa
+        W: "Ԝ", // Cyrillic we
+        X: "Χ", // Greek chi
+        Y: "Υ", // Greek upsilon
+        Z: "Ζ", // Greek zeta
       },
-      enabled: true,
+      enabled: false,
       priority: 0,
     },
     {
       id: "leet",
       title: "Leetspeak",
       map: {
-       a: "4",
-       e: "3",
-       o: "0"
+        a: "4",
+        b: "8",
+        e: "3",
+        g: "6",
+        i: "1",
+        l: "1",
+        o: "0",
+        s: "5",
+        t: "7",
+        z: "2"
       },
-      enabled: true,
+      enabled: false,
+    },
+    {
+      id: "fakehebrew",
+      title: "ਕᑊ ລᕄᑐ ᕄᑊᒉລƔ ᑊᒧƔᑊ",
+      map:{
+        "א": "ꗪ",
+        "ב": "ລ",
+        "ג": "ᕍ",
+        "ד": "ਕ",
+        "ה": "ᘅ",
+        "ו": "ꓲ",
+        "ז": "ᕊ",
+        "ח": "⋂",
+        "ט": "ᘎ",
+        "י": "ᑊ",
+        "כ": "ᑐ",
+        "ל": "ᘕ",
+        "מ": "ᘞ",
+        "נ": "ᒧ",
+        "ע": "Ɣ",
+        "פ": "ᘐ",
+        "צ": "ਤ",
+        "ק": "Ꭾ",
+        "ר": "ᒉ",
+        "ש": "ᘓ",
+        "ת": "ᕄ",
+        "ם": "ᕵ",
+        "ן": "|",
+        "ף": "ໃ",
+        "ץ": "Ⴥ"
+      },
+      enabled: false,
     },
   ],
 };
 
 export function loadTypingReplacerState(): TypingReplacerState {
   if (typeof window === "undefined" || !window.localStorage) {
-    return DEFAULT_STATE;
+    return getDefaultTypingReplacerState();
   }
 
   try {
@@ -92,6 +182,20 @@ export function saveTypingReplacerState(state: TypingReplacerState) {
   } catch {
     // ignore storage errors
   }
+}
+
+export function getDefaultTypingReplacerState(): TypingReplacerState {
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
+export function toggleReplacementSetEnabled(sets: ReplacementSet[], setId: string): ReplacementSet[] {
+  return sets.map((set) =>
+    set.id === setId ? { ...set, enabled: !set.enabled } : set
+  );
+}
+
+export function getEnabledReplacementSetIds(sets: ReplacementSet[]): string[] {
+  return sets.filter((set) => set.enabled).map((set) => set.id);
 }
 
 export function createReplacementSet(): ReplacementSet {

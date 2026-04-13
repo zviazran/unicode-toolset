@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
 import styles from "./TypingReplacer.module.css";
-import { createReplacementSet, loadTypingReplacerState, saveTypingReplacerState, ReplacementSet } from "../../utils/TypingReplacer";
+import { createReplacementSet, getDefaultTypingReplacerState, loadTypingReplacerState, saveTypingReplacerState, ReplacementSet } from "../../utils/TypingReplacer";
 
 type ReplacementRow = {
   id: string;
@@ -10,12 +11,46 @@ type ReplacementRow = {
 
 type LocalReplacementSet = Omit<ReplacementSet, "map"> & {
   rows: ReplacementRow[];
+  jsonView?: boolean;
+  jsonText?: string;
+  jsonError?: string;
 };
 
 const TypingReplacer: React.FC = () => {
-  const initialState = loadTypingReplacerState();
-  const [state, setState] = useState<LocalReplacementSet[]>(
-    initialState.sets.map((set) => {
+  const rowsToMap = (rows: ReplacementRow[]) =>
+    rows.reduce<Record<string, string>>((acc, row) => {
+      if (row.from) acc[row.from] = row.to;
+      return acc;
+    }, {});
+
+  const mapToRows = (map: Record<string, string>, setId: string) =>
+    Object.entries(map).map(([from, to], index) => ({
+      id: `${setId}-row-${index}`,
+      from,
+      to,
+    }));
+
+  const getJsonError = (text: string): string => {
+    try {
+      const parsed = JSON.parse(text);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return "JSON must be an object";
+      }
+
+      for (const value of Object.values(parsed)) {
+        if (typeof value !== "string") {
+          return "All values must be strings";
+        }
+      }
+
+      return "";
+    } catch {
+      return "Invalid JSON";
+    }
+  };
+
+  const createLocalState = (sets: ReplacementSet[]) =>
+    sets.map((set) => {
       const { map, ...rest } = set;
       return {
         ...rest,
@@ -25,7 +60,11 @@ const TypingReplacer: React.FC = () => {
           to,
         })),
       };
-    })
+    });
+
+  const initialState = loadTypingReplacerState();
+  const [state, setState] = useState<LocalReplacementSet[]>(
+    createLocalState(initialState.sets)
   );
 
   useEffect(() => {
@@ -74,16 +113,57 @@ const TypingReplacer: React.FC = () => {
     setState((prev) =>
       prev.map((set) => {
         if (set.id !== id) return set;
-        const newTitle = set.enabled ? applyReplacementMap(title, set.rows) : title;
+        const newTitle = applyReplacementMap(title, set.rows);
         return { ...set, title: newTitle };
       })
     );
   };
 
-  const toggleSetEnabled = (id: string) => {
+  const toggleJsonView = (id: string) => {
+    setState((prev) =>
+      prev.map((set) => {
+        if (set.id !== id) return set;
+
+        if (!set.jsonView) {
+          return {
+            ...set,
+            jsonView: true,
+            jsonText: JSON.stringify(rowsToMap(set.rows), null, 2),
+            jsonError: "",
+          };
+        }
+
+        const jsonText = set.jsonText ?? "";
+        const error = getJsonError(jsonText);
+        if (error) {
+          return {
+            ...set,
+            jsonError: error,
+          };
+        }
+
+        const parsed = JSON.parse(jsonText);
+        return {
+          ...set,
+          jsonView: false,
+          jsonText: undefined,
+          jsonError: undefined,
+          rows: mapToRows(parsed as Record<string, string>, set.id),
+        };
+      })
+    );
+  };
+
+  const updateJsonText = (id: string, text: string) => {
     setState((prev) =>
       prev.map((set) =>
-        set.id === id ? { ...set, enabled: !set.enabled } : set
+        set.id !== id
+          ? set
+          : {
+              ...set,
+              jsonText: text,
+              jsonError: getJsonError(text),
+            }
       )
     );
   };
@@ -152,12 +232,15 @@ const TypingReplacer: React.FC = () => {
           <h1>Typing Replacer</h1>
           <p>
             Create and manage replacements that will be applied while typing.
-            Use the checkbox to enable or disable each set. Stored in local browser memory only.
+            Enable or disable sets from the Typing Replacer panel. Stored in local browser memory only.
           </p>
         </div>
         <div className={styles.typingReplacerHeaderButtons}>
           <button className={styles.addSetButton} onClick={addSet}>
-            Add replacement set
+            Add new replacement set
+          </button>
+          <button className={styles.smallButton} onClick={() => setState(createLocalState(getDefaultTypingReplacerState().sets))}>
+            Restore default sets
           </button>
         </div>
       </div>
@@ -167,9 +250,10 @@ const TypingReplacer: React.FC = () => {
           No replacement sets yet. Add one to get started.
         </div>
       ) : (
-        state.map((set) => (
-          <div key={set.id} className={styles.replacementSetCard}>
-            <div className={styles.replacementCardTitle}>
+        <div className={styles.replacementSetGrid}>
+          {state.map((set) => (
+            <div key={set.id} className={styles.replacementSetCard}>
+              <div className={styles.replacementCardTitle}>
               <input
                 className={styles.replacementTitleInput}
                 value={set.title}
@@ -177,72 +261,102 @@ const TypingReplacer: React.FC = () => {
                 placeholder="Set title"
               />
               <div className={styles.setControls}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={set.enabled}
-                    onChange={() => toggleSetEnabled(set.id)}
-                  />
-                  Enabled
-                </label>
                 <button
-                  className={styles.smallButton}
-                  onClick={() => deleteSet(set.id)}
+                  className={`${styles.smallButton} ${styles.iconButton}`}
+                  onClick={() => toggleJsonView(set.id)}
+                  aria-label={set.jsonView ? "Switch to table view" : "Switch to JSON view"}
+                  title={set.jsonView ? "Switch to table view" : "Switch to JSON view"}
                 >
-                  Delete set
+                  <Icon
+                    icon={set.jsonView ? "mdi:table-large" : "mdi:code-json"}
+                    width="18"
+                  />
+                </button>
+                <button
+                  className={`${styles.smallButton} ${styles.iconButton}`}
+                  onClick={() => deleteSet(set.id)}
+                  aria-label="Delete set"
+                  title="Delete set"
+                >
+                  <Icon icon="mdi:trash-can-outline" width="18" />
                 </button>
               </div>
             </div>
 
-            <table className={styles.mappingsTable}>
-              <thead>
-                <tr>
-                  <th>Replace</th>
-                  <th>With</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {set.rows.map((row) => (
-                  <tr key={row.id}>
-                    <td>
-                      <input
-                        className={styles.mappingInput}
-                        value={row.from}
-                        onChange={(e) => updateMapping(set.id, row.id, e.target.value, row.to)}
-                        placeholder="from"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className={styles.mappingInput}
-                        value={row.to}
-                        onChange={(e) => updateMapping(set.id, row.id, row.from, e.target.value)}
-                        placeholder="to"
-                      />
-                    </td>
-                    <td>
+            {set.jsonView ? (
+              <div className={styles.jsonEditorWrapper}>
+                <textarea
+                  className={styles.jsonEditorArea}
+                  value={set.jsonText ?? ""}
+                  onChange={(e) => updateJsonText(set.id, e.target.value)}
+                  placeholder='{ "from": "to" }'
+                />
+                {set.jsonError ? (
+                  <div className={styles.jsonError}>{set.jsonError}</div>
+                ) : null}
+              </div>
+            ) : (
+              <div className={styles.mappingsTableWrapper}>
+                <table className={styles.mappingsTable}>
+                  <thead>
+                    <tr>
+                      <th>Replace</th>
+                      <th>With</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {set.rows.map((row) => (
+                    <tr key={row.id}>
+                      <td>
+                        <input
+                          className={styles.mappingInput}
+                          value={row.from}
+                          onChange={(e) => updateMapping(set.id, row.id, e.target.value, row.to)}
+                          placeholder="from"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className={styles.mappingInput}
+                          value={row.to}
+                          onChange={(e) => updateMapping(set.id, row.id, row.from, e.target.value)}
+                          placeholder="to"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          className={styles.mappingRowButton}
+                          onClick={() => deleteMapping(set.id, row.id)}
+                          title="Remove mapping"
+                        >
+                          ✕
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  <tr className={styles.addMappingRow} onClick={() => addMappingRow(set.id)}>
+                    <td colSpan={3} className={styles.addMappingCell}>
                       <button
-                        className={styles.mappingRowButton}
-                        onClick={() => deleteMapping(set.id, row.id)}
-                        title="Remove mapping"
+                        className={`${styles.addMappingButton}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          addMappingRow(set.id);
+                        }}
+                        aria-label="Add mapping"
+                        title="Add mapping"
                       >
-                        ✕
+                        <Icon icon="mdi:plus" width="18" />
                       </button>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <button
-              className={styles.addMappingButton}
-              onClick={() => addMappingRow(set.id)}
-            >
-              Add mapping
-            </button>
+                </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        ))
+        ))}
+      </div>
       )}
     </div>
   );

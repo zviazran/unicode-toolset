@@ -4,13 +4,11 @@ import { ReplacementSet } from "../../utils/TypingReplacer";
 
 type TypingReplacerPanelProps = {
   typingReplacerSets: ReplacementSet[];
-  enabledTypingReplacerSetIds: string[];
   toggleTypingReplacerSet: (setId: string) => void;
 };
 
 const TypingReplacerPanel: React.FC<TypingReplacerPanelProps> = ({
   typingReplacerSets,
-  enabledTypingReplacerSetIds,
   toggleTypingReplacerSet,
 }) => {
   return (
@@ -25,7 +23,7 @@ const TypingReplacerPanel: React.FC<TypingReplacerPanelProps> = ({
             <label key={set.id} className={styles.typingReplacerCheckboxRow}>
               <input
                 type="checkbox"
-                checked={enabledTypingReplacerSetIds.includes(set.id)}
+                checked={set.enabled}
                 onChange={() => toggleTypingReplacerSet(set.id)}
               />
               <span>{set.title}</span>

@@ -6,7 +6,7 @@ import CounterBar from '../../components/CounterBar';
 import CharGenerator from "../../utils/CharGenerator";
 import PlainTextInput from "./PlainTextInput";
 import ProcessedTextDisplay from "./ProcessedTextDisplay";
-import { buildTypingReplacerMap, loadTypingReplacerState, ReplacementSet } from "../../utils/TypingReplacer";
+import { buildTypingReplacerMap, getEnabledReplacementSetIds, loadTypingReplacerState, saveTypingReplacerState, toggleReplacementSetEnabled, ReplacementSet } from "../../utils/TypingReplacer";
 import CollapsiblePanel from "../../components/CollapsiblePanel";
 import { TypingSequencePanel } from "./TypingSequenceAnimation";
 import NormalizationPanel from "./NormalizationPanel";
@@ -33,8 +33,7 @@ const CodepointEditor: React.FC = () => {
   const [selectedFont, setSelectedFont] = useState("sans-serif");
   const [isButtonClick, setIsButtonClick] = useState(false);
   const [typingReplacerMappings, setTypingReplacerMappings] = useState<Record<string, string>>({});
-  const [typingReplacerSets, setTypingReplacerSets] = useState<ReplacementSet[]>([]);
-  const [enabledTypingReplacerSetIds, setEnabledTypingReplacerSetIds] = useState<string[]>([]);
+  const [typingReplacerSets, setTypingReplacerSets] = useState<ReplacementSet[] | null>(null);
 
   const isMobileView = window.innerWidth < 768;
 
@@ -64,18 +63,21 @@ const CodepointEditor: React.FC = () => {
   useEffect(() => {
     const state = loadTypingReplacerState();
     setTypingReplacerSets(state.sets);
-    setTypingReplacerMappings({});
-    setEnabledTypingReplacerSetIds([]);
   }, []);
 
+  useEffect(() => {
+    if (typingReplacerSets === null) return;
+
+    const enabledIds = getEnabledReplacementSetIds(typingReplacerSets);
+    const nextMap = buildTypingReplacerMap(typingReplacerSets, enabledIds);
+    setTypingReplacerMappings(nextMap);
+    saveTypingReplacerState({ sets: typingReplacerSets });
+  }, [typingReplacerSets]);
+
   const toggleTypingReplacerSet = (setId: string) => {
-    setEnabledTypingReplacerSetIds((prev) => {
-      const next = prev.includes(setId)
-        ? prev.filter((id) => id !== setId)
-        : [...prev, setId];
-      const nextMap = buildTypingReplacerMap(typingReplacerSets, next);
-      setTypingReplacerMappings(nextMap);
-      return next;
+    setTypingReplacerSets((prev) => {
+      if (prev === null) return prev;
+      return toggleReplacementSetEnabled(prev, setId);
     });
   };
 
@@ -224,8 +226,7 @@ const CodepointEditor: React.FC = () => {
       title: "Typing Replacer",
       content: (
         <TypingReplacerPanel
-          typingReplacerSets={typingReplacerSets}
-          enabledTypingReplacerSetIds={enabledTypingReplacerSetIds}
+          typingReplacerSets={typingReplacerSets ?? []}
           toggleTypingReplacerSet={toggleTypingReplacerSet}
         />
       ),

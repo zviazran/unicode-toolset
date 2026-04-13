@@ -34,6 +34,13 @@ export const TOOLSETS = [
     description: "Enter your corrupted text and maybe we can find how it happened. Is one of them your original?",
     link: "was-this-your-text",
   },
+    {
+    image: DR_UNICODE,
+    name: "Typing Replacer",
+    joke: "Type it once, replace it forever 🎯",
+    description: "Create custom typing replacements and use them while editing text in the codepoint editor.",
+    link: "typing-replacer",
+  },  
   {
     image: URL_TWISTER,
     name: "URL Twister",
@@ -41,13 +48,6 @@ export const TOOLSETS = [
     description: "Enter a URL to generate random tricky spoofing versions. Would you be fooled?",
     link: "url-twister",
   },
-  {
-    image: DR_UNICODE,
-    name: "Typing Replacer",
-    joke: "Type it once, replace it forever 🎯",
-    description: "Create custom typing replacements and use them while editing text in the codepoint editor.",
-    link: "typing-replacer",
-  },  
   {
     image: ENCODED_PROMPT_INJECTION_GENERATOR,
     name: "Encoded Prompt Injection Generator",
