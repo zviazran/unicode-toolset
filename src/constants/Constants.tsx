@@ -1,5 +1,5 @@
 import CODEPOINT_EDITOR from "../Assets/Toolsets/codepoint-editor.png";
-import DR_UNICODE from "../Assets/Toolsets/drunicode.png";
+import TYPING_REPLACER from "../Assets/Toolsets/typing-replacer.png";
 import CRASH_CHAR_SEQUENCE_GENERATOR from "../Assets/Toolsets/crash-char-sequence-generator.png";
 import URL_TWISTER from "../Assets/Toolsets/url-twister.png";
 import WAS_THIS_YOUR_TEXT from "../Assets/Toolsets/was-this-your-text.png";
@@ -35,7 +35,7 @@ export const TOOLSETS = [
     link: "was-this-your-text",
   },
     {
-    image: DR_UNICODE,
+    image: TYPING_REPLACER,
     name: "Typing Replacer",
     joke: "Type it once, replace it forever 🎯",
     description: "Create custom typing replacements and use them while editing text in the codepoint editor.",

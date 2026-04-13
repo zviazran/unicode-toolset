@@ -16,7 +16,7 @@ const DEFAULT_STATE: TypingReplacerState = {
   sets: [
     {
       id: "typing-replacer-default",
-      title: "Default replacement set",
+      title: "Ꭰеƒаυⅼт герⅼасеⅿеոт ѕет",
       map: {
         a: "а", // Cyrillic a
         b: "Ь", // Cyrillic soft sign

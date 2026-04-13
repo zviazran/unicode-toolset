@@ -85,11 +85,11 @@ const TypingReplacer: React.FC = () => {
   const addSet = () => {
     const { map, ...newSet } = createReplacementSet();
     setState((prev) => ([
-      ...prev,
       {
         ...newSet,
         rows: [],
       },
+      ...prev,
     ]));
   };
 
@@ -227,22 +227,18 @@ const TypingReplacer: React.FC = () => {
 
   return (
     <div className={styles.typingReplacer}>
-      <div className={styles.typingReplacerHeader}>
-        <div>
-          <h1>Typing Replacer</h1>
-          <p>
-            Create and manage replacements that will be applied while typing.
-            Enable or disable sets from the Typing Replacer panel. Stored in local browser memory only.
-          </p>
-        </div>
-        <div className={styles.typingReplacerHeaderButtons}>
-          <button className={styles.addSetButton} onClick={addSet}>
-            Add new replacement set
-          </button>
-          <button className={styles.smallButton} onClick={() => setState(createLocalState(getDefaultTypingReplacerState().sets))}>
-            Restore default sets
-          </button>
-        </div>
+      <h1>Typing Replacer</h1>
+      <p>
+        Create and manage replacements that will be applied while typing in the codepoint editor.<br/>
+        Stored in local browser memory only.
+      </p>
+      <div className={styles.typingReplacerHeaderButtons}>
+        <button className={styles.addSetButton} onClick={addSet}>
+          Add new replacement set
+        </button>
+        <button className={styles.smallButton} onClick={() => setState(createLocalState(getDefaultTypingReplacerState().sets))}>
+          Restore default sets
+        </button>
       </div>
 
       {state.length === 0 ? (

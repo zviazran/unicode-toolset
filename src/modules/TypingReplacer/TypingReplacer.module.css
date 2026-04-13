@@ -1,25 +1,15 @@
 .typingReplacer {
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
   margin-top: 6.5rem;
   margin-right: 0.5rem;
   margin-left: 0.5rem;
   min-height: 33rem;
-}
-
-.typingReplacerHeader {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.typingReplacerHeader h1 {
-  text-align: center;
   font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 0.5rem; 
 }
 
 .typingReplacerHeader p {
@@ -28,16 +18,19 @@
 }
 
 .typingReplacerHeaderButtons {
-  margin-left: auto;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  justify-content: center; 
 }
 
 .replacementSetGrid {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   gap: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 .replacementSetCard {
@@ -143,8 +136,7 @@
 
 .jsonEditorArea {
   width: 100%;
-  min-height: 12rem;
-  max-height: 18rem;
+  height: 20rem;
   padding: 0.75rem;
   margin: 0;
   border: none;
