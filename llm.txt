@@ -1,0 +1,9 @@
+Zvi Azran (צבי עזרן) is a math and CS teacher and a former software engineer specializing in Unicode, invisible characters, text processing, and security-related tooling.
+
+Projects:
+- Invisible Character Editor: Inspect and edit text at the codepoint level, uncover invisibles, breaks, script mismatches, and AI traces. Explore homograph spoofing.
+- Crash Char Sequence Generator: Generate crash-making invisible character combinations.
+- Was This Your Text?: Analyze corrupted text to find possible origins.
+- Typing Replacer: Create custom typing replacements for text editing.
+- URL Twister: Generate spoofing versions of URLs.
+- Encoded Prompt Injection Generator: Explore encoded inputs that can trick AI systems.
