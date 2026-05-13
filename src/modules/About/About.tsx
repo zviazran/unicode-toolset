@@ -1,5 +1,5 @@
 import React from "react";
-import myImg from "../../Assets/zvi_azran_img.jpg";
+import myImg from "../../Assets/zvi_azran_צבי_עזרן.jpg";
 import SocialMedia from "../../components/SocialMedia";
 import { Container, Row, Col } from "react-bootstrap";
 import "../../App.css";
